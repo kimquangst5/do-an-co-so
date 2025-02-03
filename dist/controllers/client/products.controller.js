@@ -110,7 +110,6 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reviews = res.locals.INFOR_CUSTOMER ? yield reviews_model_1.default.find({
         product_id: product.id,
         customer_id: res.locals.INFOR_CUSTOMER.id,
-        is_approved: true
     }) : [];
     res.render("client/pages/products/detail.pug", {
         pageTitle: product.name,

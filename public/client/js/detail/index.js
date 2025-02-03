@@ -11,7 +11,7 @@ listColors.forEach((color) => {
           // showLoader();
           const colorId = color.getAttribute("color-id");
           if (colorId) {
-               axios.put('/san-pham/chi-tiet-san-pham/ao-khoac-phao-3-lop-lot-bong-co-cao/getSize', {
+               axios.put(`${location.href}/getSize`, {
                          color: colorId
                     })
                     .then(res => {

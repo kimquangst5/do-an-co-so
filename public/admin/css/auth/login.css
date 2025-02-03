@@ -1,0 +1,69 @@
+[login-text]::after {
+  content: "Đăng nhập quản trị"; /* Nội dung lặp lại */
+  position: absolute;
+  top: -3.5px; /* Căn cùng vị trí dọc với chữ chính */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
+
+  color: #edbc1d; /* Màu chữ lặp lại mờ hơn */
+  z-index: -1; /* Đặt phía sau chữ chính */
+  transform: translate(5px, 5px); /* Điều chỉnh khoảng cách chữ lặp lại */
+}
+sl-input::part(base) {
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+sl-input::part(base)::placeholder {
+  color: black;
+  opacity: 63%;
+  text-align: center;
+}
+
+[button-login]::part(base) {
+  all: unset;
+  background: transparent;
+  border-radius: 9999px;
+  padding: 3px 7px;
+  color: #fbcd6b;
+  border: 1px solid #fbcd6b;
+}
+
+[button-login]::part(label) {
+  padding: 0px;
+}
+
+::placeholder {
+  text-align: center;
+}
+
+/* or, for legacy browsers */
+
+::-webkit-input-placeholder {
+  text-align: center;
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  text-align: center;
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  text-align: center;
+}
+
+:-ms-input-placeholder {
+  text-align: center;
+}
+
+[checkbox]::part(control) {
+  background-color: transparent !important;
+  border: 1px solid #edbc1d;
+}
+
+[checkbox]::part(checked-icon) {
+  color: #ae1f24;
+}

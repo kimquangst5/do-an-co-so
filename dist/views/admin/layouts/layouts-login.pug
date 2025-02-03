@@ -1,0 +1,17 @@
+doctype html
+html(lang="vi")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="description", content=(pageDesc ? pageDesc : 'Website thời trang uy tín, chất lượng. Giá tốt nhất thị trường.LH ngay 0859615254"'))
+        link(rel="stylesheet", href="/admin/css/style.css")
+        script(src="https://cdn.tailwindcss.com")
+        script(src="/tailwind.config.js")
+        block css
+        title #{pageTitle}
+    body(class="font-main ")
+        include ../partials/loader.pug
+        div(class=`bg-cover bg-center bg-gradient-to-tr from-[#f57f20] to-[#d62b08] bg-no-repeat w-full`) 
+            div(class=`flex h-screen overflow-y-auto items-center justify-center`)
+                block main
+    block script

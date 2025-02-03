@@ -1,0 +1,48 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/createTree.mixin.pug
+
+block header
+    h1 Thêm danh mục mới
+
+block hb
+    sl-button(variant="primary", size="small" btn-update-product-category = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.UPDATE}/${category.id}`)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Cập nhật
+block css
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/style.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.css")
+
+block main
+    sl-details(summary="Thông tin cơ bản" open)
+        sl-input(label="Tên danh mục" required size="small" name='name' value=category.name)
+        sl-select(clearable  size="small" label="Danh mục cha" required name='category-parent' placeholder="Không chọn nếu là danh mục cha" value=category.parentId)
+            //- small Thời trang nam
+            - if(tree && tree.length > 0)
+                +createTree(tree)
+            - else
+                    sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
+
+        sl-input(label="Vị trí" size="small" placeholder="Tự động tăng..." name='position' value=category.position)
+        sl-input(label="Đường dẫn" size="small" placeholder="Tự động tạo ra theo tên của sản phẩm..." disabled)
+
+        sl-radio-group(label="Trạng thái", name="status" size="small" value=category.status)
+            sl-radio(value="active") Hoạt động
+            sl-radio(value="inactive") Tạm dừng
+        
+
+    sl-details(summary="Ảnh mô tả danh mục" open)
+        div(class="custom-file-container", data-upload-id="upload-image-preview-main")
+
+    sl-details(summary="Mô tả danh mục" open)
+        textarea(label="Mô tả" size="small" id='desc' name='description') #{category.description}
+    
+    
+block script
+    script(type="application/javascript" src="/tinymce/tinymce.min.js")
+    script(type="application/javascript" src="/admin/js/tinymce.config.js")
+    script(src="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/index.iife.min.js" async)
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js") 
+    script(type="module" src="/admin/js/products-categories/update.js")
+

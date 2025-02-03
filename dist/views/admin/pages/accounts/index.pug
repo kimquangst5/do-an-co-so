@@ -1,0 +1,82 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/btn-redirect.mixin.pug
+block header
+    h1 Danh sách tài khoản quản trị
+
+block hb
+    +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.CREATE}`)
+    
+
+block css
+
+
+block main
+    sl-details(summary="Danh sách tài khoản quản trị" open)
+        - if(accounts && accounts.length > 0)
+            table(class=`w-full`)
+                thead
+                    tr
+                        th
+                            sl-checkbox
+                        th
+                            div(class=``) Họ tên
+                        th
+                            sl-icon(name="images" class=`text-[20px]`)
+                        th
+                            div(class=``) Phân quyền
+                        th
+                            div(class=``) Email
+                        th
+                            div(class=``) Số điện thoại
+                        th
+                            div(class=``) Trạng thái
+                        th
+                            div(class=``) Tạo bởi
+                tbody
+                    each it in accounts
+                        tr(class=`group text-center`)
+                            td
+                                sl-checkbox(class=`flex justify-center`)
+                            td(class=``)
+                                div(class=`flex flex-col gap-y-[5px] justify-center`) 
+                                    div(class=`font-bold text-left text-[18px] line-clamp-1` name-product) #{it.fullname}
+                                    div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[14px]`)
+                                        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${it._id}`) Chỉnh sửa
+                                        button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}`) Xóa
+                            td
+                                div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                    - if(!it.images || it.images.length == 0)
+                                        sl-badge(variant="danger" size="small" pill) Chưa tạo
+
+                                    - else if(it.images && it.images.length > 0)
+                                        div(class="avatar-group")
+                                            each img, i in it.images
+                                                - if(i + 1 <= 3)
+                                                    sl-avatar(image=img.path, label=img.name)
+                                            - if(it.images.length > 3)
+                                                sl-avatar(label="Avatar with an image icon")
+                                                    sl-icon(slot="icon", name="cloud-arrow-up")
+                            
+                            td
+                                div(class=``) #{it.role_name}
+                            td
+                                div #{it.email}
+                            td
+                                div #{it.phone ? it.phone : '-'}
+                            td
+                                div(class=`flex justify-center items-center`)
+                                    - if(it.status == 'active')
+                                        sl-button(variant="success" size="small" pill) Hoạt động
+                                    - else if(it.status == 'inactive')
+                                        sl-button(variant="danger" size="small" pill) Tạm dừng
+                            td
+                                //- div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                    sl-badge(variant="primary" pill) #{it.author}
+        - else
+            +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
+
+
+
+block script
+
+    

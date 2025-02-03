@@ -1,0 +1,7 @@
+mixin createTree(array, level = 1)
+    each it in array
+        //- - if(level = 1)
+        small #{level == 1 ? it.name : ''}
+        sl-option(value=it.id) #{'---'.repeat(level - 1)}#{it.name}
+        - if(it.children)
+            +createTree(it.children, level + 1)

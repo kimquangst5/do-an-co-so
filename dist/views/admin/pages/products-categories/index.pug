@@ -1,0 +1,27 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/btn-redirect.mixin.pug
+include ../../mixins/list-select-tree.pug
+
+block header
+    h1 Danh sách danh mục
+
+block hb
+    sl-button(variant="primary", size="small" href = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.CREATE}`)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+block css
+
+block main
+    //- - if(array && array.length > 0)
+    sl-tree(class="tree-selectable" selection="multiple")
+        +list-select-tree(tree)
+    //- - else
+    //-     sl-details(summary="Chưa có danh mục nào được tạo!")
+
+
+    
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11" async)
+    script(type="module" src="/admin/js/products-categories/index.js")
+

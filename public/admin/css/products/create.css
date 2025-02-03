@@ -1,0 +1,12 @@
+.input-container {
+  grid-column: span 2 / span 2;
+}
+.image-preview {
+  grid-column-start: 2 !important;
+  grid-column: span 2 / span 2;
+}
+
+.label-container label::before {
+  content: "* ";
+  color: red;
+}

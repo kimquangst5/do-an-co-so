@@ -1,0 +1,171 @@
+extends ../../layouts/layouts.pug
+
+block css
+     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" type="text/css")
+     script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+
+     link(rel="stylesheet" href="/client/css/products/detail.css")
+block script
+     script(type="module" src="/client/js/detail/index.js") 
+
+block main
+     div(class="")
+          div(class="container flex gap-x-[40px] items-center mt-[24px] lg:justify-between")
+               div(class="")
+                    div(class="grid grid-cols-2 gap-x-[40px]")
+                         div(class=``)
+                              - if(product["images"].length == 0)
+                                   img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
+                              - else
+                                   sl-carousel(class="carousel-thumbnails h-[80%]", navigation, loop, autoplay)
+                                        each img in product["images"]
+                                             sl-carousel-item(class=`aspect-square h-full`)
+                                                  img(alt=img.name src=img.path)
+                                   div(class="thumbnails")
+                                        div(class="thumbnails__scroller")
+                                             each img in product["images"]
+                                                  img(alt=img.name class="thumbnails__image active" src=img.path)
+
+                         div
+                              div(class="text-[40px] mb-[13px]")
+                                   | #{product.name}
+                              div(class="flex gap-x-[16px]")
+                                   div(class="flex justify-between flex gap-x-[7.1px] mb-[14.29px]")
+                                        i(class="fa-solid fa-sharp fa-star text-[24.71px]" style="color: #FFD43B;")
+                                        i(class="fa-solid fa-sharp fa-star text-[24.71px]" style="color: #FFD43B;")
+                                        i(class="fa-solid fa-sharp fa-star text-[24.71px]" style="color: #FFD43B;")
+                                        i(class="fa-solid fa-sharp fa-star text-[24.71px]" style="color: #FFD43B;")
+                                        i(class="fa-sharp fa-solid fa-star-half text-[24.71px]" style="color: #FFD43B;")
+                                   div(class="text-[16px]") 4/5
+                              div(class="flex gap-x-[58px] mb-[23px] items-center")
+                                   div(class="flex gap-x-[12px] ")
+                                        sl-format-number(type="currency" currency="VND" lang="vi-VI" class="text-[32px]" price-new)
+                                        sl-format-number(type="currency" currency="VND" lang="vi-VI" class="line-through text-[32px] text-[#0000004D]" product-price)
+                                   div(class="flex items-center justify-center bg-[#FF33331A] py-[6px] px-[14px] text-[16px] rounded-[62px] h-max text-[#FF3333]" discount-product)
+                              div(class="text-[#00000099] mb-[24px]")
+                                   | #{product.descriptionShort}
+                              div(class="h-[1px] bg-[#0000001A] w-full mb-[24px]")
+                              div(class="text-[16px] text-[#00000099] mb-[16px]") Chọn màu
+                              - if(product.color && product.color.length > 0)
+                                   div(class="flex gap-x-[16px] mb-[24px]" color-product)
+                                        each color in product.color
+                                             sl-tooltip(content=color.name)
+                                                  input(type="radio" name="color", class=`radio w-[37px] h-[37px] bg-[${color.code}] checked:bg-[${color.code}]` color-id = color.id)
+
+                              div(class="h-[1px] bg-[#0000001A] w-full mb-[24px]")
+                              div(class="text-[16px] text-[#00000099] mb-[26px]") Chọn kích thước
+                              - if(product.size && product.size.length > 0)
+                                   sl-radio-group(class="flex gap-x-[12px] mb-[26px]" size-product)
+                                        each size in product.size
+                                             sl-radio-button(class="mr-[12px] flex justify-center items-center" value = size.id)
+                                                  div(class="text-[16px]") #{size.name}
+
+                                        //- div(class="bg-[#000000] rounded-[62px] w-[57px] h-[44px] flex justify-center items-center")
+                                             div(class="text-[#FFFFFF] text-[16px]") active
+
+                              div(class="h-[1px] bg-[#0000001A] w-full mb-[24px]")
+                              div(class="flex gap-[20px] mb-[80px]")
+                                   div(class="flex gap-x-[40.62px] bg-[#F0F0F0] rounded-[62px] h-[52px] w-[170px] flex justify-center items-center")
+                                        div(class="flex gap-x-[40.62px]")
+                                             div
+                                                  i(class="fa-sharp fa-solid fa-minus")
+                                             div(quantity-product) 1
+                                             div
+                                                  i(class="fa-sharp fa-solid fa-plus")
+                                   //- div(class="bg-[black] rounded-[62px] w-[400px] h-[52px] flex justify-center items-center")
+                                        div(class="text-[#FFFFFF] text-[16px]") Thêm vào giỏ hàng
+                                   button(type="button" class="text-[#FFFFFF] text-[16px] bg-[black] rounded-[62px] w-[400px] h-[52px] flex justify-center items-center transition duration-150 ease-in-out focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-gray-800" data-twe-collapse-init data-twe-ripple-init add-cart = `${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.ADD}/${product.id}`) Thêm vào giỏ hàng
+
+
+
+                    // Tabs navigation
+                    ul(class="mb-5 flex list-none flex-row flex-wrap border-b-0 ps-0 text-[20px]" role="tablist", data-twe-nav-ref)
+                         li(role="presentation" class="flex-grow basis-0 text-center")
+                              a(href="#tabs-desc" class="focus:text-[black] my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 font-medium leading-tight text-neutral-500 hover:isolate hover:border-b-[2px] hover:border-b-[#000000] focus:border-b-[#000000] focus:isolate focus:border-b-[2px] data-[twe-nav-active]:border-primary data-[twe-nav-active]:text-primary dark:text-white/50 dark:hover:bg-neutral-700/60 dark:data-[twe-nav-active]:text-primary" data-twe-toggle="pill" data-twe-target="#tabs-desc", data-twe-nav-active, role="tab" aria-controls="tabs-desc" aria-selected="true") Mô tả sản phẩm
+                         li(role="presentation" class="flex-grow basis-0 text-center")
+                              a(href="#tabs-comment" class="focus:text-[black] my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 font-medium leading-tight text-neutral-500 hover:isolate hover:border-b-[2px] hover:border-b-[#000000] focus:border-b-[#000000] focus:isolate focus:border-b-[2px] data-[twe-nav-active]:border-primary data-[twe-nav-active]:text-primary dark:text-white/50 dark:hover:bg-neutral-700/60 dark:data-[twe-nav-active]:text-primary" data-twe-toggle="pill" data-twe-target="#tabs-comment" role="tab" aria-controls="tabs-comment" aria-selected="false") Đánh giá và bình luận
+                         li(role="presentation" class="flex-grow basis-0 text-center")
+                              a(href="#tabs-question" class="focus:text-[black] my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 font-medium leading-tight text-neutral-500 hover:isolate hover:border-b-[2px] hover:border-b-[#000000] focus:border-b-[#000000] focus:isolate focus:border-b-[2px] data-[twe-nav-active]:border-primary data-[twe-nav-active]:text-primary dark:text-white/50 dark:hover:bg-neutral-700/60 dark:data-[twe-nav-active]:text-primary" data-twe-toggle="pill" data-twe-target="#tabs-question" role="tab" aria-controls="tabs-question" aria-selected="false") Câu hỏi thường gặp
+
+                    // Tabs content
+                    div(class="mb-6")
+                         div#tabs-desc(class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[twe-tab-active]:block" role="tabpanel" aria-labelledby="tabs-desc", data-twe-tab-active)
+                              | !{product.description}
+
+                         div#tabs-comment(class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[twe-tab-active]:block" role="tabpanel" aria-labelledby="tabs-comment")
+                              div(class="flex gap-x-[662px]")
+                                   div(class="flex gap-[1px] mb-[24px] text-[24px]")
+                                        div Tất cả bình luận
+                                        div(class="text-[#00000099] text-[16px] items-center flex justify-center") (#{reviews.length})
+                                   div(class="flex gap-x-[10px]")
+                                        div(class="bg-[#F0F0F0] rounded-[62px] w-[48px] h-[48px] flex justify-center items-center")
+                                             i(class="fa-solid fa-sliders")
+                                        div(class="bg-[#F0F0F0] rounded-[62px] w-[120px] h-[48px] flex justify-center items-center")
+                                             div Gần nh...
+                                             div
+                                                  i(class="fa-solid fa-chevron-down")
+                                        button(type="button" class="bg-[#000000] rounded-[62px] flex justify-center items-center text-[#FFFFFF] h-[48px] px-[33px]"  data-twe-collapse-init data-twe-ripple-init data-twe-ripple-color="light" data-twe-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") Bình luận ngay
+
+                              div#collapseExample(class="!visible hidden py-[10px]", data-twe-collapse-item)
+                                   div(class=`flex flex-col gap-y-[20px]`) 
+                                        div(class=`font-bold text-[18px]`) 1. Đánh giá của bạn về sản phẩm này
+                                        sl-rating(label="Rating" precision="0.5" style="--symbol-color-active: #FFD43B; --symbol-size: 2rem;")
+                                        div(class=`flex flex-col gap-y-[10px]`) 
+                                             div(class=`font-bold text-[18px]`) 2. Viết nhận xét của bạn vào bên dưới:
+                                             sl-textarea(placeholder=`Nhận xét của bạn về sản phẩm ${product.name}`)
+                                   button(type="button" class="bg-[#000000] my-[20px] rounded-[62px] flex justify-center items-center text-[#FFFFFF] h-[48px] px-[33px]"  data-twe-collapse-init data-twe-ripple-init data-twe-ripple-color="light" btn-comment = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${product.id}${ROUTERS.CLIENT.CUSTOMER.REVIEW}`) Gửi đánh giá
+
+
+
+
+                              div(class="grid grid-cols-2  lg:grid-cols-1 gap-[20px] justify-between")
+                                   - if(reviews && reviews.length > 0)
+                                        each it in reviews
+                                             div(class=`flex flex-col gap-y-[24px] border-[#0000001A] border-[1px] rounded-[20px] py-[28px] px-[32px]`) 
+                                                  div(class=`flex flex-col gap-y-[15px]`) 
+                                                       sl-rating(label="Rating" precision="0.5" value=it.rating readonly style="--symbol-color-active: #FFD43B; --symbol-size: 2rem;")
+                                                       div(class=`flex flex-col gap-y-[12px]`) 
+                                                            div(class=`flex items-center gap-x-[4px]`) 
+                                                                 div(class=``) Trần Kim Quang
+                                                                 img(src="/client/images/icon-tick.svg" alt="")
+                                                            p(class="text-[#00000099] text-wrap break-words") #{it.content}
+                                                  div(class="text-[#00000099] flex gap-x-[5px]")
+                                                       div(class=``) Đăng vào
+                                                       sl-format-date(lang="vi" date=it.createdAt weekday="long")
+                                                       div ngày
+                                                       sl-format-date(lang="fr" date=it.createdAt day="numeric")
+                                                       div tháng
+                                                       sl-format-date(lang="fr" date=it.createdAt month="numeric")
+                                                       div tháng
+                                                       sl-format-date(lang="fr" date=it.createdAt year="numeric")
+                                             //- div(class="flex border border-[#0000001A] rounded-[20px] px-[32px] py-[28px] truncate")
+                                             //-      div(class="lg:justify-between flex flex-col")
+                                             //-           div(class=`flex flex-col gap-y-[15px]`) 
+                                             //-                div(class="flex justify-between")
+                                             //-                     sl-rating(label="Rating" precision="0.5" value=it.rating readonly style="--symbol-color-active: #FFD43B; --symbol-size: 2rem;")
+                                             //-                     i(class="fa-solid fa-ellipsis flex justify-center items-center")
+                                             //-                div(class=`flex flex-col gap-y-[12px]`) 
+                                             //-                     div(class="flex gap-[6px] items-center")
+                                             //-                          div(class="text-[20px]") ok
+                                             //-                          i(class="fa-solid fa-circle-check" style="color: #12de9a;")
+                                             //-                     div(class="mb-[24px] text-[#00000099] flex flex-wrap text-wrap ") #{it.content}
+                                             //-           div(class="text-[#00000099] flex gap-x-[5px]")
+                                             //-                div(class=``) Đăng vào
+                                             //-                sl-format-date(lang="vi" date=it.createdAt weekday="long")
+                                             //-                div ngày
+                                             //-                sl-format-date(lang="fr" date=it.createdAt day="numeric")
+                                             //-                div tháng
+                                             //-                sl-format-date(lang="fr" date=it.createdAt month="numeric")
+                                             //-                div tháng
+                                             //-                sl-format-date(lang="fr" date=it.createdAt year="numeric")
+
+
+                              // này là grind cho đánh giá
+                              div(class="w-full flex justify-center")
+                                   div(class="border border-[#0000001A] rounded-[52px] w-[230px] mb-[20.41px] flex justify-center items-center") Xem Thêm
+
+                         div#tabs-question(class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[twe-tab-active]:block" role="tabpanel" aria-labelledby="tabs-question", data-twe-tab-active)
+                              | Chưa có câu hỏi nào
+
+
+

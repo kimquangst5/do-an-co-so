@@ -1,0 +1,30 @@
+extends ../../layouts/layouts-login.pug
+
+
+block main
+    
+    div(class=`bg-[rgba(236,205,157,0.4)] py-[30px]  w-[60%] flex flex-col justify-center`)
+
+        div(class=`relative text-center`) 
+            div(class=`text-5xl font-sub1 z-[10] text-[white] relative` login-text) Đăng nhập quản trị
+        div(class=`mt-[40px] flex flex-col gap-y-[20px]`) 
+            sl-input(placeholder="Tên đăng nhập..." clearable name='info' class=` rounded-[50%] w-1/2 mx-auto placeholder:text-[black] placeholder:text-[black]` info)
+            sl-input(placeholder="Mật khẩu..." type="password" password-toggle  name='password' class=` rounded-[50%] w-1/2 mx-auto placeholder:text-[black] placeholder:text-[black]` )
+        sl-checkbox(checkbox class=`mx-auto mt-[10px]`) Ghi nhớ tôi
+        div(class=`bg-[white] w-max mx-auto px-[10px] py-[5px] rounded-full mt-[27px]`) 
+            sl-button(pill btn-login = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.LOGIN}` redirect=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}` class=`w-max font-sub1 mx-auto ` button-login) Đăng nhập
+
+
+block css
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap", rel="stylesheet")
+    link(rel="stylesheet", href="/admin/css/auth/login.css")
+
+block script
+    script(type="module", src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js")
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11") 
+    script(src="/admin/js/login.js")
+

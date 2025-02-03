@@ -1,0 +1,40 @@
+{
+  "name": "do-an-co-so-nganh",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dự án này là một webiste được xây dựng bằng Node.js và Express.js, theo mô hình MVC (Model-View-Controller). Nó bao gồm các tính năng như xác thực người dùng, xác thực đầu vào và các biện pháp bảo mật API.",
+  "main": "index.ts",
+  "scripts": {
+    "start": "nodemon --exec node --inspect -r ts-node/register index.ts",
+    "build": "tsc && node fs-extra.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ag-grid-enterprise": "^33.0.4",
+    "argon2": "^0.41.1",
+    "body-parser": "^1.20.3",
+    "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "file-upload-with-preview": "^6.1.2",
+    "fs-extra": "^11.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.3",
+    "mongoose-slug-updater": "^3.3.0",
+    "multer": "^1.4.5-lts.1",
+    "pug": "^3.0.3",
+    "streamifier": "^0.1.1",
+    "tinymce": "^7.6.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,56 @@
+sl-radio-button::part(button button--checked) {
+     background-color: #000000 !important;
+     color: #ffffff;
+}
+
+sl-radio-button::part(button):hover {
+     background-color: #000000;
+     color: #ffffff;
+}
+
+sl-radio-button::part(button) {
+     border: 0px;
+     border-radius: 62px;
+     width: 57px;
+     height: 44px;
+     margin-right: 12px;
+     background-color: #f0f0f0;
+}
+
+.carousel-thumbnails {
+     --slide-aspect-ratio: 1 / 1;
+}
+
+.thumbnails {
+     display: flex;
+     justify-content: center;
+}
+
+.thumbnails__scroller {
+     display: flex;
+     gap: var(--sl-spacing-small);
+     overflow-x: auto;
+     scrollbar-width: none;
+     scroll-behavior: smooth;
+     scroll-padding: var(--sl-spacing-small);
+}
+
+.thumbnails__scroller::-webkit-scrollbar {
+     display: none;
+}
+
+.thumbnails__image {
+     width: 64px;
+     height: 64px;
+     object-fit: cover;
+
+     opacity: 0.3;
+     will-change: opacity;
+     transition: 250ms opacity;
+
+     cursor: pointer;
+}
+
+.thumbnails__image.active {
+     opacity: 1;
+}

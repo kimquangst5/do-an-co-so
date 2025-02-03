@@ -1,0 +1,24 @@
+extends ../../layouts/layouts.pug
+
+block header
+    h1 Thêm nhóm quyền
+
+block css
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css" async)
+
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/roles/create.js")
+
+block hb
+    sl-button(variant="primary", size="small" btn-create-new-role = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.CREATE}`)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+
+
+block main
+    div(class=``)
+        sl-input(label="Tên nhóm quyền" size="small" name="name")
+        sl-textarea(label="Mô tả" size="small" name="description")
+
+        

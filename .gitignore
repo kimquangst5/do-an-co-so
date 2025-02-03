@@ -1,0 +1,7 @@
+.env
+/node_modules
+.vscode
+*.ts
+/tsconfig.json
+/vercel.json
+fs-extra.js

@@ -1,0 +1,121 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/createTree.mixin.pug
+
+block header
+    h1 Thêm sản phẩm mới
+
+block hb
+    sl-button(size="small" href = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`)
+        sl-icon(slot="prefix", name="arrow-up-left-circle")
+        | Quay lại danh sách
+    - if(ROLE.permission.includes("products-create"))
+        sl-button(variant="primary", size="small" btn-create-new-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
+            sl-icon(slot="prefix", name="plus-circle")
+            | Thêm mới
+block css
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/style.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css")
+    link(rel="stylesheet", href="/admin/css/products/create.css")
+
+block main
+    - if(ROLE.permission.includes("products-create"))
+        sl-details(summary="Thông tin cơ bản" open)
+            div(class="custom-file-container container", data-upload-id="upload-image-preview-sub" class=`grid grid-cols-3 gap-x-[10px]`)
+            div(class="custom-file-container container", data-upload-id="upload-image-preview-main" class=`grid grid-cols-3 gap-x-[10px]`)
+            sl-input(label="Tên sản phẩm" placeholder="Tên sản phẩm + Thương hiệu + Model + Thông số kỹ thuật" required size="small" name='name-product')
+        
+            sl-select(max-options-visible=6 clearable  multiple  size="small" label="Ngành hàng" required name='category-parent' placeholder="Chọn ngành hàng" )
+                - if(listCategories && listCategories.length > 0)
+                    +createTree(listCategories)
+                - else
+                        sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
+
+            sl-input(label="Vị trí" size="small" placeholder="Tự động tăng..." name='position')
+            sl-input(label="Đường dẫn" size="small" placeholder="Tự động tạo ra theo tên của sản phẩm...")
+
+            sl-radio-group(label="Trạng thái sản phẩm", name="status-product" size="small" value="active")
+                sl-radio(value="active") Hoạt động
+                sl-radio(value="inactive") Tạm dừng
+            sl-radio-group(label="Sản phẩm nổi bật", size="small" value="false" name="featured")
+                sl-radio(value="true") Có
+                sl-radio(value="false") Không
+
+        sl-details(summary="Ảnh sản phẩm" open)
+
+        //- sl-details(summary="Biến thể sản phẩm" open)
+        div(class=``)
+            
+            sl-button(variant="primary", size="small" btn-create-new-variant class=`ml-auto`)
+                sl-icon(slot="prefix", name="plus-circle")
+                | Thêm biến thể
+            div(class=`flex gap-x-[10px] items-center w-full flex-wrap`)
+                table(class=`w-full`)
+                    thead
+                        tr
+                            th Trạng thái
+                            th Màu sắc
+                            th Kích thước
+                            th Giá gốc
+                            th % giảm giá
+                            th Đơn giá
+                            th Số lượng
+                            th
+                    tbody(parent-variant class=``)
+                        tr
+                            td(class=`mx-auto h-full my-auto`)
+                                sl-switch(checked class=`mx-auto block`)
+                            td
+                                - if(getColor && getColor.length > 0)
+                                    sl-select(clearable class=`w-[10rem] mx-auto` name='color' )
+                                        <small>Màu sắc</small>
+                                        each it in getColor
+                                            sl-option(value=it.id)
+                                                div(class=`flex justify-between items-center`) 
+                                                    sl-icon(slot="prefix", name="palette" class=`mr-[10px]`)
+                                                    div #{it.name}
+                                                    div(class=`ml-auto w-[20px]`)
+                                                        sl-color-picker(format="hex" size="small" label="Mã màu" name="code" value=it.code disabled) 
+                            td
+                                - if(getSize && getSize.length > 0)
+                                    sl-select(clearable class=`w-[10rem] mx-auto` name='size')
+                                        <small>Kích thước</small>
+                                            each it in getSize
+                                                sl-option(value=it.id)
+                                                    sl-icon(slot="prefix", name="rulers")
+                                                    | #{it.name}
+                                                    sl-icon(slot="suffix", name="patch-check")
+                                
+                            td
+                                    div(class="format-number-overview flex gap-x-[10px] items-center justify-center mx-auto")
+                                        sl-input(type="number" class=`w-[7rem] text-center ` name='price')
+                            td
+                                    div(class=`mx-auto`)
+                                        sl-input(type="number" value=0 discount max=100 maxlength=2 class=`w-[7rem] text-center mx-auto` name='discount')
+                            td
+                                    div(class=`flex items-center w-max justify-center mx-auto`) 
+                                        sl-format-number()
+                                        div(class=`đ`) đ
+                            td
+                                    sl-input(type="number" value=0 class=`w-[7rem] mx-auto` name='quantity')
+                            td
+                                sl-icon(slot="suffix", name="trash" class=`cursor-pointer text-[red]`)
+
+
+        sl-details(summary="Mô tả ngắn" open)
+            textarea(label="Mô tả ngắn" size="small" id='desc-short' name='description-short')
+        
+        
+        sl-details(summary="Mô tả đầy đủ" open)
+            textarea(label="Mô tả đầy đủ" size="small" id='desc' name='description')
+
+block script
+    script(type="application/javascript" src="/tinymce/tinymce.min.js")
+    script(type="application/javascript" src="/admin/js/tinymce.config.js")
+    script(src="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/index.iife.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js" async)
+    script(src="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.js") 
+    script(type="module" src="/admin/js/products/create.js")
+

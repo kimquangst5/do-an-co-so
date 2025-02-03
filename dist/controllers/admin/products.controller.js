@@ -1,0 +1,303 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.changeStatusMany = exports.changeStatus = exports.trashPatch = exports.updatePatch = exports.getImage = exports.update = exports.createPost = exports.create = exports.index = void 0;
+const index_service_1 = require("../../services/admin/index.service");
+const mongodb_1 = require("mongodb");
+const products_model_1 = __importDefault(require("../../models/products.model"));
+const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.model"));
+const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.model"));
+const productsCategories_model_1 = __importDefault(require("../../models/productsCategories.model"));
+const createTree_helper_1 = __importDefault(require("../../helpers/createTree.helper"));
+const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_1, _b, _c, _d, e_2, _e, _f;
+    const products = yield products_model_1.default.find({
+        deleted: false,
+    })
+        .lean()
+        .sort({
+        position: -1,
+    });
+    try {
+        for (var _g = true, products_1 = __asyncValues(products), products_1_1; products_1_1 = yield products_1.next(), _a = products_1_1.done, !_a; _g = true) {
+            _c = products_1_1.value;
+            _g = false;
+            const it = _c;
+            const productItem = yield index_service_1.productItemService.get({
+                productId: it["_id"],
+            });
+            if (productItem.length > 0) {
+                it["priceNew"] = yield productItem.map((item) => Math.ceil(item.price - item.price * (item.discount / 100)));
+            }
+            const author = yield index_service_1.accountsService.get({
+                _id: it.createdBy,
+            });
+            if (author.length > 0)
+                it["author"] = author[0]["fullname"];
+            const productAssets = yield index_service_1.productAssetsService.get({
+                productId: it["_id"],
+                deleted: false,
+            });
+            it["images"] = [];
+            try {
+                for (var _h = true, productAssets_1 = (e_2 = void 0, __asyncValues(productAssets)), productAssets_1_1; productAssets_1_1 = yield productAssets_1.next(), _d = productAssets_1_1.done, !_d; _h = true) {
+                    _f = productAssets_1_1.value;
+                    _h = false;
+                    const element = _f;
+                    const assets = yield index_service_1.assetsService.get({
+                        _id: element.assetsId,
+                    });
+                    it["images"].push(assets[0]);
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (!_h && !_d && (_e = productAssets_1.return)) yield _e.call(productAssets_1);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (!_g && !_a && (_b = products_1.return)) yield _b.call(products_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    res.render("admin/pages/products/index.pug", {
+        pageTitle: "Danh sách sản phẩm",
+        pageDesc: "Danh sách sản phẩm",
+        products: products,
+    });
+});
+exports.index = index;
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const getSize = yield index_service_1.sizeProductService.get({
+        status: "active",
+    });
+    const getColor = yield index_service_1.colorProductService.get({
+        status: "active",
+    });
+    const categories = yield productsCategories_model_1.default.find({
+        deleted: false,
+    });
+    const listCategories = (0, createTree_helper_1.default)(categories);
+    res.render("admin/pages/products/create.pug", {
+        pageTitle: "Thêm sản phẩm",
+        pageDesc: "Thêm sản phẩm",
+        getSize: getSize,
+        getColor: getColor,
+        listCategories,
+    });
+});
+exports.create = create;
+const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (res.locals.ROLE.permission.includes("products-create")) {
+        const createProduct = yield index_service_1.productService.create(req.body, res.locals.INFOR_USER.id);
+        const createProductAssets = yield index_service_1.productAssetsService.create(createProduct.id, req.body);
+        const createProductItem = yield index_service_1.productItemService.create(createProduct.id, req.body.bien_the, res.locals.INFOR_USER.id);
+        res.json({ code: 200 });
+    }
+    else {
+        res.json({ code: 503 });
+    }
+});
+exports.createPost = createPost;
+const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const products = yield products_model_1.default.findOne({
+            _id: req.params.id,
+            deleted: false,
+        }).lean();
+        const productItem = yield index_service_1.productItemService.get({
+            productId: products["_id"],
+        });
+        if (productItem.length > 0) {
+            productItem.forEach((it) => __awaiter(void 0, void 0, void 0, function* () {
+                it["infoColor"] = yield colorProduct_model_1.default.findOne({
+                    _id: it.color,
+                });
+                it["infoSize"] = yield sizeProduct_model_1.default.findOne({
+                    _id: it.size,
+                });
+            }));
+        }
+        const author = yield index_service_1.accountsService.get({
+            _id: products.createdBy,
+        });
+        products["author"] = author[0]["fullname"];
+        try {
+            const updatetor = yield index_service_1.accountsService.get({
+                _id: products.updatedBy,
+            });
+            products["updatetor"] = updatetor[0]["fullname"];
+        }
+        catch (error) { }
+        const getSize = yield index_service_1.sizeProductService.get({
+            status: "active",
+        });
+        const getColor = yield index_service_1.colorProductService.get({
+            status: "active",
+        });
+        const categories = yield productsCategories_model_1.default.find({
+            deleted: false,
+        });
+        const listCategories = (0, createTree_helper_1.default)(categories);
+        if (products["categoryId"].length > 0)
+            products["categories"] = products.categoryId
+                .map((id) => id.toString())
+                .join(" ");
+        res.render("admin/pages/products/update.pug", {
+            pageTitle: products.name,
+            pageDesc: "Cập nhật sản phẩm",
+            products: products,
+            getColor,
+            getSize,
+            productItem,
+            listCategories,
+        });
+    }
+    catch (error) {
+        res.redirect("back");
+    }
+});
+exports.update = update;
+const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_3, _b, _c, _d, e_4, _e, _f;
+    if (res.locals.ROLE.permission.includes("products-update")) {
+        const { id } = req.params;
+        const productAssets = yield index_service_1.productAssetsService.get({
+            productId: id,
+        });
+        const main = productAssets.filter((it) => it.type == "main");
+        const sub = productAssets.filter((it) => it.type == "sub");
+        const images_main = [];
+        const images_main_id = [];
+        const images_sub = [];
+        const images_sub_id = [];
+        try {
+            for (var _g = true, main_1 = __asyncValues(main), main_1_1; main_1_1 = yield main_1.next(), _a = main_1_1.done, !_a; _g = true) {
+                _c = main_1_1.value;
+                _g = false;
+                const it = _c;
+                const img = yield index_service_1.assetsService.getOne({
+                    _id: it.assetsId,
+                });
+                images_main.push(img.path);
+                images_main_id.push(img.id);
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (!_g && !_a && (_b = main_1.return)) yield _b.call(main_1);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        try {
+            for (var _h = true, sub_1 = __asyncValues(sub), sub_1_1; sub_1_1 = yield sub_1.next(), _d = sub_1_1.done, !_d; _h = true) {
+                _f = sub_1_1.value;
+                _h = false;
+                const it = _f;
+                const img = yield index_service_1.assetsService.getOne({
+                    _id: it.assetsId,
+                });
+                images_sub.push(img.path);
+                images_sub_id.push(img.id);
+            }
+        }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        finally {
+            try {
+                if (!_h && !_d && (_e = sub_1.return)) yield _e.call(sub_1);
+            }
+            finally { if (e_4) throw e_4.error; }
+        }
+        res.json({
+            images_main,
+            images_sub,
+            images_main_id,
+            images_sub_id,
+        });
+    }
+});
+exports.getImage = getImage;
+const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (res.locals.ROLE.permission.includes("products-update")) {
+        req.body.updatedBy = res.locals.INFOR_USER.id;
+        const updateProduct = yield index_service_1.productService.update(req.params.id, req.body);
+        const updateProductAssets = yield index_service_1.productAssetsService.update(req.params.id, req.body);
+        const updateProductItem = yield index_service_1.productItemService.update(req.params.id, req.body.bien_the, res.locals.INFOR_USER.id);
+        res.json({
+            code: 200,
+        });
+    }
+    else {
+        res.status(503).json({
+            code: 503,
+        });
+    }
+});
+exports.updatePatch = updatePatch;
+const trashPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    yield products_model_1.default.updateOne({
+        _id: id,
+    }, {
+        deleted: true,
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.trashPatch = trashPatch;
+const changeStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield products_model_1.default.updateOne({
+        _id: req.params.id,
+    }, req.body);
+    res.json({
+        code: 200,
+    });
+});
+exports.changeStatus = changeStatus;
+const changeStatusMany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    req.body.id = req.body.id.map((id) => new mongodb_1.ObjectId(id));
+    if (req.body.status == "trash-product") {
+        yield products_model_1.default.updateMany({
+            _id: req.body.id,
+        }, {
+            deleted: true,
+        });
+    }
+    else if (req.body.status == "active" || req.body.status == "inactive") {
+        yield products_model_1.default.updateMany({
+            _id: req.body.id,
+        }, {
+            status: req.body.status,
+        });
+    }
+    res.json({
+        code: 200,
+    });
+});
+exports.changeStatusMany = changeStatusMany;

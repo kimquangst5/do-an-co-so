@@ -1,0 +1,5 @@
+mixin permission-data(roles, title, name, permission, className = '')
+    div(class=`px-2 py-1 grid grid-cols-${roles.length + 2} w-full font-bold` data-name = `${name}-${permission}`) 
+        div(class=`${className} col-span-2 text-[14px]`) #{title}
+        each it in roles
+            sl-checkbox(class=`text-center` value=it.id check-item checked = (it.permission.includes(`${name}-${permission}`)))

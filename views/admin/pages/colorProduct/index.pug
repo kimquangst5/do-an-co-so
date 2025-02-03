@@ -1,0 +1,33 @@
+extends ../../layouts/layouts.pug
+
+block header
+    h1 Màu sắc sản phẩm
+
+block css
+
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/colorProduct/index.js")
+
+block hb
+    sl-button(variant="primary", size="small" btn-create-color-product)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+    sl-button(variant="primary", size="small" btn-update-color-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.COLOR_PRODUCT.PATH}${ROUTERS.ADMIN.COLOR_PRODUCT.UPDATE}`)
+        sl-icon(slot="prefix", name="shield-check")
+        | Cập nhật
+
+
+block main
+    - if(listColor && listColor.length > 0)
+        each it in listColor
+            div(class=`` items-color-product = it.id) 
+                div(class=`flex w-full justify-between items-center`)
+                    sl-switch(checked = (it.status == 'active' ? true : false) value='status') Trạng thái
+                    sl-input(label="Tên màu" size="small" name="name" value=it.name)
+                    div(class=`flex gap-x-[20px] items-center`) 
+                        sl-input(label="Mã màu" size="small" disabled value=it.code)
+                        sl-color-picker(format="hex" size="small" label="Mã màu" name="code" value=it.code)
+                    sl-input(label="Đường dẫn" size="small" name="slug" value=it.slug )
+                    sl-icon(name="trash" class=`text-[red] cursor-pointer`)
+    

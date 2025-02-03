@@ -1,0 +1,31 @@
+extends ../../layouts/layouts.pug
+
+block header
+    h1 Kích thước sản phẩm
+
+block css
+
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/sizeProduct/index.js")
+
+block hb
+    sl-button(variant="primary", size="small" btn-create-size-product)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+    sl-button(variant="primary", size="small" btn-update-size-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.SIZE.PATH}${ROUTERS.ADMIN.SIZE.UPDATE}`)
+        sl-icon(slot="prefix", name="shield-check")
+        | Cập nhật
+
+
+block main
+    - if(listSize && listSize.length > 0)
+        each it in listSize
+            div(class=`` items-size-product = it.id) 
+                div(class=`flex w-full justify-between items-center`)
+                    sl-switch(checked = (it.status == 'active' ? true : false) value='status') Trạng thái
+                    sl-input(label="Kích thước" size="small" name="name" value=it.name)
+                    sl-input(label="Đường dẫn" size="small" name="slug" value=it.slug )
+                    sl-icon(name="trash" class=`text-[red] cursor-pointer`)
+
+        

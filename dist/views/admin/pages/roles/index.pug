@@ -1,0 +1,54 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/btn-redirect.mixin.pug
+
+block header
+    h1 Danh sách nhóm quyền
+
+block hb
+    +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.CREATE}`)
+    +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.PERMISSION}`, 'Phân quyền')
+    
+
+block css
+
+
+block script
+
+
+block main
+    - if(ROLE.permission.includes("roles-view"))
+        sl-details(summary="Danh sách nhóm quyền" open)
+            - if(roles && roles.length > 0)
+                table(class=`w-full`)
+                    thead
+                        tr
+                            th
+                                sl-checkbox
+                            th
+                                div(class=``) Tên nhóm quyền
+                            th
+                                div(class=``) Trạng thái
+                            th 
+                                div(class=``) Tạo bởi
+                    tbody
+                        each it in roles
+                            tr(class=`group`)
+                                td
+                                    sl-checkbox(class=`flex justify-center`)
+                                td(class=``)
+                                    div(class=`flex flex-col gap-y-[5px] justify-center`) 
+                                        div(class=`font-bold text-[18px] line-clamp-1` name-product) #{it.name}
+                                        div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[14px]`)
+                                            a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.UPDATE}/${it._id}`) Chỉnh sửa
+                                            button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}`) Xóa
+                                td
+                                    div(class=`flex justify-center items-center`)
+                                        - if(it.status == 'active')
+                                            sl-button(variant="success" size="small" pill) Hoạt động
+                                        - else if(it.status == 'inactive')
+                                            sl-button(variant="danger" size="small" pill) Tạm dừng
+                                td
+                                    div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                        sl-badge(variant="primary" pill) #{it.author}
+            - else
+                +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)

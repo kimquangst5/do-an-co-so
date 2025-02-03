@@ -1,0 +1,36 @@
+extends ../../layouts/layouts.pug
+
+block header
+    h1 Thêm tài khoản quản trị
+
+block css
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css" async)
+
+block script
+    script(type="module", src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js" async)
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/accounts/create.js")
+
+block hb
+    sl-button(variant="primary", size="small" btn-create-new-account = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.CREATE}`)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+
+
+block main
+    sl-details(summary="Thông tin cơ bản" open)
+        sl-input(label="Họ và tên" size="small" name="fullname" class=``)
+        - if(listRole && listRole.length > 0)
+            sl-select(label="Nhóm quyền" size="small" name="roles")
+                each it in listRole
+                    sl-option(value=it.id size="small")
+                        sl-icon(slot="prefix", name="person-gear")
+                        | #{it.name}
+                        sl-icon(slot="suffix", name="patch-check")
+            
+
+        sl-input(label="Tên đăng nhập" size="small"  name="usename")
+        sl-input(label="Email" size="small" type='email' name="email")
+        sl-input(label="Mật khẩu" type="password" password-toggle size="small" name="password")
+
+        

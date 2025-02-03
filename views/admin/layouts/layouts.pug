@@ -1,0 +1,49 @@
+doctype html
+html(lang="en")
+     head
+          title #{pageTitle}
+          meta(charset="utf-8")
+          meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+          meta(http-equiv="Content-Type" content="text/html; charset=utf-8")
+          meta(name="description", content=(pageDesc ? pageDesc : "Website bán quần áo hiện đại với giao diện thân thiện, dễ sử dụng ⭐-⭐-⭐ Khám phá các sản phẩm thời trang chất lượng cao cho mọi lứa tuổi."))
+          meta(name="keywords" content="bán quần áo, thời trang, mua sắm online, quần áo nam, quần áo nữ, thời trang hiện đại")
+          link(rel="canonical" href="")
+          link(rel="alternate" hreflang="vi" href="")
+          // Twitter Card data
+          meta(name="twitter:card" content="website")
+          meta(name="twitter:site" content="")
+          meta(name="twitter:title" content="Website Bán Quần Áo - Thời Trang Chất Lượng Cao, Chuyên Nghiệp, Chuẩn SEO")
+          meta(name="twitter:description" content="Khám phá các sản phẩm thời trang mới nhất và mua sắm dễ dàng trên website bán quần áo của chúng tôi.")
+          meta(name="twitter:image" content="https://cdn.daca.vn/media/anh-share/share-home.jpg")
+          // Open Graph data
+          meta(property="og:type" content="website")
+          meta(property="og:site_name" content="Website Bán Quần Áo")
+          meta(property="og:title" content="Website Bán Quần Áo - Thời Trang Chất Lượng Cao")
+          meta(property="og:url" content="")
+          meta(property="og:image" content="")
+          meta(property="og:description" content="Website bán quần áo với nhiều sản phẩm thời trang phong cách, chất lượng cao và giá cả hợp lý. Trải nghiệm mua sắm tiện lợi và an toàn ngay hôm nay!")
+          //- meta(http-equiv="x-dns-prefetch-control" content="on")
+          //- link(rel="dns-prefetch" href="")
+          link(href="https://www.postman.com/_ar-assets/images/favicon-1-16.png" rel="icon" type="image/png" sizes="16x16")
+          link(href="https://www.postman.com/_ar-assets/images/favicon-1-32.png" rel="icon" type="image/png" sizes="32x32")
+          link(href="https://www.postman.com/_ar-assets/images/favicon-1-48.png" rel="icon" type="image/png" sizes="48x48")
+          link(rel="stylesheet" href="/admin/css/style.css")
+          link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css")
+          block css
+          script(src="https://cdn.tailwindcss.com")
+          script(src="/tailwind.config.js")
+
+     body(class="font-main")
+          include ../partials/loader.pug
+
+          div(class=`flex h-screen overflow-y-auto`)
+               div(class=`h-full overflow-y-auto w-auto`)
+                    include ../partials/sider.pug
+               div(class=`h-full overflow-y-auto flex-1 bg-xam1`)
+                    include ../partials/header.pug
+                    div(class=`px-4 py-6 flex flex-col gap-y-[20px] [&>*]:bg-[white] [&>*]:rounded-[5px] [&>*]:p-3` parent) 
+                         block main
+
+     script(type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js")
+     block script
+     script(src="/admin/js/style.js")

@@ -162,6 +162,7 @@ comment()
 
 const addCart = () => {
      const btnAdd = document.querySelector('[add-cart]')
+     if (!btnAdd) return
      btnAdd.addEventListener('click', () => {
           const link = btnAdd.getAttribute('add-cart')
           if (!link) return
@@ -214,7 +215,8 @@ const addCart = () => {
                                    icon: "success",
                               })
                          );
-                         showAlertSuccess()
+                         const redirect = btnAdd.getAttribute('redirect')
+                         location.href = redirect
                     }
                })
 

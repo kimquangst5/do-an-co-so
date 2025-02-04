@@ -74,7 +74,7 @@ block main
                                                   i(class="fa-sharp fa-solid fa-plus")
                                    //- div(class="bg-[black] rounded-[62px] w-[400px] h-[52px] flex justify-center items-center")
                                         div(class="text-[#FFFFFF] text-[16px]") Thêm vào giỏ hàng
-                                   button(type="button" class="text-[#FFFFFF] text-[16px] bg-[black] rounded-[62px] w-[400px] h-[52px] flex justify-center items-center transition duration-150 ease-in-out focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-gray-800" data-twe-collapse-init data-twe-ripple-init add-cart = `${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.ADD}/${product.id}`) Thêm vào giỏ hàng
+                                   button(type="button" class="text-[#FFFFFF] text-[16px] bg-[black] rounded-[62px] w-[400px] h-[52px] flex justify-center items-center transition duration-150 ease-in-out focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-gray-800" data-twe-collapse-init data-twe-ripple-init add-cart = `${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.ADD}/${product.id}` redirect = (INFOR_CUSTOMER ? `${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.INDEX}/${INFOR_CUSTOMER.username}` : '')) Thêm vào giỏ hàng
 
 
 

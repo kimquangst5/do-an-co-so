@@ -5,6 +5,8 @@ import Customer from "../../models/customers.model";
 import ROUTERS from "../../constants/routes/index.routes";
 import axios from "axios";
 import OTP from "../../models/otp.model";
+import http from "http";
+
 require("dotenv").config();
 const login = async (req: Request, res: Response) => {
   res.render("client/pages/customers/login.pug", {
@@ -59,7 +61,6 @@ const loginPost = async (req: Request, res: Response) => {
       },
     ],
   });
-  console.log(customer);
 
   try {
     const user = jwt.verify(customer.token, process.env.JWT_SECRET);
@@ -95,12 +96,12 @@ const logout = async (req: Request, res: Response) => {
   res.redirect("/");
 };
 
-const CLIENT_ID =
-  "91971570522-1sov5kbjtvafvf6rch6biaffqi3a5br9.apps.googleusercontent.com";
-const CLIENT_SECRET = "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";
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 const loginGoogle = async (req: Request, res: Response) => {
-  const domain = req.protocol + "://" + req.headers.host;
+  const protocol = req.socket["encrypted"] ? "https" : "http";
+  const domain = protocol + "://" + req.headers.host;
   const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   // const url = `https://accounts.google.com/o/oauth2/v2/auth
   // ?client_id=${CLIENT_ID}
@@ -113,7 +114,8 @@ const loginGoogle = async (req: Request, res: Response) => {
 };
 
 const loginGoogleCallback = async (req: Request, res: Response) => {
-  const domain = req.protocol + "://" + req.headers.host;
+  const protocol = req.socket["encrypted"] ? "https" : "http";
+  const domain = protocol + "://" + req.headers.host;
   const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
 
   try {
@@ -205,8 +207,6 @@ const loginGoogleCallback = async (req: Request, res: Response) => {
         process.env.JWT_SECRET,
         { expiresIn: process.env.EXPIRES_IN_ACCOUNT_CUSTOMER }
       );
-      console.log(newCustomer.id);
-      console.log(token);
 
       await Customer.updateOne(
         {

@@ -65,7 +65,6 @@ const loginPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         ],
     });
-    console.log(customer);
     try {
         const user = jsonwebtoken_1.default.verify(customer.token, process.env.JWT_SECRET);
     }
@@ -93,10 +92,11 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.redirect("/");
 });
 exports.logout = logout;
-const CLIENT_ID = "91971570522-1sov5kbjtvafvf6rch6biaffqi3a5br9.apps.googleusercontent.com";
-const CLIENT_SECRET = "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";
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const domain = req.protocol + "://" + req.headers.host;
+    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
     res.redirect(url);
@@ -104,7 +104,8 @@ const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.loginGoogle = loginGoogle;
 const loginGoogleCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f;
-    const domain = req.protocol + "://" + req.headers.host;
+    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     try {
         const { code } = req.query;
@@ -166,8 +167,6 @@ const loginGoogleCallback = (req, res) => __awaiter(void 0, void 0, void 0, func
             const token = yield jsonwebtoken_1.default.sign({
                 id: newCustomer.id,
             }, process.env.JWT_SECRET, { expiresIn: process.env.EXPIRES_IN_ACCOUNT_CUSTOMER });
-            console.log(newCustomer.id);
-            console.log(token);
             yield customers_model_1.default.updateOne({
                 _id: newCustomer.id,
             }, {

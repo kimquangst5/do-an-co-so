@@ -111,8 +111,9 @@ const loginGoogle = async (req: Request, res: Response) => {
   // &scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read`;
 
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
+  console.log(REDIRECT_URI);
 
-  res.redirect(REDIRECT_URI);
+  res.redirect(url);
 };
 
 const loginGoogleCallback = async (req: Request, res: Response) => {

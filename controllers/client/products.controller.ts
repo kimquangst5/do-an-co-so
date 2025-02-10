@@ -7,8 +7,13 @@ import { ObjectId } from "mongodb";
 import ProductAssets from "../../models/productAssets.model";
 import Assets from "../../models/assets.model";
 import console from "console";
+import ROUTERS from "../../constants/routes/index.routes";
 
 const detail = async (req: Request, res: Response) => {
+  const protocol = req.socket["encrypted"] ? "https" : "http";
+  const domain = protocol + "://" + req.headers.host;
+  // const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
+  const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   const { slug } = req.params;
   const product = await Product.findOne({
     slug: slug,
@@ -51,6 +56,7 @@ const detail = async (req: Request, res: Response) => {
   res.render("client/pages/products/detail.pug", {
     pageTitle: product.name,
     product: product,
+    REDIRECT_URI: REDIRECT_URI,
   });
 };
 

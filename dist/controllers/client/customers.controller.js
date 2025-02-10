@@ -99,7 +99,8 @@ const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
-    res.redirect(REDIRECT_URI);
+    console.log(REDIRECT_URI);
+    res.redirect(url);
 });
 exports.loginGoogle = loginGoogle;
 const loginGoogleCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

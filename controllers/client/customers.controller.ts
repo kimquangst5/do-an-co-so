@@ -100,7 +100,9 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 const loginGoogle = async (req: Request, res: Response) => {
-  const protocol = req.socket["encrypted"] ? "https" : "http";
+  const protocol =
+    req.headers["x-forwarded-proto"] ||
+    (req.socket["encrypted"] ? "https" : "http");
   const domain = protocol + "://" + req.headers.host;
   // const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
@@ -111,8 +113,6 @@ const loginGoogle = async (req: Request, res: Response) => {
   // &scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read`;
 
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
-  console.log(REDIRECT_URI);
-
   res.redirect(url);
 };
 

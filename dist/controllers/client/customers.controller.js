@@ -95,11 +95,11 @@ exports.logout = logout;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const protocol = req.headers["x-forwarded-proto"] ||
+        (req.socket["encrypted"] ? "https" : "http");
     const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
-    console.log(REDIRECT_URI);
     res.redirect(url);
 });
 exports.loginGoogle = loginGoogle;

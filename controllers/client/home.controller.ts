@@ -5,9 +5,9 @@ import Assets from "../../models/assets.model";
 import ProductItem from "../../models/product-items.model";
 
 const index = async (req: Request, res: Response) => {
-  const protocol = req.socket["encrypted"] ? "https" : "http";
-  const domain = protocol + "://" + req.headers.host;
-  console.log(domain);
+  // const protocol = req.socket["encrypted"] ? "https" : "http";
+  // const domain = protocol + "://" + req;
+  // console.log(req);
 
   const products = await Product.find({
     deleted: false,

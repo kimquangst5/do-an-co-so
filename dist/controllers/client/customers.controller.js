@@ -105,7 +105,8 @@ const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.loginGoogle = loginGoogle;
 const loginGoogleCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f;
-    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const protocol = req.headers["x-forwarded-proto"] ||
+        (req.socket["encrypted"] ? "https" : "http");
     const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     try {

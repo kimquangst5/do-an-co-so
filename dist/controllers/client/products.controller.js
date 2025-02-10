@@ -30,7 +30,8 @@ const assets_model_1 = __importDefault(require("../../models/assets.model"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c, _d, e_2, _e, _f;
-    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const protocol = req.headers["x-forwarded-proto"] ||
+        (req.socket["encrypted"] ? "https" : "http");
     const domain = protocol + "://" + req.headers.host;
     const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     const { slug } = req.params;

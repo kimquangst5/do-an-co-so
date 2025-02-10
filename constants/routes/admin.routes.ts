@@ -1,0 +1,86 @@
+import { encodeRouterPathsSync } from "../../helpers/encodeRouterPaths";
+
+export interface GeneralRoutes {
+  PATH: string;
+  INDEX: string;
+  CREATE?: string;
+  READ?: string;
+  UPDATE?: string;
+  TRASH?: string;
+  DELETE?: string;
+}
+
+interface Roles extends GeneralRoutes {
+  PERMISSION?: string;
+}
+
+interface Product extends GeneralRoutes {
+  CHANGE_STATUS?: string;
+  CHANGE_STATUS_MANY_PRODUCT?: string;
+}
+
+export interface RouterAdmin {
+  AUTH: string;
+  LOGIN: string;
+  PRODUCT?: Product;
+  ROLES?: Roles;
+  ACCOUNT?: GeneralRoutes;
+  COLOR_PRODUCT?: GeneralRoutes;
+  SIZE?: GeneralRoutes;
+  PRODUCT_CATEGORY?: GeneralRoutes;
+}
+
+const ROUTER_ADMIN: RouterAdmin = {
+  AUTH: process.env.ADMIN,
+  LOGIN: "/Đăng_nhập_quản_trị",
+  PRODUCT: {
+    PATH: "/Sản_phẩm",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_sản_phẩm",
+    READ: "/Chi_tiết_sản_phẩm",
+    UPDATE: "/Cập_nhật_sản_phẩm",
+    CHANGE_STATUS: "/Cập_nhật_trạng_thái_sản_phẩm",
+    CHANGE_STATUS_MANY_PRODUCT: "/Cập_nhật_trạng_thái_nhiều_sản_phẩm",
+    DELETE: "/Xóa_sản_phẩm",
+    TRASH: "/Thùng_rác",
+  },
+  PRODUCT_CATEGORY: {
+    PATH: "/Danh_mục_sản_phẩm",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_mới",
+    UPDATE: "/Cập_nhật_danh_mục",
+    TRASH: "/Thùng_rác",
+  },
+  ROLES: {
+    PATH: "/Nhóm_quyền",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_nhóm_quyền",
+    UPDATE: "/Cập_nhật",
+    PERMISSION: "/Phân_quyền",
+  },
+  ACCOUNT: {
+    PATH: "/Tài_khoản",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_tài_khoản",
+  },
+  COLOR_PRODUCT: {
+    PATH: "/Màu_sản_phẩm",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_màu_sản_phẩm",
+    READ: "/detail",
+    UPDATE: "/update",
+    DELETE: "/delete",
+  },
+  SIZE: {
+    PATH: "/Kích_thước_sản_phẩm",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_kích_thước_sản_phẩm",
+    READ: "/detail",
+    UPDATE: "/update",
+    DELETE: "/delete",
+  },
+};
+
+const ENCODED_ROUTER_ADMIN = encodeRouterPathsSync(ROUTER_ADMIN);
+
+export default ENCODED_ROUTER_ADMIN;

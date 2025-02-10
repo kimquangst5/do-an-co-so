@@ -1,0 +1,310 @@
+import { NextFunction, Request, Response } from "express";
+import argon2 from "argon2";
+import Customer from "../../models/customers.model";
+import OTP from "../../models/otp.model";
+require("dotenv").config();
+
+const register = async (req: Request, res: Response, next: NextFunction) => {
+  const data = req.body;
+  if (!data.fullname) {
+    res.status(400).json({
+      message: "Chưa nhập Họ tên!",
+    });
+    return;
+  }
+  if (data.fullname.length < 6) {
+    res.status(400).json({
+      message: "Họ và tên quá ngắn",
+    });
+    return;
+  }
+  if (!data.username) {
+    res.status(400).json({
+      message: "Chưa nhập tên đăng nhập!",
+    });
+    return;
+  }
+  if (data.username.length <= 8) {
+    res.status(400).json({
+      message: "Tên đăng nhập quá ngắn",
+    });
+    return;
+  }
+  if (!data.email) {
+    res.status(400).json({
+      message: "Chưa nhập email!",
+    });
+    return;
+  }
+  const emailRegex =
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
+  if (emailRegex.test(data.email) == false) {
+    res.status(400).json({
+      message: "Email không hợp lệ!",
+    });
+    return;
+  }
+
+  if (!data.password) {
+    res.status(400).json({
+      message: "Chưa nhập mật khẩu!",
+    });
+    return;
+  }
+
+  const passwordRegex =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  if (passwordRegex.test(data.password) == false) {
+    res.status(400).json({
+      message:
+        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt",
+    });
+    return;
+  }
+
+  if (!data.confirmPassword) {
+    res.status(400).json({
+      message: "Chưa nhập xác nhận mật khẩu!",
+    });
+    return;
+  }
+
+  if (data.password != data.confirmPassword) {
+    res.status(400).json({
+      message: "MK và xác nhận MK không giống!",
+    });
+    return;
+  }
+
+  const checkUsername = await Customer.findOne({
+    username: data.username,
+  });
+  if (checkUsername) {
+    res.status(400).json({
+      message: "Tên đăng nhập đã tồn tại!",
+    });
+    return;
+  }
+
+  const checkEmail = await Customer.findOne({
+    email: data.email,
+  });
+  if (checkEmail) {
+    res.status(400).json({
+      message: "Email đã tồn tại!",
+    });
+    return;
+  }
+
+  next();
+};
+
+const login = async (req: Request, res: Response, next: NextFunction) => {
+  const data = req.body;
+  if (!data.username) {
+    res.status(400).json({
+      message: "Chưa nhập tên đăng nhập hoặc email!",
+    });
+    return;
+  }
+  if (data.username.length <= 8) {
+    res.status(400).json({
+      message: "Tên đăng nhập quá ngắn",
+    });
+    return;
+  }
+  if (!data.password) {
+    res.status(400).json({
+      message: "Chưa nhập mật khẩu!",
+    });
+    return;
+  }
+  const passwordRegex =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  if (passwordRegex.test(data.password) == false) {
+    res.status(400).json({
+      message:
+        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt",
+    });
+    return;
+  }
+  const customer = await Customer.findOne({
+    $or: [
+      {
+        email: req.body.username,
+      },
+      {
+        username: req.body.username,
+      },
+    ],
+  });
+  if (!customer) {
+    res.status(400).json({
+      message: "Tên đăng nhập chưa đúng!",
+    });
+    return;
+  } else {
+    if (!customer.password) {
+      res.status(400).json({
+        message: "Vui lòng đăng nhập bằng Google!",
+      });
+      return;
+    } else {
+      const checkPass = await argon2.verify(
+        customer.password,
+        req.body.password
+      );
+      console.log(checkPass);
+      if (checkPass == false) {
+        res.status(400).json({
+          message: "Mật khẩu chưa đúng!",
+        });
+        return;
+      } else next();
+    }
+  }
+};
+
+const forgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const data = req.body;
+  if (!data.email) {
+    res.status(400).json({
+      message: "Chưa điền email!",
+    });
+    return;
+  }
+  const emailRegex =
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
+  if (emailRegex.test(data.email) == false) {
+    res.status(400).json({
+      message: "Email không hợp lệ!",
+    });
+    return;
+  }
+
+  const check = await Customer.findOne({
+    email: data.email,
+  });
+  if (!check) {
+    res.status(400).json({
+      message: "Email chưa được đăng ký!",
+    });
+    return;
+  }
+  next();
+};
+const forgotPasswordCheckOtp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log(req.body);
+  const { email, code } = req.body;
+  if (!email) {
+    res.status(400).json({
+      message: "Chưa điền email!",
+    });
+    return;
+  }
+  if (!code) {
+    res.status(400).json({
+      message: "Chưa điền mã OTP!",
+    });
+    return;
+  }
+  if (code.length != 6) {
+    res.status(400).json({
+      message: `Mã OTP thiếu ${6 - code.length} ký tự`,
+    });
+    return;
+  }
+  const customer = await Customer.findOne({
+    email: email,
+  });
+  if (!customer) {
+    res.status(400).json({
+      message: `Email chưa được đăng ký!`,
+    });
+    return;
+  }
+  const otp = await OTP.findOne({
+    email: email,
+  });
+  if (!otp) {
+    res.status(400).json({
+      message: `Mã OTP đã hết hiệu lực!`,
+    });
+    return;
+  } else {
+    if (otp.code != parseInt(code)) {
+      res.status(400).json({
+        message: `Mã OTP không đúng!`,
+      });
+      return;
+    } else next();
+  }
+};
+
+const forgotPasswordNewPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password, confirmPassword } = req.body;
+  if (!email) {
+    res.status(400).json({
+      message: `Chưa nhập email!`,
+    });
+    return;
+  }
+  if (!password) {
+    res.status(400).json({
+      message: `Chưa nhập mật khẩu!`,
+    });
+    return;
+  }
+  if (!confirmPassword) {
+    res.status(400).json({
+      message: `Chưa nhập xác nhận mật khẩu!`,
+    });
+    return;
+  }
+  const passwordRegex =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+  if (passwordRegex.test(password) == false) {
+    res.status(400).json({
+      message:
+        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt",
+    });
+    return;
+  }
+  if (password != confirmPassword) {
+    res.status(400).json({
+      message: `MK và xác nhận MK không giống!`,
+    });
+    return;
+  }
+  const customer = await Customer.findOne({
+    email: email,
+  });
+  if (!customer) {
+    res.status(400).json({
+      message: `Tài khoản chưa được đăng ký!`,
+    });
+    return;
+  }
+  next();
+};
+export {
+  register,
+  login,
+  forgotPassword,
+  forgotPasswordCheckOtp,
+  forgotPasswordNewPassword,
+};

@@ -19,17 +19,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.review = exports.getItem = exports.getSize = exports.detail = void 0;
+exports.getItem = exports.getSize = exports.detail = void 0;
 const products_model_1 = __importDefault(require("../../models/products.model"));
 const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.model"));
 const product_items_model_1 = __importDefault(require("../../models/product-items.model"));
 const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.model"));
+const mongodb_1 = require("mongodb");
 const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
 const assets_model_1 = __importDefault(require("../../models/assets.model"));
-const reviews_model_1 = __importDefault(require("../../models/reviews.model"));
-const mongodb_1 = require("mongodb");
 const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, e_1, _b, _c, _d, e_2, _e, _f, _g, e_3, _h, _j;
+    var _a, e_1, _b, _c, _d, e_2, _e, _f;
     const { slug } = req.params;
     const product = yield products_model_1.default.findOne({
         slug: slug,
@@ -41,128 +40,98 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
     product["color"] = [];
     product["size"] = [];
+    product["images"] = [];
     try {
-        for (var _k = true, colors_1 = __asyncValues(colors), colors_1_1; colors_1_1 = yield colors_1.next(), _a = colors_1_1.done, !_a; _k = true) {
+        for (var _g = true, colors_1 = __asyncValues(colors), colors_1_1; colors_1_1 = yield colors_1.next(), _a = colors_1_1.done, !_a; _g = true) {
             _c = colors_1_1.value;
-            _k = false;
+            _g = false;
             const it = _c;
             const color = yield colorProduct_model_1.default.findOne({
                 _id: it.color,
             });
-            if (!product["color"].find((it) => it.id == color.id))
+            if (!product["color"].find((co) => co.id == color.id))
                 product["color"].push(color);
             const size = yield sizeProduct_model_1.default.findOne({
                 _id: it.size,
             });
-            if (!product["size"].find((sizeItem) => sizeItem.id == size.id))
+            if (size && !product["size"].find((siz) => siz.id == size.id))
                 product["size"].push(size);
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
     finally {
         try {
-            if (!_k && !_a && (_b = colors_1.return)) yield _b.call(colors_1);
+            if (!_g && !_a && (_b = colors_1.return)) yield _b.call(colors_1);
         }
         finally { if (e_1) throw e_1.error; }
     }
-    product["images"] = [];
-    const productAssets = yield productAssets_model_1.default.find({
-        productId: product.id
+    const productsAssets = yield productAssets_model_1.default.find({
+        productId: product.id,
+    }).sort({
+        type: 1,
     });
-    const img_main = productAssets.filter(it => it.type == 'main');
-    const img_sub = productAssets.filter(it => it.type == 'sub');
     try {
-        for (var _l = true, img_main_1 = __asyncValues(img_main), img_main_1_1; img_main_1_1 = yield img_main_1.next(), _d = img_main_1_1.done, !_d; _l = true) {
-            _f = img_main_1_1.value;
-            _l = false;
-            const image = _f;
-            const images = yield assets_model_1.default.findOne({
-                _id: image['assetsId']
+        for (var _h = true, productsAssets_1 = __asyncValues(productsAssets), productsAssets_1_1; productsAssets_1_1 = yield productsAssets_1.next(), _d = productsAssets_1_1.done, !_d; _h = true) {
+            _f = productsAssets_1_1.value;
+            _h = false;
+            const it = _f;
+            const assets = yield assets_model_1.default.findOne({
+                _id: it.assetsId,
             });
-            product["images"].push(images);
+            product["images"].push(assets);
         }
     }
     catch (e_2_1) { e_2 = { error: e_2_1 }; }
     finally {
         try {
-            if (!_l && !_d && (_e = img_main_1.return)) yield _e.call(img_main_1);
+            if (!_h && !_d && (_e = productsAssets_1.return)) yield _e.call(productsAssets_1);
         }
         finally { if (e_2) throw e_2.error; }
     }
-    try {
-        for (var _m = true, img_sub_1 = __asyncValues(img_sub), img_sub_1_1; img_sub_1_1 = yield img_sub_1.next(), _g = img_sub_1_1.done, !_g; _m = true) {
-            _j = img_sub_1_1.value;
-            _m = false;
-            const image = _j;
-            const images = yield assets_model_1.default.findOne({
-                _id: image['assetsId']
-            });
-            product["images"].push(images);
-        }
-    }
-    catch (e_3_1) { e_3 = { error: e_3_1 }; }
-    finally {
-        try {
-            if (!_m && !_g && (_h = img_sub_1.return)) yield _h.call(img_sub_1);
-        }
-        finally { if (e_3) throw e_3.error; }
-    }
-    const reviews = res.locals.INFOR_CUSTOMER ? yield reviews_model_1.default.find({
-        product_id: product.id,
-        customer_id: res.locals.INFOR_CUSTOMER.id,
-    }) : [];
     res.render("client/pages/products/detail.pug", {
         pageTitle: product.name,
         product: product,
-        reviews: reviews
     });
 });
 exports.detail = detail;
 const getSize = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { slug } = req.params;
     const product = yield products_model_1.default.findOne({
-        slug: slug
-    }).select('_id');
-    const listItem = yield product_items_model_1.default.find({
-        productId: product.id,
-        color: req.body.color,
+        slug: slug,
     });
-    const listSizes = yield listItem.map(it => String(it.size));
+    const listItems = yield product_items_model_1.default.find({
+        productId: new mongodb_1.ObjectId(product.id),
+        color: new mongodb_1.ObjectId(req.body.color),
+        status: "active",
+    });
+    const listSizes = [];
+    listItems.forEach((it) => {
+        if (!listSizes.find((size) => size == it.size.toString())) {
+            listSizes.push(it.size.toString());
+        }
+    });
     res.json({
         code: 200,
-        listSizes
+        listSizes,
     });
 });
 exports.getSize = getSize;
 const getItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { color, size } = req.body;
     const { slug } = req.params;
     const product = yield products_model_1.default.findOne({
-        slug: slug
+        slug: slug,
     });
-    const productItems = yield product_items_model_1.default.findOne({
-        productId: product.id,
-        color: req.body.color,
-        size: req.body.size,
+    const listItems = yield product_items_model_1.default.findOne({
+        productId: new mongodb_1.ObjectId(product.id),
+        color: new mongodb_1.ObjectId(color),
+        size: new mongodb_1.ObjectId(size),
     }).lean();
-    productItems['priceNew'] = Math.ceil(productItems.price - productItems.price * (productItems.discount / 100));
-    const productItem = Object.assign({}, productItems);
+    const productItem = Object.assign({}, listItems);
+    productItem["priceNew"] = Math.ceil(productItem.price - productItem.price * (productItem.discount / 100));
     res.json({
         code: 200,
-        productItem
+        productItem: productItem,
     });
 });
 exports.getItem = getItem;
-const review = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const reviews = new reviews_model_1.default({
-        product_id: new mongodb_1.ObjectId(id),
-        customer_id: new mongodb_1.ObjectId(res.locals.INFOR_CUSTOMER.id),
-        rating: parseInt(req.body.rating),
-        content: req.body.content
-    });
-    yield reviews.save();
-    res.json({
-        code: 200
-    });
-});
-exports.review = review;

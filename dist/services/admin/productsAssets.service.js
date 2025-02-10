@@ -23,7 +23,6 @@ exports.update = exports.create = exports.get = void 0;
 const mongodb_1 = require("mongodb");
 const enum_1 = require("../../constants/enum");
 const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
-const console_1 = __importDefault(require("console"));
 const get = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const listProAsset = yield productAssets_model_1.default.find(query);
     return listProAsset;
@@ -83,28 +82,19 @@ const create = (productId, data) => __awaiter(void 0, void 0, void 0, function* 
 exports.create = create;
 const update = (productId, data) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_3, _b, _c, _d, e_4, _e, _f;
-    yield productAssets_model_1.default.deleteMany({
-        productId: productId,
-        assetsId: { $nin: JSON.parse(data.images_main_id) },
-        type: enum_1.TYPE_IMAGE.MAIN,
-    });
-    yield productAssets_model_1.default.deleteMany({
-        productId: productId,
-        assetsId: { $nin: JSON.parse(data.images_sub_id) },
-        type: enum_1.TYPE_IMAGE.SUB,
-    });
-    console_1.default.log(data);
     if (data.images_main && data.images_main.length > 0) {
         const result = [];
+        let indexMain = 1;
         try {
-            for (var _g = true, _h = __asyncValues(data.images_main), _j; _j = yield _h.next(), _a = _j.done, !_a; _g = true) {
+            for (var _g = true, _h = __asyncValues(data.images_main.entries()), _j; _j = yield _h.next(), _a = _j.done, !_a; _g = true) {
                 _c = _j.value;
                 _g = false;
-                const it = _c;
+                const [index, it] = _c;
                 const data = {
                     productId: new mongodb_1.ObjectId(productId),
                     assetsId: new mongodb_1.ObjectId(it.id),
                     type: enum_1.TYPE_IMAGE.MAIN,
+                    position: index + 1
                 };
                 result.push(data);
             }
@@ -121,14 +111,15 @@ const update = (productId, data) => __awaiter(void 0, void 0, void 0, function* 
     if (data.images_sub && data.images_sub.length > 0) {
         const result = [];
         try {
-            for (var _k = true, _l = __asyncValues(data.images_sub), _m; _m = yield _l.next(), _d = _m.done, !_d; _k = true) {
+            for (var _k = true, _l = __asyncValues(data.images_sub.entries()), _m; _m = yield _l.next(), _d = _m.done, !_d; _k = true) {
                 _f = _m.value;
                 _k = false;
-                const it = _f;
+                const [index, it] = _f;
                 const data = {
                     productId: new mongodb_1.ObjectId(productId),
                     assetsId: new mongodb_1.ObjectId(it.id),
                     type: enum_1.TYPE_IMAGE.SUB,
+                    position: index + 1
                 };
                 result.push(data);
             }

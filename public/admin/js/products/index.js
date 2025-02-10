@@ -189,3 +189,38 @@ const changeStatusMany = async () => {
 };
 
 changeStatusMany();
+
+const filterStatus = () => {
+     const select = document.querySelector('sl-select[filter-status]')
+
+     select.addEventListener('sl-change', () => {
+          const url = new URL(location.href)
+          if (select.value != '') url.searchParams.set('trang_thai', select.value)
+          else url.searchParams.delete('trang_thai')
+          location.href = url.href
+
+     })
+     const url = new URL(location.href)
+     select.defaultValue = url.searchParams.get('trang_thai')
+
+}
+filterStatus()
+
+const searchProduct = () => {
+     const form = document.querySelector('[search-product]')
+     form.addEventListener('submit', (event) => {
+          event.preventDefault()
+          console.log(event.srcElement.children[0].value)
+          const content = event.srcElement.children[0].value
+          const url = new URL(location.href)
+          if (content != '') url.searchParams.set('tim_kiem', content)
+          else url.searchParams.delete('tim_kiem')
+          location.href = url.href
+     })
+     const url = new URL(location.href)
+
+     const input = document.querySelector('[search-product] sl-input')
+     input.value = url.searchParams.get('tim_kiem')
+
+}
+searchProduct()

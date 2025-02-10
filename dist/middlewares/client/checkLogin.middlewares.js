@@ -16,6 +16,9 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (req.cookies["alert-success"] == "xoa-cookie") {
+            res.clearCookie("alert-success");
+        }
         if (req.cookies.tokenCustomer) {
             const user = jsonwebtoken_1.default.verify(req.cookies.tokenCustomer, process.env.JWT_SECRET);
             const INFOR_USER = yield customers_model_1.default.findById({ _id: user.id }).select("-token -password");
@@ -23,7 +26,7 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                 res.locals.INFOR_CUSTOMER = INFOR_USER;
             }
             else {
-                res.clearCookie('tokenCustomer');
+                res.clearCookie("tokenCustomer");
             }
             next();
         }
@@ -31,7 +34,7 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             next();
     }
     catch (error) {
-        res.clearCookie('tokenCustomer');
+        res.clearCookie("tokenCustomer");
         next();
     }
 });

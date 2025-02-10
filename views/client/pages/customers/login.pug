@@ -1,7 +1,6 @@
 extends ../../layouts/layouts.pug
 
 block css
-     link(rel="stylesheet" href="/client/css/home/index.css")
 block script
      script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
      script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
@@ -13,4 +12,18 @@ block main
                div(class=`w-1/2 mx-auto flex flex-col gap-y-[20px]`) 
                     sl-input(label = 'Tên đăng nhập hoặc email' name='username')
                     sl-input(type='password' label = 'Mật khẩu' name='password' password-toggle clearable oncopy="return false" oncut="return false" onpaste="return false" onselectstart="return false" ondragstart="return false" ondrop="return false")
+
+                    div(class=`flex flex-col gap-y-[5px]`) 
+                         div(class=`flex items-center gap-x-[5px]`) 
+                              div(class=`italic text-[#677279] text-[12px]`) Khách hàng mới? 
+                              a(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.REGISTER}` class=`italic text-[#ff0000] text-[12px]`) Tạo tài khoản
+                         div(class=`flex items-center gap-x-[5px]`) 
+                              div(class=`italic text-[#677279] text-[12px]`) Quên mật khẩu?
+                              a(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.FORGOT_PASSWORD}` class=`italic text-[#ff0000] text-[12px]`) Khôi phục mật khẩu
+
+                    div(class=`text-[black]/50 text-center`) Hoặc
+                    div(class=`flex items-center justify-center gap-x-[10px]`)
+                         sl-tooltip(content="Đăng nhập bằng Google")
+                              a(href = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE}`)
+                                   sl-icon(name="google")
                     sl-button(variant="primary" btn-login = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.LOGIN}`) Đăng nhập

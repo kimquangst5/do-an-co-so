@@ -63,6 +63,7 @@ const update = (productId, bien_the, userId) => __awaiter(void 0, void 0, void 0
             const it = _c;
             it.color = new mongodb_1.ObjectId(it.color);
             it.size = new mongodb_1.ObjectId(it.size);
+            it.productId = new mongodb_1.ObjectId(productId);
             if (it.id) {
                 yield product_items_model_1.default.updateOne({
                     _id: it.id,

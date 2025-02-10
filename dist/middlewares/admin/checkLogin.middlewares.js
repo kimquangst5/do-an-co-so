@@ -18,6 +18,66 @@ const accounts_model_1 = __importDefault(require("../../models/accounts.model"))
 const roles_models_1 = __importDefault(require("../../models/roles.models"));
 const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const siderArray = [
+            {
+                name: "Tổng quan",
+                icon: "grid",
+            },
+            {
+                name: "Bài viết",
+                icon: "box",
+                childrent: [
+                    {
+                        name: "Thêm bài viết",
+                        icon: "plus-circle",
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                    },
+                    {
+                        name: "Danh mục",
+                        icon: "columns-gap",
+                    }
+                ]
+            },
+            {
+                name: "Media",
+                icon: "image",
+            },
+            {
+                name: "Sản phẩm",
+                icon: "box",
+                childrent: [
+                    {
+                        name: "Thêm sản phẩm",
+                        icon: "plus-circle",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.CREATE}`
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.INDEX}`
+                    },
+                    {
+                        name: "Danh mục",
+                        icon: "columns-gap",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.PATH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.INDEX}`
+                    },
+                    {
+                        name: "Màu sắc",
+                        icon: "palette",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.PATH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.INDEX}`
+                    },
+                    {
+                        name: "Kích thước",
+                        icon: "rulers",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.SIZE.PATH}${index_routes_1.default.ADMIN.SIZE.INDEX}`
+                    }
+                ]
+            },
+        ];
+        res.locals.siderArray = siderArray;
         if (!req.cookies.token) {
             localStorage.setItem("alert-error", JSON.stringify({
                 icon: "error",

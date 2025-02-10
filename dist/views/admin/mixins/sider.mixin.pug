@@ -1,0 +1,16 @@
+
+mixin sider-mixin(array)
+     ul
+          each it in array
+               - if(!it.childrent)
+                    li(class=`hover:bg-[#1A1825] flex gap-x-[10px] hover:text-[white] `)
+                         a(class=`active:text-[white] active:bg-[#1A1825] transition duration-150 ease-in-out focus:bg-primary-accent-300 focus:shadow-primary-2` data-twe-ripple-init, href = (it.link ? it.link : '#'))
+                              sl-icon(name=it.icon class=``)
+                              | #{it.name}
+               - else
+                    li
+                         details()
+                              summary(class=`hover:bg-[#1A1825] hover:text-[white] after:text-[#373641]`)
+                                   sl-icon(name='box' class=`active:text-[#5277FF]`)
+                                   | #{it.name}
+                              +sider-mixin(it.childrent)

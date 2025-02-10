@@ -25,22 +25,64 @@ const previewImageSub = new FileUploadWithPreview.FileUploadWithPreview(
           accept: "image/*",
      }
 );
-const setCookie = (name, value, days) => {
-     const expires = days ?
-          `expires=${new Date(
-        Date.now() + days * 24 * 60 * 60 * 1000
-      ).toUTCString()};` :
-          "";
-     document.cookie = `${name}=${value}; ${expires}`;
-};
-axios.get(location.pathname + "/getImage").then((res) => {
-     if (res.data.images_main && res.data.images_sub) {
-          previewImageMain.addImagesFromPath(res.data.images_main);
-          previewImageSub.addImagesFromPath(res.data.images_sub);
-          setCookie("images_main", JSON.stringify(res.data.images_main_id));
-          setCookie("images_sub", JSON.stringify(res.data.images_sub_id));
-     }
-});
+// const setCookie = (name, value, days) => {
+//      const expires = days ?
+//           `expires=${new Date(
+//         Date.now() + days * 24 * 60 * 60 * 1000
+//       ).toUTCString()};` :
+//           "";
+//      document.cookie = `${name}=${value}; ${expires}`;
+// };
+setTimeout(() => {
+     axios.get(location.pathname + "/getImage").then(async (res) => {
+          if (res.data.images_main && res.data.images_sub) {
+
+               const addPath = async (array, preview) => {
+                    for await (const path of array) {
+                         try {
+                              const defaultType = 'image/jpeg';
+                              const response = await fetch(path, {
+                                   mode: 'cors'
+                              });
+                              const blob = await response.blob();
+                              const file = new File([blob], 'preset-file', {
+                                   type: blob.type || defaultType,
+                              });
+                              preview.addFiles([file]);
+                         } catch (error) {
+                              if (error instanceof Error) {
+                                   console.warn(`${error.message.toString()}`);
+                              }
+
+                              console.warn('Image cannot be added to the cachedFileArray.');
+                         }
+                    }
+
+               }
+               await addPath(res.data.images_main, previewImageMain)
+               await addPath(res.data.images_sub, previewImageSub)
+
+               async function loadImages(preview, imageUrls) {
+                    // setTimeout(async () => {
+                    //      for (const url of imageUrls) {
+                    //           console.log(url);
+
+                    //           await preview.addImagesFromPath([url]);
+                    //      }
+                    // }, 1000);
+               }
+               // loadImages(previewImageMain, res.data.images_main)
+               // loadImages(previewImageSub, res.data.images_sub)
+
+               // previewImageMain.addImagesFromPath(res.data.images_main);
+               // previewImageSub.addImagesFromPath(res.data.images_sub);
+               // setCookie("images_main", JSON.stringify(res.data.images_main_id));
+               // setCookie("images_sub", JSON.stringify(res.data.images_sub_id));
+          }
+     });
+}, 0);
+
+
 
 window.addEventListener(
      FileUploadWithPreview.Events.IMAGE_MULTI_ITEM_CLICKED,
@@ -62,36 +104,36 @@ window.addEventListener(
           viewer.show();
      }
 );
-const getCookie = (cookieName) => {
-     // Tách chuỗi thành một mảng các cặp name/value
-     let cookieArray = document.cookie.split("; ");
-     // Chuyển name/value từ dạng string thành object
-     cookieArray = cookieArray.map((item) => {
-          item = item.split("=");
-          return {
-               name: item[0],
-               value: item[1],
-          };
-     });
-     // Lấy ra cookie đang cần tìm
-     const cookie = cookieArray.find((item) => {
-          return item.name === cookieName;
-     });
+// const getCookie = (cookieName) => {
+//      // Tách chuỗi thành một mảng các cặp name/value
+//      let cookieArray = document.cookie.split("; ");
+//      // Chuyển name/value từ dạng string thành object
+//      cookieArray = cookieArray.map((item) => {
+//           item = item.split("=");
+//           return {
+//                name: item[0],
+//                value: item[1],
+//           };
+//      });
+//      // Lấy ra cookie đang cần tìm
+//      const cookie = cookieArray.find((item) => {
+//           return item.name === cookieName;
+//      });
 
-     return cookie ? cookie.value : null;
-};
-window.addEventListener(FileUploadWithPreview.Events.IMAGE_DELETED, (e) => {
-     if (e.detail.uploadId == "upload-image-preview-main") {
-          const main = JSON.parse(getCookie("images_main"));
-          main.splice(e.detail.index, 1);
-          setCookie("images_main", JSON.stringify(main));
-     }
-     if (e.detail.uploadId == "upload-image-preview-sub") {
-          const sub = JSON.parse(getCookie("images_sub"));
-          sub.splice(e.detail.index, 1);
-          setCookie("images_sub", JSON.stringify(sub));
-     }
-});
+//      return cookie ? cookie.value : null;
+// };
+// window.addEventListener(FileUploadWithPreview.Events.IMAGE_DELETED, (e) => {
+//      if (e.detail.uploadId == "upload-image-preview-main") {
+//           const main = JSON.parse(getCookie("images_main"));
+//           main.splice(e.detail.index, 1);
+//           setCookie("images_main", JSON.stringify(main));
+//      }
+//      if (e.detail.uploadId == "upload-image-preview-sub") {
+//           const sub = JSON.parse(getCookie("images_sub"));
+//           sub.splice(e.detail.index, 1);
+//           setCookie("images_sub", JSON.stringify(sub));
+//      }
+// });
 
 const BAT_SU_KIEN_THAY_DOI_GIA = () => {
      const listCol = document.querySelectorAll("[parent-variant] tr");
@@ -131,14 +173,16 @@ const main = async () => {
           const formData = new FormData();
 
           previewImageMain.cachedFileArray.forEach((it, index) => {
-               if (index >= JSON.parse(getCookie("images_main")).length) {
-                    formData.append("images_main", it);
-               }
+               formData.append("images_main", it);
+               // if (index >= JSON.parse(getCookie("images_main")).length) {
+               //      formData.append("images_main", it);
+               // }
           });
           previewImageSub.cachedFileArray.forEach((it, index) => {
-               if (index >= JSON.parse(getCookie("images_sub")).length) {
-                    formData.append("images_sub", it);
-               }
+               formData.append("images_sub", it);
+               // if (index >= JSON.parse(getCookie("images_sub")).length) {
+               //      formData.append("images_sub", it);
+               // }
           });
 
           const name = document.querySelector("sl-input[name='name-product']");
@@ -167,8 +211,9 @@ const main = async () => {
                formData.append("bien_the", JSON.stringify(variant));
           }
 
-          formData.append("images_main_id", getCookie("images_main"));
-          formData.append("images_sub_id", getCookie("images_sub"));
+          // formData.append("images_main_id", getCookie("images_main"));
+          // formData.append("images_sub_id", getCookie("images_sub"));
+
 
           axios.patch(link, formData).then((res) => {
                if (res.status == 200) {
@@ -179,6 +224,8 @@ const main = async () => {
                               icon: "success",
                          })
                     );
+                    previewImageMain.resetPreviewPanel();
+                    previewImageSub.resetPreviewPanel();
                     location.reload();
                }
           });

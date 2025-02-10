@@ -27,11 +27,36 @@ const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.
 const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.model"));
 const productsCategories_model_1 = __importDefault(require("../../models/productsCategories.model"));
 const createTree_helper_1 = __importDefault(require("../../helpers/createTree.helper"));
+const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
+const assets_model_1 = __importDefault(require("../../models/assets.model"));
+const unidecode_1 = __importDefault(require("unidecode"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c, _d, e_2, _e, _f;
-    const products = yield products_model_1.default.find({
+    const find = {
         deleted: false,
-    })
+    };
+    if (req.query.trang_thai) {
+        find['status'] = req.query.trang_thai;
+    }
+    const search = req.query.tim_kiem || '';
+    if (typeof search === 'string') {
+        const findSlug = (0, unidecode_1.default)(search.trim().replace(/\s+/g, '-'));
+        const regexTitle = new RegExp(search, 'i');
+        const regexSlug = new RegExp(findSlug, 'i');
+        const regexSlugDb = new RegExp(search.trim().replace(/\s+/g, '-'), 'i');
+        find['$or'] = [
+            {
+                title: regexTitle
+            },
+            {
+                slug: regexSlug
+            },
+            {
+                slug: regexSlugDb
+            },
+        ];
+    }
+    const products = yield products_model_1.default.find(find)
         .lean()
         .sort({
         position: -1,
@@ -186,9 +211,12 @@ const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_3, _b, _c, _d, e_4, _e, _f;
     if (res.locals.ROLE.permission.includes("products-update")) {
         const { id } = req.params;
-        const productAssets = yield index_service_1.productAssetsService.get({
+        const productAssets = yield productAssets_model_1.default.find({
             productId: id,
+        }).sort({
+            position: 'asc'
         });
+        console.log(productAssets);
         const main = productAssets.filter((it) => it.type == "main");
         const sub = productAssets.filter((it) => it.type == "sub");
         const images_main = [];
@@ -200,11 +228,13 @@ const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 _c = main_1_1.value;
                 _g = false;
                 const it = _c;
-                const img = yield index_service_1.assetsService.getOne({
+                const img = yield assets_model_1.default.findOne({
                     _id: it.assetsId,
                 });
-                images_main.push(img.path);
-                images_main_id.push(img.id);
+                if (img) {
+                    images_main.push(img.path);
+                    images_main_id.push(img.id);
+                }
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -222,8 +252,10 @@ const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 const img = yield index_service_1.assetsService.getOne({
                     _id: it.assetsId,
                 });
-                images_sub.push(img.path);
-                images_sub_id.push(img.id);
+                if (img) {
+                    images_sub.push(img.path);
+                    images_sub_id.push(img.id);
+                }
             }
         }
         catch (e_4_1) { e_4 = { error: e_4_1 }; }
@@ -243,8 +275,36 @@ const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getImage = getImage;
 const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_5, _b, _c;
     if (res.locals.ROLE.permission.includes("products-update")) {
         req.body.updatedBy = res.locals.INFOR_USER.id;
+        const productAssets = yield productAssets_model_1.default.find({
+            productId: new mongodb_1.ObjectId(req.params.id)
+        });
+        const listProductAssets = [];
+        const listAssets = [];
+        try {
+            for (var _d = true, productAssets_2 = __asyncValues(productAssets), productAssets_2_1; productAssets_2_1 = yield productAssets_2.next(), _a = productAssets_2_1.done, !_a; _d = true) {
+                _c = productAssets_2_1.value;
+                _d = false;
+                const it = _c;
+                listAssets.push(it.assetsId);
+                listProductAssets.push(new mongodb_1.ObjectId(it.id));
+            }
+        }
+        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+        finally {
+            try {
+                if (!_d && !_a && (_b = productAssets_2.return)) yield _b.call(productAssets_2);
+            }
+            finally { if (e_5) throw e_5.error; }
+        }
+        yield assets_model_1.default.deleteMany({
+            _id: listAssets
+        });
+        yield productAssets_model_1.default.deleteMany({
+            _id: listProductAssets
+        });
         const updateProduct = yield index_service_1.productService.update(req.params.id, req.body);
         const updateProductAssets = yield index_service_1.productAssetsService.update(req.params.id, req.body);
         const updateProductItem = yield index_service_1.productItemService.update(req.params.id, req.body.bien_the, res.locals.INFOR_USER.id);

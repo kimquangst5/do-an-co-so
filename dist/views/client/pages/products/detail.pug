@@ -14,17 +14,21 @@ block main
                div(class="")
                     div(class="grid grid-cols-2 gap-x-[40px]")
                          div(class=``)
-                              - if(product["images"].length == 0)
-                                   img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
-                              - else
-                                   sl-carousel(class="carousel-thumbnails h-[80%]", navigation, loop, autoplay)
-                                        each img in product["images"]
-                                             sl-carousel-item(class=`aspect-square h-full`)
-                                                  img(alt=img.name src=img.path)
-                                   div(class="thumbnails")
-                                        div(class="thumbnails__scroller")
+                              - if(product["images"])
+                                   - if(product["images"].length == 0)
+                                        img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
+                                   - else
+                                        sl-carousel(class="carousel-thumbnails h-[80%]", navigation, loop, autoplay)
                                              each img in product["images"]
-                                                  img(alt=img.name class="thumbnails__image active" src=img.path)
+                                                  sl-carousel-item(class=`aspect-square h-full`)
+                                                       img(alt=img.name src=img.path)
+                                        div(class="thumbnails")
+                                             div(class="thumbnails__scroller")
+                                                  each img in product["images"]
+                                                       img(alt=img.name class="thumbnails__image active" src=img.path)
+                              - else
+                                   div(class=`h-full flex items-center`) 
+                                        img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
 
                          div
                               div(class="text-[40px] mb-[13px]")
@@ -96,7 +100,7 @@ block main
                               div(class="flex gap-x-[662px]")
                                    div(class="flex gap-[1px] mb-[24px] text-[24px]")
                                         div Tất cả bình luận
-                                        div(class="text-[#00000099] text-[16px] items-center flex justify-center") (#{reviews.length})
+                                        div(class="text-[#00000099] text-[16px] items-center flex justify-center") (#{reviews ? reviews.length : 0})
                                    div(class="flex gap-x-[10px]")
                                         div(class="bg-[#F0F0F0] rounded-[62px] w-[48px] h-[48px] flex justify-center items-center")
                                              i(class="fa-solid fa-sliders")

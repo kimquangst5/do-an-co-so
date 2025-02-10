@@ -31,30 +31,33 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const carts = yield carts_model_1.default.find({
         customerId: res.locals.INFOR_CUSTOMER,
     });
-    carts['totalPrice'] = 0;
+    console.log(carts);
+    carts["totalPrice"] = 0;
     try {
         for (var _d = true, carts_1 = __asyncValues(carts), carts_1_1; carts_1_1 = yield carts_1.next(), _a = carts_1_1.done, !_a; _d = true) {
             _c = carts_1_1.value;
             _d = false;
             const it = _c;
             const productItems = yield product_items_model_1.default.findOne({
-                _id: it.productItemId
+                _id: it.productItemId,
             });
             const product = yield products_model_1.default.findOne({
-                _id: productItems.productId
+                _id: productItems.productId,
             });
-            it['product_name'] = product.name;
+            it["product_name"] = product.name;
             const color = yield colorProduct_model_1.default.findOne({
-                _id: productItems.color
+                _id: productItems.color,
             });
-            it['product_color'] = color.name;
+            it["product_color"] = color.name;
             const size = yield sizeProduct_model_1.default.findOne({
-                _id: productItems.size
+                _id: productItems.size,
             });
-            it['product_size'] = size.name;
-            it['price'] = Math.ceil(productItems.price - productItems.price * (productItems.discount / 100));
-            it['priceNew'] = Math.ceil(it.quantity * (productItems.price - productItems.price * (productItems.discount / 100)));
-            carts['totalPrice'] += it['priceNew'];
+            it["product_size"] = size.name;
+            it["price"] = Math.ceil(productItems.price - productItems.price * (productItems.discount / 100));
+            it["priceNew"] = Math.ceil(it.quantity *
+                (productItems.price -
+                    productItems.price * (productItems.discount / 100)));
+            carts["totalPrice"] += it["priceNew"];
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -65,9 +68,9 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         finally { if (e_1) throw e_1.error; }
     }
     res.render("client/pages/carts/index.pug", {
-        pageTitle: 'Giỏ hàng của bạn',
-        pageDesc: 'Giỏ hàng của bạn',
-        carts: carts
+        pageTitle: "Giỏ hàng của bạn",
+        pageDesc: "Giỏ hàng của bạn",
+        carts: carts,
     });
 });
 exports.index = index;
@@ -85,44 +88,44 @@ const add = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (cart) {
         const newQuantity = cart.quantity + parseInt(req.body.quantity);
         yield carts_model_1.default.updateOne({
-            _id: cart.id
+            _id: cart.id,
         }, {
-            quantity: newQuantity
+            quantity: newQuantity,
         });
     }
     else {
         const newCart = new carts_model_1.default({
             customerId: new mongodb_1.ObjectId(res.locals.INFOR_CUSTOMER.id),
             productItemId: new mongodb_1.ObjectId(productItem.id),
-            quantity: parseInt(req.body.quantity)
+            quantity: parseInt(req.body.quantity),
         });
         yield newCart.save();
     }
     res.json({
-        code: 200
+        code: 200,
     });
 });
 exports.add = add;
 const addQuantity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield carts_model_1.default.updateOne({
-        _id: new mongodb_1.ObjectId(req.body.itemId)
+        _id: new mongodb_1.ObjectId(req.body.itemId),
     }, { $inc: { quantity: 1 } });
     res.json({
-        code: 200
+        code: 200,
     });
 });
 exports.addQuantity = addQuantity;
 const decrease = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield carts_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(req.body.itemId), quantity: { $gt: 1 } }, { $inc: { quantity: -1 } });
     res.json({
-        code: 200
+        code: 200,
     });
 });
 exports.decrease = decrease;
 const deleteItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield carts_model_1.default.deleteOne({ _id: new mongodb_1.ObjectId(req.params.idItem) });
     res.json({
-        code: 200
+        code: 200,
     });
 });
 exports.deleteItem = deleteItem;

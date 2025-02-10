@@ -1,17 +1,6 @@
-ul(class=`p-3 h-full`)
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`) Thêm sản phẩm
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`) Danh sách sản phẩm
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.INDEX}`) Danh sách nhóm quyền
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.INDEX}`) Danh sách tài khoản
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.COLOR_PRODUCT.PATH}${ROUTERS.ADMIN.COLOR_PRODUCT.INDEX}`) Màu sắc sản phẩm
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.SIZE.PATH}${ROUTERS.ADMIN.SIZE.INDEX}`) Kích thước sản phẩm
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.INDEX}`) Danh mục sản phẩm
-    li
-        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.CREATE}`) Thêm danh mục
+include ../mixins/sider.mixin.pug
+
+nav(class="menu menu-sm bg-[#1F1E2E] h-full text-[#939398]")
+     ul(sider data-theme="dark" class=`bg-[transparent] h-full`)
+          +sider-mixin(siderArray)
+          

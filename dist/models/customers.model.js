@@ -8,6 +8,10 @@ const customersSchema = new mongoose_1.Schema({
     email: String,
     password: String,
     token: String,
+    avatar: String,
+    birthday: String,
+    phone: String,
+    genders: String,
     deleted: {
         type: Boolean,
         default: false,

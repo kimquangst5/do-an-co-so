@@ -29,6 +29,7 @@ const productAssetSchema = new mongoose_1.default.Schema({
         type: Boolean,
         default: false,
     },
+    position: Number
 }, {
     timestamps: true,
     autoCreate: true,

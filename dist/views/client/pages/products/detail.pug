@@ -48,7 +48,7 @@ block main
                                    div(class="flex items-center justify-center bg-[#FF33331A] py-[6px] px-[14px] text-[16px] rounded-[62px] h-max text-[#FF3333]" discount-product)
                               div(class="text-[#00000099] mb-[24px]")
                                    //- | #{product.descriptionShort}
-                                   | #{REDIRECT_URI}
+                                   | #{REDIRECT_URI} - #{CLIENT_ID}
                               div(class="h-[1px] bg-[#0000001A] w-full mb-[24px]")
                               div(class="text-[16px] text-[#00000099] mb-[16px]") Chọn màu
                               - if(product.color && product.color.length > 0)

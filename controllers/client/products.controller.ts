@@ -59,6 +59,7 @@ const detail = async (req: Request, res: Response) => {
     pageTitle: product.name,
     product: product,
     REDIRECT_URI: REDIRECT_URI,
+    CLIENT_ID: process.env.CLIENT_ID,
   });
 };
 

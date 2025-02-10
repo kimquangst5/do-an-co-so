@@ -97,6 +97,7 @@ const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         pageTitle: product.name,
         product: product,
         REDIRECT_URI: REDIRECT_URI,
+        CLIENT_ID: process.env.CLIENT_ID,
     });
 });
 exports.detail = detail;

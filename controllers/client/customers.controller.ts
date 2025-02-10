@@ -103,7 +103,7 @@ const loginGoogle = async (req: Request, res: Response) => {
   const protocol = req.socket["encrypted"] ? "https" : "http";
   const domain = protocol + "://" + req.headers.host;
   // const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
-  const REDIRECT_URI = `https://do-an-co-so-seven.vercel.app${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
+  const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   // const url = `https://accounts.google.com/o/oauth2/v2/auth
   // ?client_id=${CLIENT_ID}
   // &redirect_uri=${REDIRECT_URI}
@@ -111,15 +111,15 @@ const loginGoogle = async (req: Request, res: Response) => {
   // &scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read`;
 
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
-  res.redirect(url);
+
+  res.redirect(REDIRECT_URI);
 };
 
 const loginGoogleCallback = async (req: Request, res: Response) => {
   const protocol = req.socket["encrypted"] ? "https" : "http";
   const domain = protocol + "://" + req.headers.host;
   // const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
-  const REDIRECT_URI = `https://do-an-co-so-seven.vercel.app${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
-
+  const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   try {
     // Exchange authorization code for access token
     const { code } = req.query;

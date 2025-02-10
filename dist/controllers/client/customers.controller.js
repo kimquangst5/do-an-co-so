@@ -97,16 +97,16 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const loginGoogle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const protocol = req.socket["encrypted"] ? "https" : "http";
     const domain = protocol + "://" + req.headers.host;
-    const REDIRECT_URI = `https://do-an-co-so-seven.vercel.app${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
+    const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
-    res.redirect(url);
+    res.redirect(REDIRECT_URI);
 });
 exports.loginGoogle = loginGoogle;
 const loginGoogleCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e, _f;
     const protocol = req.socket["encrypted"] ? "https" : "http";
     const domain = protocol + "://" + req.headers.host;
-    const REDIRECT_URI = `https://do-an-co-so-seven.vercel.app${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
+    const REDIRECT_URI = `${domain}${index_routes_1.default.CLIENT.CUSTOMER.PATH}${index_routes_1.default.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
     try {
         const { code } = req.query;
         const { data } = yield axios_1.default.post("https://oauth2.googleapis.com/token", {

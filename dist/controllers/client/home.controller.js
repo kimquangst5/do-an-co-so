@@ -26,6 +26,9 @@ const assets_model_1 = __importDefault(require("../../models/assets.model"));
 const product_items_model_1 = __importDefault(require("../../models/product-items.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c, _d, e_2, _e, _f;
+    const protocol = req.socket["encrypted"] ? "https" : "http";
+    const domain = protocol + "://" + req.headers.host;
+    console.log(domain);
     const products = yield products_model_1.default.find({
         deleted: false,
         status: "active",

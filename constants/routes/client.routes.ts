@@ -23,12 +23,17 @@ interface ROUTER_CLIENT {
     ADD_QUANTITY: string;
     DECREASE: string;
   };
+  CHECKOUT: {
+    PATH: string;
+    INDEX: string;
+    SUCCESS: string;
+  };
 }
 
 const ROUTER_CLIENT: ROUTER_CLIENT = {
   PRODUCT: {
     PATH: "/san-pham",
-    DETAIL: "/chi-tiet-san-pham",
+    DETAIL: "",
   },
   CUSTOMER: {
     PATH: "/nguoi-dung",
@@ -49,6 +54,11 @@ const ROUTER_CLIENT: ROUTER_CLIENT = {
     DELETE: "/xoa-san-pham-khoi-gio-hang",
     ADD_QUANTITY: "/them-so-luong",
     DECREASE: "/giam-so-luong",
+  },
+  CHECKOUT: {
+    PATH: "/thanh-toan",
+    INDEX: "",
+    SUCCESS: "/thanh-cong",
   },
 };
 

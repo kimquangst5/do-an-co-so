@@ -12,7 +12,6 @@ const index = async (req: Request, res: Response) => {
   const carts = await Cart.find({
     customerId: res.locals.INFOR_CUSTOMER,
   });
-  console.log(carts);
 
   carts["totalPrice"] = 0;
   for await (const it of carts) {
@@ -23,6 +22,7 @@ const index = async (req: Request, res: Response) => {
       _id: productItems.productId,
     });
     it["product_name"] = product.name;
+    it["slug"] = product.slug;
 
     const color = await ColorProduct.findOne({
       _id: productItems.color,
@@ -42,6 +42,15 @@ const index = async (req: Request, res: Response) => {
           productItems.price * (productItems.discount / 100))
     );
     carts["totalPrice"] += it["priceNew"];
+    const productAsset = await ProductAssets.findOne({
+      productId: product.id,
+    }).sort({
+      type: 1,
+    });
+    const asset = await Assets.findOne({
+      _id: productAsset.assetsId,
+    });
+    it["image"] = asset.path;
   }
   res.render("client/pages/carts/index.pug", {
     pageTitle: "Giỏ hàng của bạn",

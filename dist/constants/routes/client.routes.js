@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ROUTER_CLIENT = {
     PRODUCT: {
         PATH: "/san-pham",
-        DETAIL: "/chi-tiet-san-pham",
+        DETAIL: "",
     },
     CUSTOMER: {
         PATH: "/nguoi-dung",
@@ -24,6 +24,11 @@ const ROUTER_CLIENT = {
         DELETE: "/xoa-san-pham-khoi-gio-hang",
         ADD_QUANTITY: "/them-so-luong",
         DECREASE: "/giam-so-luong",
+    },
+    CHECKOUT: {
+        PATH: "/thanh-toan",
+        INDEX: "",
+        SUCCESS: "/thanh-cong",
     },
 };
 exports.default = ROUTER_CLIENT;

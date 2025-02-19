@@ -12,8 +12,8 @@ block main
      div(class="")
           div(class="container flex gap-x-[40px] items-center mt-[24px] lg:justify-between")
                div(class="")
-                    div(class="grid grid-cols-2 gap-x-[40px]")
-                         div(class=``)
+                    div(class="grid grid-cols-2 gap-x-[40px] pt-[40px] ")
+                         div(class=`flex flex-row-reverse`)
                               - if(product["images"])
                                    - if(product["images"].length == 0)
                                         img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
@@ -21,11 +21,11 @@ block main
                                         sl-carousel(class="carousel-thumbnails h-[80%]", navigation, loop, autoplay)
                                              each img in product["images"]
                                                   sl-carousel-item(class=`aspect-square h-full`)
-                                                       img(alt=img.name src=img.path)
-                                        div(class="thumbnails")
-                                             div(class="thumbnails__scroller")
+                                                       img(alt=img.name src=img.path class=`w-full h-auto aspect-[1/1]`)
+                                        div(class="thumbnails w-1/2")
+                                             div(class="thumbnails__scroller flex flex-col w-full")
                                                   each img in product["images"]
-                                                       img(alt=img.name class="thumbnails__image active" src=img.path)
+                                                       img(alt=img.name class="thumbnails__image active" src=img.path class=`w-full h-auto aspect-[1/1]`)
                               - else
                                    div(class=`h-full flex items-center`) 
                                         img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="" class=`w-1/2 m-auto`)
@@ -47,8 +47,8 @@ block main
                                         sl-format-number(type="currency" currency="VND" lang="vi-VI" class="line-through text-[32px] text-[#0000004D]" product-price)
                                    div(class="flex items-center justify-center bg-[#FF33331A] py-[6px] px-[14px] text-[16px] rounded-[62px] h-max text-[#FF3333]" discount-product)
                               div(class="text-[#00000099] mb-[24px]")
-                                   //- | #{product.descriptionShort}
-                                   | #{REDIRECT_URI} - #{CLIENT_ID}
+                                   | !{product.descriptionShort}
+                                   //- | #{REDIRECT_URI} - #{CLIENT_ID}
                               div(class="h-[1px] bg-[#0000001A] w-full mb-[24px]")
                               div(class="text-[16px] text-[#00000099] mb-[16px]") Chọn màu
                               - if(product.color && product.color.length > 0)

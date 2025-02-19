@@ -12,6 +12,10 @@ const customersSchema = new Schema(
     birthday: String,
     phone: String,
     genders: String,
+    city: String,
+    district: String,
+    ward: String,
+    address: String,
     deleted: {
       type: Boolean,
       default: false,

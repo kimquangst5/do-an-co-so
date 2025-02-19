@@ -21,6 +21,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteItem = exports.decrease = exports.addQuantity = exports.add = exports.index = void 0;
 const products_model_1 = __importDefault(require("../../models/products.model"));
+const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
+const assets_model_1 = __importDefault(require("../../models/assets.model"));
 const product_items_model_1 = __importDefault(require("../../models/product-items.model"));
 const mongodb_1 = require("mongodb");
 const carts_model_1 = __importDefault(require("../../models/carts.model"));
@@ -31,7 +33,6 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const carts = yield carts_model_1.default.find({
         customerId: res.locals.INFOR_CUSTOMER,
     });
-    console.log(carts);
     carts["totalPrice"] = 0;
     try {
         for (var _d = true, carts_1 = __asyncValues(carts), carts_1_1; carts_1_1 = yield carts_1.next(), _a = carts_1_1.done, !_a; _d = true) {
@@ -45,6 +46,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 _id: productItems.productId,
             });
             it["product_name"] = product.name;
+            it["slug"] = product.slug;
             const color = yield colorProduct_model_1.default.findOne({
                 _id: productItems.color,
             });
@@ -58,6 +60,15 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 (productItems.price -
                     productItems.price * (productItems.discount / 100)));
             carts["totalPrice"] += it["priceNew"];
+            const productAsset = yield productAssets_model_1.default.findOne({
+                productId: product.id,
+            }).sort({
+                type: 1,
+            });
+            const asset = yield assets_model_1.default.findOne({
+                _id: productAsset.assetsId,
+            });
+            it["image"] = asset.path;
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }

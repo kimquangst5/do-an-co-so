@@ -104,14 +104,7 @@ const loginGoogle = async (req: Request, res: Response) => {
     req.headers["x-forwarded-proto"] ||
     (req.socket["encrypted"] ? "https" : "http");
   const domain = protocol + "://" + req.headers.host;
-  // const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
   const REDIRECT_URI = `${domain}${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.GOOGLE_CALLBACK}`;
-  // const url = `https://accounts.google.com/o/oauth2/v2/auth
-  // ?client_id=${CLIENT_ID}
-  // &redirect_uri=${REDIRECT_URI}
-  // &response_type=code
-  // &scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read`;
-
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.phonenumbers.read https://www.googleapis.com/auth/user.gender.read`;
   res.redirect(url);
 };
@@ -136,8 +129,6 @@ const loginGoogleCallback = async (req: Request, res: Response) => {
 
     const { access_token, id_token } = data;
 
-    // Use access_token or id_token to fetch user profile
-    // 1️⃣ Gọi API Google Userinfo để lấy tên, ảnh, email
     const { data: profile } = await axios.get(
       "https://www.googleapis.com/oauth2/v1/userinfo",
       {
@@ -145,7 +136,6 @@ const loginGoogleCallback = async (req: Request, res: Response) => {
       }
     );
 
-    // 2️⃣ Gọi Google People API để lấy số điện thoại và ngày sinh
     const { data: peopleInfo } = await axios.get(
       "https://people.googleapis.com/v1/people/me?personFields=phoneNumbers,birthdays,genders",
       {

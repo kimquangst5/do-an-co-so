@@ -1,0 +1,213 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.success = exports.create = exports.index = void 0;
+const products_model_1 = __importDefault(require("../../models/products.model"));
+const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
+const assets_model_1 = __importDefault(require("../../models/assets.model"));
+const product_items_model_1 = __importDefault(require("../../models/product-items.model"));
+const mongodb_1 = require("mongodb");
+const carts_model_1 = __importDefault(require("../../models/carts.model"));
+const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.model"));
+const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.model"));
+const order_model_1 = __importDefault(require("../../models/order.model"));
+const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_1, _b, _c;
+    const carts = yield carts_model_1.default.find({
+        customerId: res.locals.INFOR_CUSTOMER,
+    });
+    carts["totalPrice"] = 0;
+    try {
+        for (var _d = true, carts_1 = __asyncValues(carts), carts_1_1; carts_1_1 = yield carts_1.next(), _a = carts_1_1.done, !_a; _d = true) {
+            _c = carts_1_1.value;
+            _d = false;
+            const it = _c;
+            const productItems = yield product_items_model_1.default.findOne({
+                _id: it.productItemId,
+            });
+            const product = yield products_model_1.default.findOne({
+                _id: productItems.productId,
+            });
+            it["product_name"] = product.name;
+            it["slug"] = product.slug;
+            const color = yield colorProduct_model_1.default.findOne({
+                _id: productItems.color,
+            });
+            it["product_color"] = color.name;
+            const size = yield sizeProduct_model_1.default.findOne({
+                _id: productItems.size,
+            });
+            it["product_size"] = size.name;
+            it["price"] = Math.ceil(productItems.price - productItems.price * (productItems.discount / 100));
+            it["priceNew"] = Math.ceil(it.quantity *
+                (productItems.price -
+                    productItems.price * (productItems.discount / 100)));
+            carts["totalPrice"] += it["priceNew"];
+            const productAsset = yield productAssets_model_1.default.findOne({
+                productId: product.id,
+            }).sort({
+                type: 1,
+            });
+            const asset = yield assets_model_1.default.findOne({
+                _id: productAsset.assetsId,
+            });
+            it["image"] = asset.path;
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (!_d && !_a && (_b = carts_1.return)) yield _b.call(carts_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    res.render("client/pages/checkouts/index.pug", {
+        pageTitle: "Thanh toán đơn hàng",
+        pageDesc: "Thanh toán đơn hàng",
+        carts: carts,
+    });
+});
+exports.index = index;
+function capitalizeWords(str) {
+    str = str.toLowerCase();
+    const words = str.split(" ");
+    for (let i = 0; i < words.length; i++) {
+        const firstChar = words[i].charAt(0).toUpperCase();
+        const restOfWord = words[i].slice(1);
+        words[i] = firstChar + restOfWord;
+    }
+    return words.join(" ");
+}
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_2, _b, _c;
+    let { fullname, email, phone, address, city, district, ward, note, cart } = req.body;
+    const data = {
+        inforCustomer: {
+            customerId: new mongodb_1.ObjectId(res.locals.INFOR_CUSTOMER.id),
+            fullname: capitalizeWords(fullname.trim().replace(/\s+/g, " ")),
+            email: email,
+            phone: phone,
+            address: capitalizeWords(address.trim().replace(/\s+/g, " ")),
+            city: parseInt(city),
+            district: parseInt(district),
+            ward: parseInt(ward),
+            note: note.trim().replace(/\s+/g, " "),
+        },
+        inforProductItem: [],
+    };
+    let listCartId = [];
+    try {
+        for (var _d = true, cart_1 = __asyncValues(cart), cart_1_1; cart_1_1 = yield cart_1.next(), _a = cart_1_1.done, !_a; _d = true) {
+            _c = cart_1_1.value;
+            _d = false;
+            const cartId = _c;
+            listCartId.push(new mongodb_1.ObjectId(cartId));
+            const cartItem = yield carts_model_1.default.findOne({
+                _id: cartId,
+            });
+            const items = yield product_items_model_1.default.findOne({
+                _id: cartItem.productItemId,
+            });
+            const dataItem = {
+                productItemId: new mongodb_1.ObjectId(items.id),
+                price: items.price,
+                discount: items.discount,
+                quantity: cartItem.quantity,
+            };
+            data.inforProductItem.push(dataItem);
+        }
+    }
+    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+    finally {
+        try {
+            if (!_d && !_a && (_b = cart_1.return)) yield _b.call(cart_1);
+        }
+        finally { if (e_2) throw e_2.error; }
+    }
+    const newOrder = new order_model_1.default(data);
+    yield newOrder.save();
+    yield carts_model_1.default.deleteMany({
+        _id: listCartId,
+    });
+    res.json({
+        code: 200,
+        newOrder: newOrder.id,
+    });
+});
+exports.create = create;
+const success = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_3, _b, _c;
+    const id = req.query["id-don-hang"];
+    const order = yield order_model_1.default.findOne({
+        _id: id,
+    });
+    order.inforProductItem["totalPrice"] = 0;
+    try {
+        for (var _d = true, _e = __asyncValues(order.inforProductItem), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
+            _c = _f.value;
+            _d = false;
+            const it = _c;
+            const productItems = yield product_items_model_1.default.findOne({
+                _id: it.productItemId,
+            });
+            const product = yield products_model_1.default.findOne({
+                _id: productItems.productId,
+            });
+            it["product_name"] = product.name;
+            it["slug"] = product.slug;
+            const color = yield colorProduct_model_1.default.findOne({
+                _id: productItems.color,
+            });
+            it["product_color"] = color.name;
+            const size = yield sizeProduct_model_1.default.findOne({
+                _id: productItems.size,
+            });
+            it["product_size"] = size.name;
+            it["price"] = Math.ceil(productItems.price - productItems.price * (productItems.discount / 100));
+            it["priceNew"] = Math.ceil(it.quantity *
+                (productItems.price -
+                    productItems.price * (productItems.discount / 100)));
+            order.inforProductItem["totalPrice"] += it["priceNew"];
+            const productAsset = yield productAssets_model_1.default.findOne({
+                productId: product.id,
+            }).sort({
+                type: 1,
+            });
+            const asset = yield assets_model_1.default.findOne({
+                _id: productAsset.assetsId,
+            });
+            it["image"] = asset.path;
+        }
+    }
+    catch (e_3_1) { e_3 = { error: e_3_1 }; }
+    finally {
+        try {
+            if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
+        }
+        finally { if (e_3) throw e_3.error; }
+    }
+    res.render("client/pages/checkouts/success.pug", {
+        pageTitle: "Đặt đơn thành công",
+        pageDesc: "Đặt đơn thành công",
+        order: order,
+    });
+});
+exports.success = success;

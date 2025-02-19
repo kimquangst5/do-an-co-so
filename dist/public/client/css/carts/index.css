@@ -1,0 +1,7 @@
+sl-progress-bar#nhu::part(indicator) {
+  background-color: #ffbc11;
+}
+
+sl-progress-bar#ok::part(indicator) {
+  background-color: #3d9851;
+}

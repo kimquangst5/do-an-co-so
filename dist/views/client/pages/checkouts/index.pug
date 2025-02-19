@@ -1,0 +1,110 @@
+extends ../../layouts/layouts.pug
+
+block css
+    link(rel="stylesheet" href="/client/css/carts/index.css")
+block script
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js") 
+    script(type='module' src="/client/js/checkouts/index.js" async) 
+
+block main
+    div(class="h-full")
+        div(class=`container`) 
+            div(class="max-w-7xl mx-auto")
+                div(class="flex items-center gap-2 text-sm py-[24px]")
+                    span(class="text-gray-600") Trang chủ
+                    span(class="text-gray-400") >
+                    span Giỏ hàng
+                div(class=`flex items-center gap-x-[5px]`)
+                    h1(class="text-xl font-medium text-[40px]") Thông tin đơn hàng
+                    div(class=`text-[black]/40`) (#{carts ? carts.length : 0} sản phẩm)
+                - if(carts && carts.length > 0)
+                    div(class=`py-[20px]`)
+                        div(class=`relative`) 
+                            - if(Math.min(100, carts.totalPrice/500000*100) != 100)
+                                sl-progress-bar(value=Math.min(100, carts.totalPrice/500000*100) id='nhu')
+                                sl-icon(name='truck' class=`absolute bg-[#ffbc11] rounded-full p-2 top-0 bottom-0 my-auto left-[${Math.min(98, carts.totalPrice/500000 * 100 - 1)}%]  text-[white]`)
+                            - else
+                                sl-progress-bar(value=100 id='ok')
+                                sl-icon(name='truck' class=`absolute bg-[#3d9851] rounded-full p-2 top-0 bottom-0 my-auto left-[${Math.min(98, carts.totalPrice/500000 * 100 - 1)}%]  text-[white]`)
+
+                        div(class=`text-[#666666] flex gap-x-[5px] text-[16px] items-center py-[20px]`) 
+                            - if(carts.totalPrice < 500000)
+                                div(class=``) Bạn cần mua thêm
+                                sl-format-number(class=`text-[#ff2c26] text-[18px] font-bold` type="currency" currency="VND" value=500000 - carts.totalPrice) 
+                                div(class=``) để được
+                                div(class=`uppercase`) miễn phí vận chuyển
+                            - else
+                                div(class=``) Bạn đã được
+                                div(class=`uppercase font-bold`) miễn phí vận chuyển
+                    div(class="gap-x-[20px] grid grid-cols-12")
+                        div(class="col-span-8 rounded-[20px] px-[24px] py-[20px] border-[1px] border-[#0000001A] h-max")
+
+                            h2(class="text-lg font-medium mb-6") Thông tin khách hàng
+                            div(class="flex flex-col gap-y-[15px]")
+                                sl-input(placeholer='Họ và tên' size="small" class=`w-full` value=INFOR_CUSTOMER.fullname name='fullname')
+                                    sl-icon(name='person' slot="prefix")
+                                div(class=`grid grid-cols-3 gap-x-[10px]`)
+                                    sl-input(placeholer='Email' size="small" class=`w-full col-span-2` placeholder = 'Email của bạn...' value=INFOR_CUSTOMER.email name='email')
+                                        sl-icon(name='envelope' slot="prefix")
+                                    sl-input(placeholer='Số điện thoại' size="small" class=`w-full` placeholder = 'Số điện thoại của bạn...' type='number' length='10' value=INFOR_CUSTOMER.phone name='phone')
+                                        sl-icon(name='telephone-outbound' slot="prefix")
+                                sl-input(placeholer='Địa chỉ (Số nhà + Tên đường)' size="small" class=`w-full` placeholder = 'Địa chỉ của bạn...' value=INFOR_CUSTOMER.address name='address')
+                                    sl-icon(name='house-heart' slot="prefix")
+                                div(class=`flex items-center justify-between gap-[10px]`)
+                                    sl-select#city(size='small' placeholder="Tỉnh / Thành phố")
+                                        option(value='' selected) Chọn tỉnh thành
+                                    sl-select#district(size='small' placeholder="Quận / Huyện")
+                                        option(value='', selected) Chọn quận huyện
+                                    sl-select#ward(size='small' placeholder="Phường / Xã")
+                                        option(value='', selected) Chọn phường xã
+                                sl-textarea(label='Ghi chú' name='note')
+
+                        div(class="col-span-4 flex flex-col gap-y-[20px] overflow-y-auto ")
+                            div(class=`flex-1 py-[20px] px-[24px] rounded-[20px] border-[1px] border-[#0000001A] flex flex-col gap-y-[24px]`)
+                                h2(class="text-lg font-medium mb-6") Thông tin giỏ hàng
+                                div(class="space-y-4 mb-6")
+                                    div(class="flex justify-between")
+                                        span Tổng cộng
+                                        sl-format-number(class="text-lg" type="currency" currency="VND" value=carts.totalPrice lang="vi")
+                                    //- div(class="flex justify-between text-red-500")
+                                        span Giảm giá (-20%)
+                                        span -113.000đ
+                                    div(class="flex justify-between")
+                                        span Phí giao hàng
+                                        - if(carts.totalPrice >= 500000)
+                                            span Miễn Phí
+                                        - else
+                                            sl-format-number(class="text-lg" type="currency" currency="VND" value='20000' lang="vi")
+
+                                    div(class="flex justify-between text-lg font-medium pt-4 border-t")
+                                        span Thành tiền
+                                        - if(carts.totalPrice >= 500000)
+                                            sl-format-number(class="text-lg" type="currency" currency="VND" value=carts.totalPrice lang="vi" class=`font-bold text-[#ff2c26]`)
+                                        - else
+                                            sl-format-number(class="text-lg" type="currency" currency="VND" value=carts.totalPrice + 20000 lang="vi" class=`font-bold text-[#ff2c26]`)
+                                //- div(class="flex gap-2 bg-gray-50 rounded-lg p-2 mb-4")
+                                    input(type="text" placeholder="Thêm mã khuyến mại" class="bg-transparent w-full outline-none px-2")
+                                    button(class="bg-black text-white px-4 py-2 rounded-lg") Áp dụng
+                                div(btn-submit=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.INDEX}/${INFOR_CUSTOMER.username}` redirect=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.SUCCESS}/${INFOR_CUSTOMER.username}` class="w-full bg-black text-white py-3 rounded-lg" class=`w-full block text-center`) Xác nhận đơn hàng
+
+
+                            div(class=`flex-1 py-[20px] px-[24px] rounded-[20px] border-[1px] border-[#0000001A] flex flex-col gap-y-[24px]`) 
+                                each it in carts
+                                    div(class="flex items-center justify-between bg-white relative" cart-id =  it.id)
+                                        div(class="grid grid-cols-12 gap-x-[10px]")
+                                            div(class=`col-span-3`) 
+                                                img(src=it.image title = it.product_name class=`w-full h-auto rounded-[10px]`)
+                                            div(class=`col-span-9 flex flex-col gap-y-[10px]`)
+                                                div(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it.slug}`) 
+                                                    h3(class="text-[15px]") #{it.product_name}
+                                                p(class="text-gray-500 text-sm") Kích thước: #{it.product_size}
+                                                p(class="text-gray-500 text-sm") Màu: #{it.product_color}
+                                                div(class=`flex gap-x-[5px] items-center text-[12px]`) 
+                                                    div(class="flex items-center")
+                                                        span #{it.quantity}
+                                                    div x
+                                                    sl-format-number(class="text-lg" type="currency" currency="VND" value=it.price lang="vi" class=`text-[12px]`)
+                                                    div #{'='}
+                                                    sl-format-number(class="text-lg" type="currency" currency="VND" value=it.priceNew lang="vi" class=`font-bold`)

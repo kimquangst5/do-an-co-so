@@ -79,6 +79,9 @@ const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         req.body.position = parseInt(req.body.position);
     else
         req.body.position = (yield productsCategories_model_1.default.countDocuments()) + 1;
+    req.body.parentId
+        ? (req.body.parentId = new mongodb_1.ObjectId(req.body.parentId))
+        : req.body;
     yield productsCategories_model_1.default.updateOne({
         _id: id,
     }, req.body);

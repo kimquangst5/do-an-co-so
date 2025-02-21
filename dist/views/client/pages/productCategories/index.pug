@@ -1,0 +1,168 @@
+extends ../../layouts/layouts.pug
+
+block css
+    //- link(rel="stylesheet" href="/client/css/home/index.css")
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    script(type="module" src="/client/js/productCategory/index.js") 
+
+block main
+    div
+        div(class="container")
+            div(class="flex gap-x-[12px] lg:mt-[20px] mt-[20px]")
+                div(class="flex gap-x-[4px] items-center")
+                    div(class="font-[400] text-[16px] text-[#00000099]") Trang chủ
+                    i(class="fa-solid fa-chevron-right text-[16px]")
+                div(class="font-[400] text-[16px] text-[#000000]") #{category.name}
+            div(class="container grid grid-cols-4 flex gap-x-[20px] pt-[26px]")
+                div(class="border border-[1px] rounded-[20px] px-[24px] pt-[20px] lg:hidden")
+                    div(class="flex justify-between items-center")
+                        div(class="font-[400] text-[20px] text-[#000000]") Lọc
+                        i(class="fas fa-sliders text-[24px]")
+                    //- div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                    //- ul(class="flex flex-col gap-y-[20px] text-[16px] text-[#00000099] font-[400]")
+                        li(class="flex justify-between items-center")
+                            a(href="") Áo thun
+                            i(class="fa-solid fa-chevron-right text-[16px]")
+                        li(class="flex justify-between items-center")
+                            a(href="") Quần ngắn
+                            i(class="fa-solid fa-chevron-right text-[16px]")
+                        li(class="flex justify-between items-center")
+                            a(href="") Áo sơ-mi
+                            i(class="fa-solid fa-chevron-right text-[16px]")
+                        li(class="flex justify-between items-center")
+                            a(href="") Áo trùm đầu
+                            i(class="fa-solid fa-chevron-right text-[16px]")
+                        li(class="flex justify-between items-center")
+                            a(href="") Quần Jeans
+                            i(class="fa-solid fa-chevron-right text-[16px]")
+                    div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                    div
+                        div(class="flex justify-between items-center")
+                            div(class="font-[400] text-[20px] text-[#000000]") Giá
+                            i(class="fa-solid fa-chevron-up text-[16px]")
+                        div(class="flex flex-col items-center w-full max-w-md mt-[20px]")
+                            div(class="relative w-full")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 w-full h-1 bg-[#F0F0F0]")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 left-[20%] right-[20%] h-1 bg-[#000000]")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 left-[20%] w-5 h-5 bg-[#000000] rounded-full")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 right-[20%] w-5 h-5 bg-[#000000] rounded-full")
+                            //- div(class="relative w-full")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 w-full h-1 bg-[#F0F0F0]")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 left-[20%] right-[20%] h-1 bg-[#000000]")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 left-[20%] w-5 h-5 bg-[#000000] rounded-full")
+                                div(class="absolute top-1/2 transform -translate-y-1/2 right-[20%] w-5 h-5 bg-[#000000] rounded-full")
+                            div(class="flex justify-center gap-x-[78px] w-full mt-[15px]")
+                                span(class="font-[400] text-[14px] text-[#000000]") 50.000đ
+                                span(class="font-[400] text-[14px] text-[#000000]") 200.000đ
+                    div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                    div
+                        div(class="flex justify-between items-center pb-[20px]")
+                            div(class="font-[400] text-[20px] text-[#000000]") Màu
+                            i(class="fa-solid fa-chevron-up text-[16px]")
+                        div(class="grid grid-cols-5 flex justify-between items-center flex-col gap-y-[16px]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#00C12B]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#F50606]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#F5DD06]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#F57906]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#06CAF5]")
+                            i(class="fa-solid fa-circle-check text-[37px] text-[#063AF5]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#7D06F5]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#F506A4]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#FFFFFF]")
+                            i(class="fa-solid fa-circle text-[37px] text-[#000000]")
+                    div
+                        div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                        div(class="flex justify-between items-center pb-[20px]")
+                            div(class="font-[400] text-[20px] text-[#000000]") Kích thước
+                            i(class="fa-solid fa-chevron-up text-[16px]")
+                        div(class="grid grid-cols-3 flex-col gap-y-[8px]")
+                            span(class="w-[65px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") XXS
+                            span(class="w-[57px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") XS
+                            span(class="w-[48px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") S
+                            span(class="w-[52px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") M
+                            span(class="w-[48px] h-[38px] font-[400] text-[14px] text-[#FFFFFF] bg-[#000000] rounded-[62px] flex items-center justify-center") L
+                            span(class="w-[56px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") XL
+                            span(class="w-[65px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") XXL
+                            span(class="w-[64px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") 3XL
+                            span(class="w-[64px] h-[38px] font-[400] text-[14px] text-[#00000099] bg-[#F0F0F0] rounded-[62px] flex items-center justify-center") 4XL
+                    div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                    //- div(class="pb-[24px]")
+                        div(class="flex justify-between items-center pb-[20px]")
+                            div(class="font-[400] text-[20px] text-[#000000]") Kiểu váy
+                            i(class="fa-solid fa-chevron-up text-[16px]")
+                        ul(class="flex flex-col gap-y-[20px] text-[16px] text-[#00000099] font-[400]")
+                            li(class="flex justify-between items-center")
+                                a(href="") Giản dị
+                                i(class="fa-solid fa-chevron-right text-[16px]")
+                            li(class="flex justify-between items-center")
+                                a(href="") Trang trọng
+                                i(class="fa-solid fa-chevron-right text-[16px]")
+                            li(class="flex justify-between items-center")
+                                a(href="") Tiệc tùng
+                                i(class="fa-solid fa-chevron-right text-[16px]")
+                            li(class="flex justify-between items-center")
+                                a(href="") Thể thao
+                                i(class="fa-solid fa-chevron-right text-[16px]")
+                    div(class="flex justify-center")
+                        button(class="w-[247px] h-[48px] bg-[#000000] text-[#FFFFFF] font-[400] text-[14px] rounded-[62px] flex-1") Lọc
+                div(class="col-span-3 lg:col-span-4")
+                    div(class="flex justify-between pb-[28px]")
+                        div(class="font-[400] text-[16px] lg:text-[24px] text-[#000000]") #{category.name}
+                        div(class="flex gap-x-[12px] items-center")
+                            div(class="font-[400] text-[16px] lg:text-[14px] text-[#00000099]") Hiển thị 1-10 trong số 100 sản phẩm
+                            div(class="flex gap-x-[4px] items-center")
+                                div(class="font-[400] text-[16px] text-[#00000099] lg:hidden") Sắp xếp theo: Phổ biến nhất
+                                i(class="fa-solid fa-chevron-down text-[16px] lg:hidden")
+                    div(class="grid grid-cols-3 lg:grid-cols-2 grid-rows-3 flex-col gap-y-[37px] lg:gap-y-[26px] gap-x-[20px] lg:gap-x-[14px]")
+                        - if(products && products.length > 0)
+                            each it in products
+                                - if(it.priceNew)
+                                    div(class="bg-none")
+                                        div(class=`group`)
+                                            - if(it.img_main.length == 0)
+                                                img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="Image Error" class="w-full aspect-square object-cover rounded-[16px]")
+                                            - else if(it.img_main.length == 1)
+                                                sl-animation(name="zoomIn" easing="easeOutQuint" duration="2000" class=`` play iterations='1')
+                                                    img(src=it.img_main[0], alt=it.name, class="duration-300 hover:scale-110 w-full aspect-square object-cover rounded-[16px]")
+                                            - else
+                                                sl-animation(name="zoomIn", img-product-main easing="easeOutQuint" duration="2000" class=`group-hover:hidden` play iterations='1')
+                                                    img(src=it.img_main[0], alt=it.name, class="w-full aspect-square object-cover rounded-[16px]")
+                                                sl-animation(name="zoomIn", img-product-sub easing="easeOutQuint" duration="2000" class=`hidden group-hover:block` )
+                                                    img(src=it.img_main[1], alt=it.name, class="w-full aspect-square object-cover rounded-[16px]")
+                                                //- img(src=it.img_main[1], alt="T-shirt" class="hidden  group-hover:block w-full aspect-square object-cover rounded-[16px]")
+                                        a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it.slug}` class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px] line-clamp-1")
+                                            sl-tooltip(content=it.name)
+                                                div #{it.name}
+                                        div(class="flex items-center mb-[6px]")
+                                            div(class="text-yellow-500 flex space-x-[2px]")
+                                                span ⭐
+                                                span ⭐
+                                                span ⭐
+                                                span ⭐
+                                                span ⭐
+                                            span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 4.5/5
+                                        div(class="inline-flex flex-wrap gap-x-[16px] mt-[6px]")
+                                            sl-format-number(class="text-[20px] sm:text-[18px] font-[500] text-[#000000]" value=(it.priceNew ? it.priceNew : '') type="currency" currency="VND" lang="vi-VI")
+                                            - if(it.discount != 0)
+                                                sl-format-number(value=(it.price ? it.price : '') class="text-[14px] sm:text-[18px] font-[500] text-[#00000066] line-through flex items-center" type="currency" currency="VND" lang="vi-VI")
+                                                span(class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center")
+                                                    | -#{it.discount ? it.discount : ''}%
+
+                    div(class="border border-[1px] border-[#0000001A] mt-[33px]")
+                    div(class="flex items-center justify-between mt-[20px] lg:justify-between")
+                        button(class="flex items-center px-[14px] py-[8px] text-[#000000] border border-[#0000001A] rounded-[8px] gap-x-[8px]")
+                            i(class="fas fa-arrow-left")
+                            | Trước
+                        div(class="flex items-center gap-x-[2px]")
+                            span(class="w-10 h-10 flex items-center justify-center bg-[#0000000F] font-[400] text-[14px] text-[#000000] rounded-[8px]") 1
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px]") 2
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px] lg:hidden") 3
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px]") ...
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px] lg:hidden") 8
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px]") 9
+                            span(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px]") 10
+                        button(class="flex items-center px-[14px] py-[8px] text-[#000000] border border-[#0000001A] rounded-[8px] gap-x-[8px]")
+                            | Sau
+                            i(class="fas fa-arrow-right")

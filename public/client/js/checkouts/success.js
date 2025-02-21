@@ -4,11 +4,6 @@ const main = () => {
   const city = address.getAttribute("city");
   const district = address.getAttribute("district");
   const ward = address.getAttribute("ward");
-  console.log(ward);
-
-  console.log(city);
-  console.log(district);
-  console.log(ward);
 
   const Parameter = {
     url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
@@ -43,36 +38,88 @@ const main = () => {
 
 main();
 
-const qrcode = () => {
-  document.addEventListener("DOMContentLoaded", () => {
-    const qr = document.querySelector("sl-qr-code[qr-code-order]");
-    qr.value = location.href;
-    qr.attachShadow({ mode: "open" });
-    const shadowRoot = qr.shadowRoot;
-    setTimeout(async () => {
-      const canvas = shadowRoot.querySelector("canvas");
-      if (!canvas) return;
-      const btnDow = document.querySelector("sl-button[download]");
-      btnDow.href = canvas.toDataURL();
-      const copyQrCode = document.querySelector("sl-copy-button[copy-qr-code]");
-      if (!copyQrCode) return;
-      copyQrCode.addEventListener("click", async () => {
-        const response = await fetch(btnDow.href);
-        const blob = await response.blob();
-        const ctx = canvas.getContext("2d");
+// const qrcode = () => {
+//   document.addEventListener("DOMContentLoaded", () => {
+//     const qr = document.querySelector("sl-qr-code[qr-code-order]");
+//     const canvas = shadowRoot.querySelector("canvas");
+//     if (!canvas) return;
+//     const btnDow = document.querySelector("sl-button[download]");
+//     // setTimeout(() => {
+//     //   copyQrCodeFunction();
+//     // }, 1000);
+//     console.log(btnDow);
+//     qr.value = location.href;
+//     qr.attachShadow({ mode: "open" });
+//     const shadowRoot = qr.shadowRoot;
 
-        const imageBitmap = await createImageBitmap(blob);
-        canvas.width = imageBitmap.width;
-        canvas.height = imageBitmap.height;
-        ctx.drawImage(imageBitmap, 0, 0);
+//     btnDow.href = canvas.toDataURL();
+//     const copyQrCode = document.querySelector("sl-copy-button[copy-qr-code]");
+//     if (!copyQrCode) return;
+//     copyQrCode.addEventListener("click", async () => {
+//       const response = await fetch(btnDow.href);
+//       const blob = await response.blob();
+//       const ctx = canvas.getContext("2d");
 
-        canvas.toBlob(async (blob) => {
-          const data = [new ClipboardItem({ "image/png": blob })];
-          await navigator.clipboard.write(data);
-        }, "image/png");
-      });
-    }, 200);
+//       const imageBitmap = await createImageBitmap(blob);
+//       canvas.width = imageBitmap.width;
+//       canvas.height = imageBitmap.height;
+//       ctx.drawImage(imageBitmap, 0, 0);
+
+//       canvas.toBlob(async (blob) => {
+//         const data = [new ClipboardItem({ "image/png": blob })];
+//         console.log(data);
+
+//         await navigator.clipboard.write(data);
+//       }, "image/png");
+//     });
+//   });
+// };
+
+// qrcode();
+const copyQrCodeFunction = async () => {
+  const qrcode = document.querySelector("[qr-code-order]");
+  const eleQr = document.createElement("sl-qr-code");
+  eleQr.setAttribute("radius", "0.5");
+  eleQr.setAttribute("size", "100");
+  eleQr.setAttribute("value", location.href);
+  qrcode.appendChild(eleQr);
+  setTimeout(() => {
+    const shadowRoot = eleQr.shadowRoot;
+    const canvas = shadowRoot.querySelector("canvas");
+    // const copyQrCode = document.querySelector("sl-copy-button[copy-qr-code]");
+    const parentCopy = document.querySelector("[copy-qr-code]");
+    const copyQrCode = document.createElement("sl-copy-butto");
+    copyQrCode.setAttribute("copy-label", "Sao chéo hình ảnh");
+    copyQrCode.setAttribute("success-label", "Đã sao chép!");
+    copyQrCode.setAttribute(
+      "error-label",
+      "Lỗi sao chép, xin lỗi vì điều bất tiện này!"
+    );
+    parentCopy.appendChild(copyQrCode);
+    copyQrCode.addEventListener("click", async () => {
+      // Code copy ảnh từ canvas (phần xử lý copy)
+      const response = await fetch(location.href);
+      const blob = await response.blob();
+      const ctx = canvas.getContext("2d");
+
+      console.log(blob);
+      canvas.toBlob(async (blob) => {
+        const data = [new ClipboardItem({ "image/png": blob })];
+        console.log(data);
+        await navigator.clipboard.write(data);
+      }, "image/png");
+    });
+  }, 200);
+  return;
+  if (!copyQrCode) return;
+
+  // Giả sử component phát ra sự kiện 'ready' khi shadow DOM được tạo
+  eleQr.addEventListener("ready", () => {
+    const shadowRoot = eleQr.shadowRoot;
+    const canvas = shadowRoot && shadowRoot.querySelector("canvas");
+    console.log(canvas);
+
+    if (!canvas) return;
   });
 };
-
-qrcode();
+copyQrCodeFunction();

@@ -1,3 +1,4 @@
+include ../mixin/treeCategory.pug
 header(class=``)
      div(class="container")
           div(class="py-[24px]  flex gap-x-[40px] items-center justify-center lg:justify-between border-b-[1px] border-b-[#0000001A]")
@@ -5,9 +6,11 @@ header(class=``)
                     button(class="fa-solid fa-bars hidden lg:block")
                     a(href='/' class="text-[#000000] font-[700] text-[32px]") DACS
                div(class="flex gap-x-[24px] items-center")
-                    div(class="flex gap-x-[4px] items-center lg:hidden")
+                    div(class="group flex gap-x-[4px] items-center lg:hidden relative")
                          div(class="text-[#000000] font-[400] text-[16px]") Sản phẩm
                          i(class="fa-solid fa-chevron-down text-[16px]")
+                         sl-menu(class=`hidden group-hover:block w-max absolute top-[20px] left-0 right-0 mx-auto z-[100]`)
+                              +treeCategory(treeCategories)
                     div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Đang giảm
                     div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Sản phẩm mới
                     div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Thương hiệu

@@ -70,6 +70,9 @@ const updatePatch = async (req: Request, res: Response) => {
   const { id } = req.params;
   if (req.body.position) req.body.position = parseInt(req.body.position);
   else req.body.position = (await ProductCategory.countDocuments()) + 1;
+  req.body.parentId
+    ? (req.body.parentId = new ObjectId(req.body.parentId))
+    : req.body;
   await ProductCategory.updateOne(
     {
       _id: id,

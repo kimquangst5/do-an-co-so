@@ -30,5 +30,8 @@ const ROUTER_CLIENT = {
         INDEX: "",
         SUCCESS: "/thanh-cong",
     },
+    PRODUCT_CATEGORY: {
+        PATH: "/danh-muc-san-pham",
+    },
 };
 exports.default = ROUTER_CLIENT;

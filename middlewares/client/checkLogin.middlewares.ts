@@ -3,12 +3,21 @@ import ROUTERS from "../../constants/routes/index.routes";
 import jwt from "jsonwebtoken";
 import Role from "../../models/roles.models";
 import Customer from "../../models/customers.model";
+import ProductCategory from "../../models/productsCategories.model";
+import createTree from "../../helpers/createTree.helper";
 
 const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.cookies["alert-success"] == "xoa-cookie") {
       res.clearCookie("alert-success");
     }
+    const categories = await ProductCategory.find({
+      deleted: false,
+      status: "active",
+    });
+    const treeCate = createTree(categories);
+    res.locals.treeCategories = treeCate;
+
     if (req.cookies.tokenCustomer) {
       const user = jwt.verify(
         req.cookies.tokenCustomer,

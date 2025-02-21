@@ -38,8 +38,8 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                     {
                         name: "Danh mục",
                         icon: "columns-gap",
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: "Media",
@@ -52,29 +52,29 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                     {
                         name: "Thêm sản phẩm",
                         icon: "plus-circle",
-                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.CREATE}`
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.CREATE}`,
                     },
                     {
                         name: "Danh sách",
                         icon: "list",
-                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.INDEX}`
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT.PATH}${index_routes_1.default.ADMIN.PRODUCT.INDEX}`,
                     },
                     {
                         name: "Danh mục",
                         icon: "columns-gap",
-                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.PATH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.INDEX}`
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.PATH}${index_routes_1.default.ADMIN.PRODUCT_CATEGORY.INDEX}`,
                     },
                     {
                         name: "Màu sắc",
                         icon: "palette",
-                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.PATH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.INDEX}`
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.PATH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.INDEX}`,
                     },
                     {
                         name: "Kích thước",
                         icon: "rulers",
-                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.SIZE.PATH}${index_routes_1.default.ADMIN.SIZE.INDEX}`
-                    }
-                ]
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.SIZE.PATH}${index_routes_1.default.ADMIN.SIZE.INDEX}`,
+                    },
+                ],
             },
         ];
         res.locals.siderArray = siderArray;

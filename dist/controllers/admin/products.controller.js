@@ -36,29 +36,27 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         deleted: false,
     };
     if (req.query.trang_thai) {
-        find['status'] = req.query.trang_thai;
+        find["status"] = req.query.trang_thai;
     }
-    const search = req.query.tim_kiem || '';
-    if (typeof search === 'string') {
-        const findSlug = (0, unidecode_1.default)(search.trim().replace(/\s+/g, '-'));
-        const regexTitle = new RegExp(search, 'i');
-        const regexSlug = new RegExp(findSlug, 'i');
-        const regexSlugDb = new RegExp(search.trim().replace(/\s+/g, '-'), 'i');
-        find['$or'] = [
+    const search = req.query.tim_kiem || "";
+    if (typeof search === "string") {
+        const findSlug = (0, unidecode_1.default)(search.trim().replace(/\s+/g, "-"));
+        const regexTitle = new RegExp(search, "i");
+        const regexSlug = new RegExp(findSlug, "i");
+        const regexSlugDb = new RegExp(search.trim().replace(/\s+/g, "-"), "i");
+        find["$or"] = [
             {
-                title: regexTitle
+                title: regexTitle,
             },
             {
-                slug: regexSlug
+                slug: regexSlug,
             },
             {
-                slug: regexSlugDb
+                slug: regexSlugDb,
             },
         ];
     }
-    const products = yield products_model_1.default.find(find)
-        .lean()
-        .sort({
+    const products = yield products_model_1.default.find(find).lean().sort({
         position: -1,
     });
     try {
@@ -149,62 +147,63 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createPost = createPost;
 const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const products = yield products_model_1.default.findOne({
+        _id: req.params.id,
+        deleted: false,
+    }).lean();
+    const productItem = yield index_service_1.productItemService.get({
+        productId: products["_id"],
+    });
+    if (productItem.length > 0) {
+        productItem.forEach((it) => __awaiter(void 0, void 0, void 0, function* () {
+            it["infoColor"] = yield colorProduct_model_1.default.findOne({
+                _id: it.color,
+            });
+            it["infoSize"] = yield sizeProduct_model_1.default.findOne({
+                _id: it.size,
+            });
+        }));
+    }
     try {
-        const products = yield products_model_1.default.findOne({
-            _id: req.params.id,
-            deleted: false,
-        }).lean();
-        const productItem = yield index_service_1.productItemService.get({
-            productId: products["_id"],
-        });
-        if (productItem.length > 0) {
-            productItem.forEach((it) => __awaiter(void 0, void 0, void 0, function* () {
-                it["infoColor"] = yield colorProduct_model_1.default.findOne({
-                    _id: it.color,
-                });
-                it["infoSize"] = yield sizeProduct_model_1.default.findOne({
-                    _id: it.size,
-                });
-            }));
-        }
         const author = yield index_service_1.accountsService.get({
             _id: products.createdBy,
         });
-        products["author"] = author[0]["fullname"];
-        try {
-            const updatetor = yield index_service_1.accountsService.get({
-                _id: products.updatedBy,
-            });
-            products["updatetor"] = updatetor[0]["fullname"];
-        }
-        catch (error) { }
-        const getSize = yield index_service_1.sizeProductService.get({
-            status: "active",
-        });
-        const getColor = yield index_service_1.colorProductService.get({
-            status: "active",
-        });
-        const categories = yield productsCategories_model_1.default.find({
-            deleted: false,
-        });
-        const listCategories = (0, createTree_helper_1.default)(categories);
-        if (products["categoryId"].length > 0)
-            products["categories"] = products.categoryId
-                .map((id) => id.toString())
-                .join(" ");
-        res.render("admin/pages/products/update.pug", {
-            pageTitle: products.name,
-            pageDesc: "Cập nhật sản phẩm",
-            products: products,
-            getColor,
-            getSize,
-            productItem,
-            listCategories,
-        });
+        if (author)
+            products["author"] = author[0]["fullname"];
     }
     catch (error) {
-        res.redirect("back");
+        products["author"] = "Chưa biết";
     }
+    try {
+        const updatetor = yield index_service_1.accountsService.get({
+            _id: products.updatedBy,
+        });
+        products["updatetor"] = updatetor[0]["fullname"];
+    }
+    catch (error) { }
+    const getSize = yield index_service_1.sizeProductService.get({
+        status: "active",
+    });
+    const getColor = yield index_service_1.colorProductService.get({
+        status: "active",
+    });
+    const categories = yield productsCategories_model_1.default.find({
+        deleted: false,
+    });
+    const listCategories = (0, createTree_helper_1.default)(categories);
+    if (products["categoryId"].length > 0)
+        products["categories"] = products.categoryId
+            .map((id) => id.toString())
+            .join(" ");
+    res.render("admin/pages/products/update.pug", {
+        pageTitle: products.name,
+        pageDesc: "Cập nhật sản phẩm",
+        products: products,
+        getColor,
+        getSize,
+        productItem,
+        listCategories,
+    });
 });
 exports.update = update;
 const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -214,7 +213,7 @@ const getImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const productAssets = yield productAssets_model_1.default.find({
             productId: id,
         }).sort({
-            position: 'asc'
+            position: "asc",
         });
         console.log(productAssets);
         const main = productAssets.filter((it) => it.type == "main");
@@ -279,7 +278,7 @@ const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (res.locals.ROLE.permission.includes("products-update")) {
         req.body.updatedBy = res.locals.INFOR_USER.id;
         const productAssets = yield productAssets_model_1.default.find({
-            productId: new mongodb_1.ObjectId(req.params.id)
+            productId: new mongodb_1.ObjectId(req.params.id),
         });
         const listProductAssets = [];
         const listAssets = [];
@@ -300,10 +299,10 @@ const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             finally { if (e_5) throw e_5.error; }
         }
         yield assets_model_1.default.deleteMany({
-            _id: listAssets
+            _id: listAssets,
         });
         yield productAssets_model_1.default.deleteMany({
-            _id: listProductAssets
+            _id: listProductAssets,
         });
         const updateProduct = yield index_service_1.productService.update(req.params.id, req.body);
         const updateProductAssets = yield index_service_1.productAssetsService.update(req.params.id, req.body);

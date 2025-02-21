@@ -28,6 +28,9 @@ interface ROUTER_CLIENT {
     INDEX: string;
     SUCCESS: string;
   };
+  PRODUCT_CATEGORY: {
+    PATH: string;
+  };
 }
 
 const ROUTER_CLIENT: ROUTER_CLIENT = {
@@ -59,6 +62,9 @@ const ROUTER_CLIENT: ROUTER_CLIENT = {
     PATH: "/thanh-toan",
     INDEX: "",
     SUCCESS: "/thanh-cong",
+  },
+  PRODUCT_CATEGORY: {
+    PATH: "/danh-muc-san-pham",
   },
 };
 

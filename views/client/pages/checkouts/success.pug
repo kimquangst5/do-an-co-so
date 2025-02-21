@@ -56,13 +56,13 @@ block main
                                     div(class=`flex items-center gap-x-[10px]`) 
                                         sl-icon(name='qr-code-scan' slot="prefix")
                                         div(class=``) Mã QR đơn hàng
-                                    div(class=`col-span-1 font-bold`)
-                                        sl-qr-code(qr-code-order radius="0.5" size="100")
-                                    div(class=`flex items-center gap-x-[10px] justify-end`) 
+                                    div(class=`col-span-1 font-bold` qr-code-order)
+                                        //- sl-qr-code(qr-code-order radius="0.5" size="100")
+                                    div(class=`flex items-center gap-x-[10px] justify-end` copy-qr-code) 
                                         sl-tooltip(content="Tải Mã QR đơn hàng")
                                             sl-button(download=`Đơn hàng ${order.id}.png` circle size='small')
                                                 sl-icon(name='arrow-down')
-                                        sl-copy-button(copy-qr-code  copy-label="Sao chéo hình ảnh" success-label="Đã sao chép!" error-label="Lỗi sao chép, xin lỗi vì điều bất tiện này!")
+                                        //- sl-copy-button(copy-qr-code  copy-label="Sao chéo hình ảnh" success-label="Đã sao chép!" error-label="Lỗi sao chép, xin lỗi vì điều bất tiện này!")
 
                         div(class="col-span-4 flex flex-col gap-y-[20px] overflow-y-auto ")
                             div(class=`flex-1 py-[20px] px-[24px] rounded-[20px] border-[1px] border-[#0000001A] flex flex-col gap-y-[24px]`)

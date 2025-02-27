@@ -8,9 +8,11 @@ import ProductAssets from "../../models/productAssets.model";
 import Assets from "../../models/assets.model";
 import console from "console";
 import ROUTERS from "../../constants/routes/index.routes";
+import unidecode from "unidecode";
 
 const detail = async (req: Request, res: Response) => {
   const { slug } = req.params;
+
   const product = await Product.findOne({
     slug: slug,
     deleted: false,
@@ -101,4 +103,84 @@ const getItem = async (req: Request, res: Response) => {
   });
 };
 
-export { detail, getSize, getItem };
+const search = async (req: Request, res: Response) => {
+  console.log(req.query);
+  console.log(req.params);
+  const { status } = req.params;
+  let key = req.query["tu-khoa"].toString();
+  const regexTitle = new RegExp(key, "i");
+  let keySlug = unidecode(key.trim().replace(/\s+/g, "-"));
+  const regexSlug = new RegExp(keySlug, "i");
+  const find = {
+    deleted: false,
+    status: "active",
+    $or: [
+      {
+        name: regexTitle,
+      },
+      {
+        slug: regexSlug,
+      },
+    ],
+  };
+
+  const products = await Product.find(find);
+  const newProduct = [];
+
+  for await (const it of products) {
+    it["img_main"] = [];
+    const img = await ProductAssets.find({
+      productId: it.id,
+      type: "main",
+    });
+    if (img.length > 0) {
+      for await (const image of img) {
+        const assets__main = await Assets.findOne({
+          _id: image.assetsId,
+        });
+        it["img_main"].push(assets__main.path);
+      }
+    }
+
+    const listItem = await ProductItem.find({
+      productId: it.id,
+    });
+    if (listItem.length > 0) {
+      if (listItem.length > 1) {
+        const minItem = listItem.reduce((min, item) => {
+          return Math.ceil(item.price * item.discount) <
+            Math.ceil(min.price * min.discount)
+            ? item
+            : min;
+        }, listItem[0]);
+        it["priceNew"] = Math.ceil(
+          minItem.price - minItem.price * (minItem.discount / 100)
+        );
+        it.price = minItem.price;
+        it.discount = minItem.discount;
+      } else {
+        it["priceNew"] = Math.ceil(
+          listItem[0].price - listItem[0].price * (listItem[0].discount / 100)
+        );
+        it.price = listItem[0].price;
+        it.discount = listItem[0].discount;
+      }
+    }
+    newProduct.push(it);
+  }
+  if (status == "trang")
+    res.render("client/pages/products/search.pug", {
+      products,
+      key,
+    });
+  else {
+    console.log(newProduct);
+
+    res.json({
+      code: 200,
+      products: newProduct,
+    });
+  }
+};
+
+export { detail, getSize, getItem, search };

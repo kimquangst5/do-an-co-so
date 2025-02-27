@@ -2,6 +2,7 @@ interface ROUTER_CLIENT {
   PRODUCT: {
     PATH: string;
     DETAIL: string;
+    SEARCH: string;
   };
   CUSTOMER: {
     PATH: string;
@@ -37,6 +38,7 @@ const ROUTER_CLIENT: ROUTER_CLIENT = {
   PRODUCT: {
     PATH: "/san-pham",
     DETAIL: "",
+    SEARCH: "/ket-qua-tim-kiem",
   },
   CUSTOMER: {
     PATH: "/nguoi-dung",
@@ -64,7 +66,7 @@ const ROUTER_CLIENT: ROUTER_CLIENT = {
     SUCCESS: "/thanh-cong",
   },
   PRODUCT_CATEGORY: {
-    PATH: "/danh-muc-san-pham",
+    PATH: "/danh-muc",
   },
 };
 

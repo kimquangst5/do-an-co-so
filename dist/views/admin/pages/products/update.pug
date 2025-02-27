@@ -5,63 +5,66 @@ block header
      h1 Cập nhật sản phẩm
 
 block hb
-     - if(ROLE.permission.includes("products-update"))
-          sl-button(variant="primary" size="small" btn-update-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${products._id}`)
-               sl-icon(slot="prefix" name="plus-circle")
+     - if(ROLE.permission.includes('products-update'))
+          sl-button(variant='primary' size='small' btn-update-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${products._id}`)
+               sl-icon(slot='prefix' name='plus-circle')
                | Cập nhật
 block css
-     - if(ROLE.permission.includes("products-update"))
-          link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/style.min.css")
-          link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css")
-          link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.css")
+     - if(ROLE.permission.includes('products-update'))
+          link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/style.min.css')
+          link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css')
+          link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.css')
 
 block script
-     - if(ROLE.permission.includes("products-update"))
-          script(type="application/javascript" src="/tinymce/tinymce.min.js")
-          script(type="application/javascript" src="/admin/js/tinymce.config.js")
-          script(src="https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/index.iife.min.js")
-          script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
-          script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
-          script(src="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.js") 
-          script(src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js") 
-          script(src="/admin/js/products/update.js")
+     - if(ROLE.permission.includes('products-update'))
+          script(type='application/javascript' src='/tinymce/tinymce.min.js')
+          script(type='application/javascript' src='/admin/js/tinymce.config.js')
+          script(src='https://cdn.jsdelivr.net/npm/file-upload-with-preview@6.1.2/dist/index.iife.min.js')
+          script(src='https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js') 
+          script(src='https://cdn.jsdelivr.net/npm/sweetalert2@11')
+          script(src='https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.js') 
+          script(src='https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js')
+
+          script(src='https://cdn.jsdelivr.net/npm/preline@2.7.0/dist/preline.min.js') 
+
+          script(src='/admin/js/products/update.js')
 
 
 
 block main
-     - if(ROLE.permission.includes("products-update"))
-          sl-details(summary="Thông tin cập nhật" open)  
+     - if(ROLE.permission.includes('products-update'))
+          sl-details(summary='Thông tin cập nhật' open)  
                div(class=`grid grid-cols-2 text-[13px]`)
                     div(class=`flex flex-col gap-y-[10px]`) 
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Trạng thái
                               - if(products.status == 'active')
-                                   sl-badge(variant="success"  pill pulse size="small") Đang bán
+                                   sl-badge(variant='success'  pill pulse size='small') Đang bán
                               - else
-                                   sl-badge(variant="danger"  pill pulse size="small") Tạm dừng
+                                   sl-badge(variant='danger'  pill pulse size='small') Tạm dừng
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Thời gian tạo
                               div(class=`flex items-center gap-x-[5px] font-bold`) 
-                                   sl-format-date(date=products.createdAt hour="numeric" minute="numeric" hour-format="24")
+                                   sl-format-date(date=products.createdAt hour='numeric' minute='numeric' hour-format='24')
                                    div(class=``) -
-                                   sl-format-date(date=products.createdAt lang="fr") 
+                                   sl-format-date(date=products.createdAt lang='fr') 
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Cập nhật mới
                               div(class=`flex items-center gap-x-[5px] font-bold`) 
-                                   sl-format-date(date=products.updatedAt hour="numeric" minute="numeric" hour-format="24")
+                                   sl-format-date(date=products.updatedAt hour='numeric' minute='numeric' hour-format='24')
                                    div(class=``) -
-                                   sl-format-date(date=products.updatedAt lang="fr") 
+                                   sl-format-date(date=products.updatedAt lang='fr') 
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) SEO
-                              sl-badge(variant="danger"  pill size="small") Chưa đạt
+                              sl-badge(variant='danger'  pill size='small') Chưa đạt
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Từ khóa
-                              sl-badge(variant="danger"  pill size="small") Chưa đạt
+                              sl-badge(variant='danger'  pill size='small') Chưa đạt
                     div(class=`flex flex-col gap-y-[10px]`) 
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Ngôn ngữ hiện tại
                               div(class=`flex items-center gap-x-[5px]`)
-                                   img(src="/admin/images/vietnam.svg" alt="" class=`w-[25px]`)
+                                   img(src='/admin/images/vietnam.svg' alt='' class=`w-[25px]`)
                                    div(class=`font-bold`) Tiếng việt
 
                          div(class=`grid grid-cols-2`)
@@ -70,33 +73,33 @@ block main
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Cập nhật bởi
                               div(class=`font-bold`) #{products.updatetor ? products.updatetor : 'Chưa ai cập nhật'}
-          sl-details(summary="Thông tin sản phẩm" open)
-               sl-input(label="Tên sản phẩm" required size="small" name='name-product' value=products.name)
-               sl-select(value=products.categories max-options-visible=6 clearable  multiple  size="small" label="Danh mục cha" required name='category-parent' placeholder="Không chọn nếu là danh mục cha" )
+          sl-details(summary='Thông tin sản phẩm' open)
+               sl-input(label='Tên sản phẩm' required size='small' name='name-product' value=products.name)
+               sl-select(value=products.categories max-options-visible=6 clearable  multiple  size='small' label='Danh mục cha' required name='category-parent' placeholder='Không chọn nếu là danh mục cha' )
                     - if(listCategories && listCategories.length > 0)
                          +createTree(listCategories)
                     - else
                          sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
 
-               sl-input(label="Vị trí" size="small" placeholder="Tự động tăng..." name='position' value=products.position)
-               sl-input(label="Đường dẫn" size="small" placeholder="Tự động tạo ra theo tên của sản phẩm..." value=products.slug name='slug')
+               sl-input(label='Vị trí' size='small' placeholder='Tự động tăng...' name='position' value=products.position)
+               sl-input(label='Đường dẫn' size='small' placeholder='Tự động tạo ra theo tên của sản phẩm...' value=products.slug name='slug')
 
-               sl-radio-group(label="Trạng thái sản phẩm" name="status-product" size="small" value=products.status)
-                    sl-radio(value="active") Đang bán
-                    sl-radio(value="inactive") Tạm dừng
-               sl-radio-group(label="Sản phẩm nổi bật" size="small" value=products.featured.toString() name="featured")
-                    sl-radio(value="true") Có
-                    sl-radio(value="false") Không
+               sl-radio-group(label='Trạng thái sản phẩm' name='status-product' size='small' value=products.status)
+                    sl-radio(value='active') Đang bán
+                    sl-radio(value='inactive') Tạm dừng
+               sl-radio-group(label='Sản phẩm nổi bật' size='small' value=products.featured.toString() name='featured')
+                    sl-radio(value='true') Có
+                    sl-radio(value='false') Không
 
-          sl-details(summary="Ảnh sản phẩm" open  )
-               div(class="custom-file-container" data-upload-id="upload-image-preview-main")
-               div(class="custom-file-container" data-upload-id="upload-image-preview-sub")
+          sl-details(summary='Ảnh sản phẩm' open  )
+               div(class='custom-file-container' data-upload-id='upload-image-preview-main')
+               div(class='custom-file-container' data-upload-id='upload-image-preview-sub')
 
-          //- sl-details(summary="Biến thể sản phẩm" open)
+          //- sl-details(summary='Biến thể sản phẩm' open)
           div(class=``)
 
-               sl-button(variant="primary" size="small" btn-create-new-variant class=`ml-auto`)
-                    sl-icon(slot="prefix" name="plus-circle")
+               sl-button(variant='primary' size='small' btn-create-new-variant class=`ml-auto`)
+                    sl-icon(slot='prefix' name='plus-circle')
                     | Thêm biến thể
                div(class=`flex gap-x-[10px] items-center w-full flex-wrap`)
                     table(class=`w-full`)
@@ -121,34 +124,34 @@ block main
                                                   each it in getColor
                                                        sl-option(value=it.id)
                                                             div(class=`flex justify-between items-center`) 
-                                                                 sl-icon(slot="prefix" name="palette" class=`mr-[10px]`)
+                                                                 sl-icon(slot='prefix' name='palette' class=`mr-[10px]`)
                                                                  div #{it.name}
                                                                  div(class=`ml-auto w-[20px]`)
-                                                                      sl-color-picker(format="hex" size="small" label="Mã màu" name="code" value=it.code disabled) 
+                                                                      sl-color-picker(format='hex' size='small' label='Mã màu' name='code' value=it.code disabled) 
                                    td
                                         - if(getSize && getSize.length > 0)
                                         sl-select(clearable class=`w-[10rem] mx-auto` name='size')
                                              <small>Kích thước</small>
                                                   each it in getSize
                                                        sl-option(value=it.id)
-                                                            sl-icon(slot="prefix" name="rulers")
+                                                            sl-icon(slot='prefix' name='rulers')
                                                             | #{it.name}
-                                                            sl-icon(slot="suffix" name="patch-check")
+                                                            sl-icon(slot='suffix' name='patch-check')
 
                                    td
-                                        div(class="format-number-overview flex gap-x-[10px] items-center justify-center mx-auto")
-                                             sl-input(type="number" class=`w-[7rem] text-center ` name='price')
+                                        div(class='format-number-overview flex gap-x-[10px] items-center justify-center mx-auto')
+                                             sl-input(type='number' class=`w-[7rem] text-center ` name='price')
                                    td
                                         div(class=`mx-auto`)
-                                             sl-input(type="number" value=0 discount max=100 maxlength=2 class=`w-[7rem] text-center mx-auto` name='discount')
+                                             sl-input(type='number' value=0 discount max=100 maxlength=2 class=`w-[7rem] text-center mx-auto` name='discount')
                                    td
                                         div(class=`flex items-center w-max justify-center mx-auto`) 
                                              sl-format-number()
                                              div(class=`đ`) đ
                                    td
-                                        sl-input(type="number" value=0 class=`w-[7rem] mx-auto` name='quantity')
+                                        sl-input(type='number' value=0 class=`w-[7rem] mx-auto` name='quantity')
                                    td
-                                        sl-icon(slot="suffix" name="trash" class=`cursor-pointer text-[red]`)
+                                        sl-icon(slot='suffix' name='trash' class=`cursor-pointer text-[red]`)
 
                               - if(productItem && productItem.length > 0)
                                    each it in productItem
@@ -162,40 +165,44 @@ block main
                                                             each it in getColor
                                                                  sl-option(value=it.id)
                                                                       div(class=`flex justify-between items-center`) 
-                                                                           sl-icon(slot="prefix" name="palette" class=`mr-[10px]`)
+                                                                           sl-icon(slot='prefix' name='palette' class=`mr-[10px]`)
                                                                            div #{it.name}
                                                                            div(class=`ml-auto w-[20px]`)
-                                                                                sl-color-picker(format="hex" size="small" label="Mã màu" name="code" value=it.code disabled) 
+                                                                                sl-color-picker(format='hex' size='small' label='Mã màu' name='code' value=it.code disabled) 
                                              td
-                                                  - if(getSize && getSize.length > 0)
+                                                  - if(getSize && getSize.length  > 0)
                                                        sl-select(clearable class=`w-[10rem] mx-auto` name='size' value=it.infoSize._id)
                                                             <small>Kích thước</small>
                                                             each it in getSize
                                                                  sl-option(value=it.id)
-                                                                      sl-icon(slot="prefix" name="rulers")
+                                                                      sl-icon(slot='prefix' name='rulers')
                                                                       | #{it.name}
-                                                                      sl-icon(slot="suffix" name="patch-check")
+                                                                      sl-icon(slot='suffix' name='patch-check')
+
+
+
+
 
                                              td
-                                                  div(class="format-number-overview flex gap-x-[10px] items-center justify-center mx-auto")
-                                                       sl-input(type="number" class=`w-[7rem] text-center ` name='price' value=it.price)
+                                                  div(class='format-number-overview flex gap-x-[10px] items-center justify-center mx-auto')
+                                                       sl-input(type='number' class=`w-[7rem] text-center ` name='price' value=it.price)
                                              td
                                                   div(class=`mx-auto`)
-                                                       sl-input(type="number" value=it.discount discount max=100 maxlength=2 class=`w-[7rem] text-center mx-auto` name='discount')
+                                                       sl-input(type='number' value=it.discount discount max=100 maxlength=2 class=`w-[7rem] text-center mx-auto` name='discount')
                                              td
                                                   div(class=`flex items-center w-max justify-center mx-auto`) 
                                                        sl-format-number()
                                                        div(class=`đ`) đ
                                              td
-                                                  sl-input(type="number" value=it.quantity class=`w-[7rem] mx-auto` name='quantity' )
+                                                  sl-input(type='number' value=it.quantity class=`w-[7rem] mx-auto` name='quantity' )
                                              td
-                                                  sl-icon(slot="suffix" name="trash" class=`cursor-pointer text-[red]`)
+                                                  sl-icon(slot='suffix' name='trash' class=`cursor-pointer text-[red]`)
 
 
-          sl-details(summary="Mô tả ngắn" open)
-               textarea(label="Mô tả ngắn" size="small" id='desc-short' name='description-short') #{products.descriptionShort}
+          sl-details(summary='Mô tả ngắn' open)
+               textarea(label='Mô tả ngắn' size='small' id='desc-short' name='description-short') #{products.descriptionShort}
 
 
-          sl-details(summary="Mô tả đầy đủ" open)
-               textarea(label="Mô tả đầy đủ" size="small" id='desc' name='description') #{products.description}
+          sl-details(summary='Mô tả đầy đủ' open)
+               textarea(label='Mô tả đầy đủ' size='small' id='desc' name='description') #{products.description}
 

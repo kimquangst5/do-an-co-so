@@ -41,6 +41,7 @@ const router = express_1.default.Router();
 const controller = __importStar(require("../../controllers/client/products.controller"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 router.get(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug`, controller.detail);
+router.get(`${index_routes_1.default.CLIENT.PRODUCT.SEARCH}/:method`, controller.search);
 router.put(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug/getSize`, controller.getSize);
 router.post(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug/getItem`, controller.getItem);
 exports.default = router;

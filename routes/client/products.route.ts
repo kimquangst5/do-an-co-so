@@ -6,6 +6,8 @@ import { review } from "../../validation/client/reviews.validate";
 
 router.get(`${ROUTERS.CLIENT.PRODUCT.DETAIL}/:slug`, controller.detail);
 
+router.get(`${ROUTERS.CLIENT.PRODUCT.SEARCH}/:method`, controller.search);
+
 router.put(
   `${ROUTERS.CLIENT.PRODUCT.DETAIL}/:slug/getSize`,
   controller.getSize

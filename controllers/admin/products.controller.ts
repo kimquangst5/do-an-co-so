@@ -17,6 +17,7 @@ import createTree from "../../helpers/createTree.helper";
 import ProductAssets from "../../models/productAssets.model";
 import Assets from "../../models/assets.model";
 import unidecode from "unidecode";
+import console from "console";
 
 const index = async (req: Request, res: Response) => {
   const find = {
@@ -235,6 +236,8 @@ const getImage = async (req: Request, res: Response) => {
 
 const updatePatch = async (req: Request, res: Response) => {
   if (res.locals.ROLE.permission.includes("products-update")) {
+    console.log(req.body);
+
     req.body.updatedBy = res.locals.INFOR_USER.id;
 
     const productAssets = await ProductAssets.find({

@@ -18,7 +18,7 @@ const index = async (req: Request, res: Response) => {
     deleted: false,
   });
   const subCategory = [];
-  subCategory.push(category.id);
+  if (category && category.id) subCategory.push(category.id);
   const getSubCategory = async (id: any) => {
     const sub = await ProductCategory.find({
       parentId: new ObjectId(id),
@@ -30,12 +30,32 @@ const index = async (req: Request, res: Response) => {
       await getSubCategory(it.id);
     }
   };
-  await getSubCategory(category.id);
-  let products = await Product.find({
+  if (category && category.id) await getSubCategory(category.id);
+
+  const findProduct = {
     categoryId: {
       $in: subCategory,
     },
-  });
+    status: "active",
+    deleted: false,
+  };
+  let sortProduct = {
+    // position: "decs",
+  };
+  // sortProduct["position"] = -1;
+  if (typeof req.query.sapxep === "string") {
+    const name = req.query.sapxep.split("-")[0];
+    const value = req.query.sapxep.split("-")[1];
+    if (name == "tensanpham") {
+      sortProduct["name"] = value == "tangdan" ? 1 : -1;
+    } else if (name == "sanpham") {
+      sortProduct["position"] = value == "moinhat" ? -1 : 1;
+    }
+  }
+
+  let products = await Product.find(findProduct).sort(sortProduct);
+  // .skip(pagination["skip"])
+  // .limit(pagination.limit);
   const listProduct = [];
   for await (const it of products) {
     const find = {
@@ -53,13 +73,11 @@ const index = async (req: Request, res: Response) => {
       const size = await SizeProduct.findOne({
         slug: kichthuoc,
       });
-      console.log(size);
 
       if (size) find["size"] = size.id;
       else find["size"] = it.id;
     }
 
-    console.log(find);
     const items = await ProductItem.findOne(find);
     if (items) {
       if (khoanggia) {
@@ -72,7 +90,6 @@ const index = async (req: Request, res: Response) => {
     }
   }
 
-  // console.log(products);
   for await (const it of listProduct) {
     it["img_main"] = [];
     const img = await ProductAssets.find({
@@ -111,14 +128,49 @@ const index = async (req: Request, res: Response) => {
         it.price = listItem[0].price;
         it.discount = listItem[0].discount;
       }
-    } else {
     }
   }
+  if (typeof req.query.sapxep === "string") {
+    const name = req.query.sapxep.split("-")[0];
+    const value = req.query.sapxep.split("-")[1];
+    if (name == "gia") {
+      if (value == "tangdan") {
+        listProduct.sort((a, b) => a.priceNew - b.priceNew);
+      } else listProduct.sort((a, b) => b.priceNew - a.priceNew);
+    }
+  } else {
+    listProduct.sort((a, b) => b.position - a.position);
+  }
+
+  let pagination: any = {
+    current: req.query.trang ? parseInt(req.query.trang as string) : 1,
+    limit: 3,
+  };
+  pagination["totalProduct"] = listProduct.length;
+  pagination["totalPage"] = Math.ceil(
+    pagination["totalProduct"] / pagination.limit
+  );
+  if (pagination.current > pagination.totalPage) pagination.current = 1;
+  pagination["skip"] = (pagination.current - 1) * pagination.limit;
+  const paginatedList = listProduct.slice(
+    pagination["skip"],
+    pagination["skip"] + pagination.limit
+  );
+
+  const listColors = await ColorProduct.find({
+    status: "active",
+  });
+  const listSizes = await SizeProduct.find({
+    status: "active",
+  });
 
   res.render("client/pages/productCategories/index.pug", {
     pageTitle: category.name,
     category,
-    products: listProduct,
+    products: paginatedList,
+    listColors,
+    listSizes,
+    pagination,
   });
 };
 

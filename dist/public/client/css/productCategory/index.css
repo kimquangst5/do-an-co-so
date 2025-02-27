@@ -1,0 +1,27 @@
+sl-radio-button::part(button button--checked) {
+  background-color: #000000 !important;
+  color: #ffffff;
+}
+
+sl-radio-button::part(button):hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+sl-radio-button::part(button) {
+  border: 0px;
+  border-radius: 62px;
+  width: 57px;
+  height: 44px;
+  margin-right: 12px;
+  background-color: #f0f0f0;
+}
+
+sl-select::part(combobox) {
+  box-shadow: none;
+  border-color: transparent;
+  padding: 0;
+}
+
+sl-select::part(base) {
+}

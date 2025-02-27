@@ -38,7 +38,8 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         deleted: false,
     });
     const subCategory = [];
-    subCategory.push(category.id);
+    if (category && category.id)
+        subCategory.push(category.id);
     const getSubCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
         const sub = yield productsCategories_model_1.default.find({
             parentId: new mongodb_1.ObjectId(id),
@@ -50,12 +51,27 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             yield getSubCategory(it.id);
         }
     });
-    yield getSubCategory(category.id);
-    let products = yield products_model_1.default.find({
+    if (category && category.id)
+        yield getSubCategory(category.id);
+    const findProduct = {
         categoryId: {
             $in: subCategory,
         },
-    });
+        status: "active",
+        deleted: false,
+    };
+    let sortProduct = {};
+    if (typeof req.query.sapxep === "string") {
+        const name = req.query.sapxep.split("-")[0];
+        const value = req.query.sapxep.split("-")[1];
+        if (name == "tensanpham") {
+            sortProduct["name"] = value == "tangdan" ? 1 : -1;
+        }
+        else if (name == "sanpham") {
+            sortProduct["position"] = value == "moinhat" ? -1 : 1;
+        }
+    }
+    let products = yield products_model_1.default.find(findProduct).sort(sortProduct);
     const listProduct = [];
     try {
         for (var _k = true, products_1 = __asyncValues(products), products_1_1; products_1_1 = yield products_1.next(), _a = products_1_1.done, !_a; _k = true) {
@@ -78,13 +94,11 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 const size = yield sizeProduct_model_1.default.findOne({
                     slug: kichthuoc,
                 });
-                console.log(size);
                 if (size)
                     find["size"] = size.id;
                 else
                     find["size"] = it.id;
             }
-            console.log(find);
             const items = yield product_items_model_1.default.findOne(find);
             if (items) {
                 if (khoanggia) {
@@ -156,8 +170,6 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     it.discount = listItem[0].discount;
                 }
             }
-            else {
-            }
         }
     }
     catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -167,10 +179,43 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         finally { if (e_2) throw e_2.error; }
     }
+    if (typeof req.query.sapxep === "string") {
+        const name = req.query.sapxep.split("-")[0];
+        const value = req.query.sapxep.split("-")[1];
+        if (name == "gia") {
+            if (value == "tangdan") {
+                listProduct.sort((a, b) => a.priceNew - b.priceNew);
+            }
+            else
+                listProduct.sort((a, b) => b.priceNew - a.priceNew);
+        }
+    }
+    else {
+        listProduct.sort((a, b) => b.position - a.position);
+    }
+    let pagination = {
+        current: req.query.trang ? parseInt(req.query.trang) : 1,
+        limit: 3,
+    };
+    pagination["totalProduct"] = listProduct.length;
+    pagination["totalPage"] = Math.ceil(pagination["totalProduct"] / pagination.limit);
+    if (pagination.current > pagination.totalPage)
+        pagination.current = 1;
+    pagination["skip"] = (pagination.current - 1) * pagination.limit;
+    const paginatedList = listProduct.slice(pagination["skip"], pagination["skip"] + pagination.limit);
+    const listColors = yield colorProduct_model_1.default.find({
+        status: "active",
+    });
+    const listSizes = yield sizeProduct_model_1.default.find({
+        status: "active",
+    });
     res.render("client/pages/productCategories/index.pug", {
         pageTitle: category.name,
         category,
-        products: listProduct,
+        products: paginatedList,
+        listColors,
+        listSizes,
+        pagination,
     });
 });
 exports.index = index;

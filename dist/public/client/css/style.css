@@ -14,6 +14,9 @@ sl-option[tabindex="0"]::part(base) {
   background-color: transparent;
   color: var(--sl-color-neutral-700);
 }
+sl-option[tabindex="0"]::part(base):hover {
+  background-color: #f4f4f5;
+}
 
 .container {
   margin: 0 auto !important;

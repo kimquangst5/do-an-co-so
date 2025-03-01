@@ -64,6 +64,38 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
           },
         ],
       },
+      {
+        name: "Tài khoản quản trị",
+        icon: "person-plus",
+        childrent: [
+          {
+            name: "Thêm tài khoản",
+            icon: "plus-circle",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.CREATE}`,
+          },
+          {
+            name: "Danh sách",
+            icon: "list",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.INDEX}`,
+          },
+        ],
+      },
+      {
+        name: "Nhóm quyền",
+        icon: "person-lock",
+        childrent: [
+          {
+            name: "Thêm nhóm quyền",
+            icon: "plus-circle",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.CREATE}`,
+          },
+          {
+            name: "Danh sách",
+            icon: "list",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.INDEX}`,
+          },
+        ],
+      },
     ];
     res.locals.siderArray = siderArray;
     if (!req.cookies.token) {

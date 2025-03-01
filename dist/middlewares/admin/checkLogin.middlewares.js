@@ -76,6 +76,38 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                     },
                 ],
             },
+            {
+                name: "Tài khoản quản trị",
+                icon: "person-plus",
+                childrent: [
+                    {
+                        name: "Thêm tài khoản",
+                        icon: "plus-circle",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ACCOUNT.PATH}${index_routes_1.default.ADMIN.ACCOUNT.CREATE}`,
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ACCOUNT.PATH}${index_routes_1.default.ADMIN.ACCOUNT.INDEX}`,
+                    },
+                ],
+            },
+            {
+                name: "Nhóm quyền",
+                icon: "person-lock",
+                childrent: [
+                    {
+                        name: "Thêm nhóm quyền",
+                        icon: "plus-circle",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ROLES.PATH}${index_routes_1.default.ADMIN.ROLES.CREATE}`,
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ROLES.PATH}${index_routes_1.default.ADMIN.ROLES.INDEX}`,
+                    },
+                ],
+            },
         ];
         res.locals.siderArray = siderArray;
         if (!req.cookies.token) {

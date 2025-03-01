@@ -190,6 +190,7 @@ const addCart = () => {
         })
       );
       showAlertError();
+      return;
     }
     const colorId = colorElement.getAttribute("color-id");
     const sizeId = document.querySelector("[size-product]").value;
@@ -202,6 +203,7 @@ const addCart = () => {
         })
       );
       showAlertError();
+      return;
     }
     const quantity = document.querySelector("[quantity-product]");
     if (!quantity.innerHTML || quantity.innerHTML < 1) {
@@ -214,7 +216,7 @@ const addCart = () => {
       );
       showAlertError();
     }
-
+    showLoader();
     axios
       .post(link, {
         colorId: colorId,
@@ -230,9 +232,20 @@ const addCart = () => {
               icon: "success",
             })
           );
-          // const redirect = btnAdd.getAttribute("redirect");
-          // location.href = redirect;
+          const redirect = btnAdd.getAttribute("redirect");
+          location.href = redirect;
         }
+      })
+      .catch((error) => {
+        closeLoader();
+        localStorage.setItem(
+          "alert-error",
+          JSON.stringify({
+            title: error.response.data.message,
+            icon: "warning",
+          })
+        );
+        showAlertError();
       });
   });
 };

@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -24,8 +24,8 @@ app.use(express.static(`${__dirname}/public`));
 
 const isDist = __dirname.includes("dist");
 const nodeModulesPath = isDist
-     ? path.join(__dirname, "..", "node_modules", "tinymce")
-     : path.join(__dirname, "node_modules", "tinymce");
+  ? path.join(__dirname, "..", "node_modules", "tinymce")
+  : path.join(__dirname, "node_modules", "tinymce");
 app.use(`/tinymce`, express.static(nodeModulesPath));
 // app.get("/tinymce", (req: Request, res: Response) => {
 //   res.setHeader("Content-Type", "text/javascript");
@@ -36,7 +36,7 @@ routeClient(app);
 routeAdmin(app);
 
 app.listen(port, () => {
-     console.log(
-          `Đang lắng nghe cổng ${port} - http://localhost:${port}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`
-     );
+  console.log(
+    `Đang lắng nghe cổng ${port} - http://localhost:${port}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`
+  );
 });

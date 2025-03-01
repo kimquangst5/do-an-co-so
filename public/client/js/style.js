@@ -146,28 +146,87 @@ const formSearch = () => {
   });
 
   const input = form.querySelector("input");
-  input.addEventListener("keydown", () => {
-    // console.log(input.value);
-    if (input.value.length > 2) {
-      axios.get(`${link}/goi-y?tu-khoa=${input.value}`).then((res) => {
-        if (res.status == 200) {
-          console.log(res.data.products);
-          if (res.data.products.length > 0) {
-            let htmlResult = "";
-            res.data.products.forEach((it) => {
-              htmlResult += `<div class='grid grid-cols-12 gap-x-[15px]'><div class='col-span-2 h-auto'><img class='w-full h-auto rounded-[10px]' src='' alt=''></div><div class='col-span-10 grid grid-rows-3'><sl-tooltip class='flex items-center' content=${it.name}><div class='font-bold line-clamp-1'>${it.name}</div></sl-tooltip><div class='flex items-center gap-x-[15px]'><sl-rating precision='0.5' value='5' readonly=''></sl-rating><div class='text-[12px] sm:text-[10px] text-gray-500'>4.5/5</div></div><div class='flex items-center gap-x-[20px]'> <sl-format-number class='text-[20px] sm:text-[18px] font-[500] text-[#000000]' value=${it.priceNew} type='currency' currency='VND' lang='vi-VI'></sl-format-number><sl-format-number class='text-[14px] sm:text-[18px] font-[500] text-[#00000066] line-through flex items-center' value='10000' type='currency' currency='VND' lang='vi-VI'></sl-format-number><div class='w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center'>-10%</div></div></div></div>`;
-            });
-            let addHTML =
-              `<div class="absolute top-[60px] left-[30px] bg-[white] rounded-[20px] w-full flex flex-col -gap-y-[10px] z-[99]"><div class="font-bold text-[20px] py-[10px]"> Kết quả tìm kiếm</div><div class="flex flex-col gap-y-[15px] p-[10px] max-h-[70vh] overflow-y-auto">` +
-              htmlResult +
-              `</div></div>`;
-            const div = document.createElement("div");
-            div.innerHTML = addHTML;
-            form.appendChild(div);
-          }
-        }
-      });
+  let timeout;
+  input.addEventListener("blur", () => {
+    if (form.children[2]) {
+      form.children[2].remove();
     }
+  });
+  // input.addEventListener("input", () => {
+  //   console.log("ok");
+  //   if (form.children[2]) {
+  //     form.children[2].remove();
+  //   }
+  // });
+  input.addEventListener("keydown", () => {
+    timeout = setTimeout(() => {
+      if (input.value && input.value.length > 0) {
+        axios
+          .get(`${link}/goi-y?tu-khoa=${input.value}`)
+          .then((res) => {
+            if (res.status == 200) {
+              const div = document.createElement("div");
+              div.classList.add(
+                ...`absolute top-[60px] left-[30px] bg-[white] rounded-[20px] w-full flex flex-col -gap-y-[10px] z-[99]`.split(
+                  " "
+                )
+              );
+              if (res.data.products.length > 0) {
+                let htmlDiv = `
+                  <div class="font-bold text-[20px] py-[10px]"> Kết quả tìm kiếm</div>
+                  <div class="flex flex-col gap-y-[15px] p-[10px] h-[70vh] overflow-y-auto">`;
+                res.data.products.forEach((sp) => {
+                  htmlDiv += `
+                        <div class="grid grid-cols-12 gap-x-[15px]">
+                            <div class="col-span-2 h-auto"><img class="w-full h-auto rounded-[10px]" src=${sp.img_main[0]} alt="" /></div>
+                            <div class="col-span-10 grid grid-rows-3">
+                                <sl-tooltip class="flex items-center" content='${sp.name}'>
+                                    <div class="font-bold line-clamp-1">${sp.name}</div>
+                                </sl-tooltip>
+                                <div class="flex items-center gap-x-[15px]">
+                                    <sl-rating precision="0.5" value="4.5" readonly="readonly"></sl-rating>
+                                    <div class="text-[12px] sm:text-[10px] text-gray-500">4.5/5</div>
+                                </div>
+                                <div class="flex items-center gap-x-[20px]">
+                                    <sl-format-number class="text-[20px] sm:text-[18px] font-[500] text-[#000000]" value=${sp.priceNew} type="currency" currency="VND" lang="vi-VI"></sl-format-number>`;
+
+                  if (sp.discount != 0) {
+                    htmlDiv += `<sl-format-number class="text-[14px] sm:text-[18px] font-[500] text-[#00000066] line-through flex items-center" value=${sp.price} type="currency" currency="VND" lang="vi-VI"></sl-format-number>
+                  <div class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center">-${sp.discount}%</div>`;
+                  }
+
+                  htmlDiv += `</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                htmlDiv += `</div>`;
+                div.innerHTML = htmlDiv;
+                if (form.children[2]) {
+                  form.children[2].replaceWith(div);
+                } else {
+                  if (input.value && input.value.length > 1)
+                    form.appendChild(div);
+                }
+                console.log(form);
+              } else {
+                if (form.children[2]) {
+                  form.children[2].remove();
+                }
+              }
+            }
+          })
+          .catch((res) => {
+            console.log(res);
+          });
+      } else {
+        if (form.children[2]) {
+          form.children[2].classList.add("hidden");
+          form.children[2].remove();
+        }
+      }
+    }, 0);
   });
 };
 formSearch();

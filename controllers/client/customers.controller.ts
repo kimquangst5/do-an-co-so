@@ -5,7 +5,6 @@ import Customer from "../../models/customers.model";
 import ROUTERS from "../../constants/routes/index.routes";
 import axios from "axios";
 import OTP from "../../models/otp.model";
-import http from "http";
 
 require("dotenv").config();
 const login = async (req: Request, res: Response) => {
@@ -234,14 +233,13 @@ const forgotPasswordCreateOTP = async (req: Request, res: Response) => {
   const nodemailer = require("nodemailer");
   const otpGenerator = require("otp-generator");
 
-  // Create a transporter object
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false, // use false for STARTTLS; true for SSL on port 465
     auth: {
       user: "kimquangst5@gmail.com",
-      pass: "pqtb oiex elde ymwf",
+      pass: process.env.PASSWORD_APPLICATION,
     },
   });
 

@@ -203,7 +203,7 @@ const forgotPasswordCreateOTP = (req, res) => __awaiter(void 0, void 0, void 0, 
         secure: false,
         auth: {
             user: "kimquangst5@gmail.com",
-            pass: "pqtb oiex elde ymwf",
+            pass: process.env.PASSWORD_APPLICATION,
         },
     });
     const createOTP = otpGenerator.generate(6, {

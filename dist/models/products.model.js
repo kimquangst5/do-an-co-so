@@ -11,9 +11,7 @@ const productsSchema = new mongoose_1.default.Schema({
         type: [mongoose_1.default.SchemaTypes.ObjectId],
         required: true,
     },
-    name: {
-        type: String,
-    },
+    name: String,
     slug: { type: String, slug: "name", unique: true },
     description: {
         type: String,

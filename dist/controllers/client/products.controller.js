@@ -139,99 +139,108 @@ const getItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getItem = getItem;
 const search = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_3, _b, _c, _d, e_4, _e, _f;
-    console_1.default.log(req.query);
-    console_1.default.log(req.params);
-    const { status } = req.params;
-    let key = req.query["tu-khoa"].toString();
-    const regexTitle = new RegExp(key, "i");
-    let keySlug = (0, unidecode_1.default)(key.trim().replace(/\s+/g, "-"));
-    const regexSlug = new RegExp(keySlug, "i");
-    const find = {
-        deleted: false,
-        status: "active",
-        $or: [
-            {
-                name: regexTitle,
-            },
-            {
-                slug: regexSlug,
-            },
-        ],
-    };
-    const products = yield products_model_1.default.find(find);
-    const newProduct = [];
     try {
-        for (var _g = true, products_1 = __asyncValues(products), products_1_1; products_1_1 = yield products_1.next(), _a = products_1_1.done, !_a; _g = true) {
-            _c = products_1_1.value;
-            _g = false;
-            const it = _c;
-            it["img_main"] = [];
-            const img = yield productAssets_model_1.default.find({
-                productId: it.id,
-                type: "main",
-            });
-            if (img.length > 0) {
-                try {
-                    for (var _h = true, img_1 = (e_4 = void 0, __asyncValues(img)), img_1_1; img_1_1 = yield img_1.next(), _d = img_1_1.done, !_d; _h = true) {
-                        _f = img_1_1.value;
-                        _h = false;
-                        const image = _f;
-                        const assets__main = yield assets_model_1.default.findOne({
-                            _id: image.assetsId,
-                        });
-                        it["img_main"].push(assets__main.path);
-                    }
-                }
-                catch (e_4_1) { e_4 = { error: e_4_1 }; }
-                finally {
-                    try {
-                        if (!_h && !_d && (_e = img_1.return)) yield _e.call(img_1);
-                    }
-                    finally { if (e_4) throw e_4.error; }
-                }
-            }
-            const listItem = yield product_items_model_1.default.find({
-                productId: it.id,
-            });
-            if (listItem.length > 0) {
-                if (listItem.length > 1) {
-                    const minItem = listItem.reduce((min, item) => {
-                        return Math.ceil(item.price * item.discount) <
-                            Math.ceil(min.price * min.discount)
-                            ? item
-                            : min;
-                    }, listItem[0]);
-                    it["priceNew"] = Math.ceil(minItem.price - minItem.price * (minItem.discount / 100));
-                    it.price = minItem.price;
-                    it.discount = minItem.discount;
-                }
-                else {
-                    it["priceNew"] = Math.ceil(listItem[0].price - listItem[0].price * (listItem[0].discount / 100));
-                    it.price = listItem[0].price;
-                    it.discount = listItem[0].discount;
-                }
-            }
-            newProduct.push(it);
-        }
-    }
-    catch (e_3_1) { e_3 = { error: e_3_1 }; }
-    finally {
+        const { method } = req.params;
+        let key = req.query["tu-khoa"].toString();
+        const regexTitle = new RegExp(key, "i");
+        let keySlug = (0, unidecode_1.default)(key.trim().replace(/\s+/g, "-"));
+        const regexSlug = new RegExp(keySlug, "i");
+        const find = {
+            deleted: false,
+            status: "active",
+            $or: [
+                {
+                    name: regexTitle,
+                },
+                {
+                    slug: regexSlug,
+                },
+            ],
+        };
+        const products = yield products_model_1.default.find(find).lean();
+        const newProduct = [];
         try {
-            if (!_g && !_a && (_b = products_1.return)) yield _b.call(products_1);
+            for (var _g = true, products_1 = __asyncValues(products), products_1_1; products_1_1 = yield products_1.next(), _a = products_1_1.done, !_a; _g = true) {
+                _c = products_1_1.value;
+                _g = false;
+                const it = _c;
+                let data = Object.assign({}, it);
+                it["img_main"] = [];
+                const img = yield productAssets_model_1.default.find({
+                    productId: it._id,
+                    type: "main",
+                });
+                if (img.length > 0) {
+                    try {
+                        for (var _h = true, img_1 = (e_4 = void 0, __asyncValues(img)), img_1_1; img_1_1 = yield img_1.next(), _d = img_1_1.done, !_d; _h = true) {
+                            _f = img_1_1.value;
+                            _h = false;
+                            const image = _f;
+                            const assets__main = yield assets_model_1.default.findOne({
+                                _id: image.assetsId,
+                            });
+                            it["img_main"].push(assets__main.path);
+                        }
+                    }
+                    catch (e_4_1) { e_4 = { error: e_4_1 }; }
+                    finally {
+                        try {
+                            if (!_h && !_d && (_e = img_1.return)) yield _e.call(img_1);
+                        }
+                        finally { if (e_4) throw e_4.error; }
+                    }
+                }
+                data["img_main"] = it["img_main"];
+                const listItem = yield product_items_model_1.default.find({
+                    productId: it._id,
+                });
+                if (listItem.length > 0) {
+                    if (listItem.length > 1) {
+                        const minItem = listItem.reduce((min, item) => {
+                            return Math.ceil(item.price * item.discount) <
+                                Math.ceil(min.price * min.discount)
+                                ? item
+                                : min;
+                        }, listItem[0]);
+                        it["priceNew"] = Math.ceil(minItem.price - minItem.price * (minItem.discount / 100));
+                        it.price = minItem.price;
+                        it.discount = minItem.discount;
+                    }
+                    else {
+                        it["priceNew"] = Math.ceil(listItem[0].price - listItem[0].price * (listItem[0].discount / 100));
+                        it.price = listItem[0].price;
+                        it.discount = listItem[0].discount;
+                    }
+                    data["priceNew"] = it["priceNew"];
+                    data["price"] = it["price"];
+                    data["discount"] = it["discount"];
+                    newProduct.push(data);
+                }
+            }
         }
-        finally { if (e_3) throw e_3.error; }
-    }
-    if (status == "trang")
-        res.render("client/pages/products/search.pug", {
-            products,
-            key,
-        });
-    else {
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (!_g && !_a && (_b = products_1.return)) yield _b.call(products_1);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
         console_1.default.log(newProduct);
-        res.json({
-            code: 200,
-            products: newProduct,
-        });
+        if (method == "trang") {
+            res.render("client/pages/products/search.pug", {
+                products,
+                key,
+            });
+        }
+        else {
+            res.json({
+                code: 200,
+                products: newProduct,
+            });
+        }
+    }
+    catch (error) {
+        res.status(400);
     }
 });
 exports.search = search;

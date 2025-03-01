@@ -8,9 +8,7 @@ const productsSchema = new mongoose.Schema(
       type: [mongoose.SchemaTypes.ObjectId],
       required: true,
     },
-    name: {
-      type: String,
-    },
+    name: String,
     slug: { type: String, slug: "name", unique: true },
 
     description: {

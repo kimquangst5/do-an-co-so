@@ -29,6 +29,7 @@ const carts_model_1 = __importDefault(require("../../models/carts.model"));
 const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.model"));
 const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.model"));
 const order_model_1 = __importDefault(require("../../models/order.model"));
+const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c;
     const carts = yield carts_model_1.default.find({
@@ -204,6 +205,56 @@ const success = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         finally { if (e_3) throw e_3.error; }
     }
+    const nodemailer = require("nodemailer");
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: "kimquangst5@gmail.com",
+            pass: process.env.PASSWORD_APPLICATION,
+        },
+    });
+    console.log(req);
+    const protocol = req.headers["x-forwarded-proto"] ||
+        (req.socket["encrypted"] ? "https" : "http");
+    const domain = protocol + "://" + req.headers.host;
+    const mailOptions = {
+        from: "kimquangst5@gmail.com",
+        to: res.locals.INFOR_CUSTOMER.email,
+        subject: "Đặt đơn hàng thành công!",
+        html: `<h1><code><span style="font-family: verdana, geneva, sans-serif; color: #e03e2d;">Đặt hàng th&agrave;nh c&ocirc;ng</span></code></h1>
+<p>&nbsp;</p>
+<h2><code><span style="font-family: verdana, geneva, sans-serif;">I. Th&ocirc;ng tin kh&aacute;ch h&agrave;ng</span></code></h2>
+<div>
+<div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Họ v&agrave; t&ecirc;n kh&aacute;ch h&agrave;ng:&nbsp;<strong>${order.inforCustomer.fullname}</strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Email kh&aacute;ch h&agrave;ng: <strong><a href="mailto:kimquangst5@gmail.com">${order.inforCustomer.email}</a></strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Số điện thoại kh&aacute;ch h&agrave;ng&nbsp;<strong>${order.inforCustomer.phone}</strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Địa chỉ giao h&agrave;ng: <strong>${order.inforCustomer.address}</strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Ghi ch&uacute;: <strong>${order.inforCustomer.note ? order.inforCustomer.note : "Không có"}</strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Id đơn h&agrave;ng: <strong>${order.id}</strong></span></code></div>
+<div style="padding-left: 40px;"><code><span style="font-size: 14pt; font-family: verdana, geneva, sans-serif;">Đường link đơn h&agrave;ng:&nbsp;<strong>${domain}${index_routes_1.default.CLIENT.CHECKOUT.PATH}${index_routes_1.default.CLIENT.CHECKOUT.SUCCESS}${res.locals.INFOR_CUSTOMER.username}?id-don-hang=${order.id}</strong></span></code></div>
+</div>
+</div>
+<h2><code><span style="font-family: verdana, geneva, sans-serif;">II. Th&ocirc;ng tin đơn h&agrave;ng (${order.inforProductItem.length} sản phẩm)</span></code></h2>
+<p style="padding-left: 40px;"><code><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Th&agrave;nh tiền: <strong>${order.inforProductItem["totalPrice"] >= 500000
+            ? order.inforProductItem["totalPrice"]
+            : order.inforProductItem["totalPrice"] + 20000} đồng</strong></span></code></p>
+<p>&nbsp;</p>
+<p style="text-align: right;"><code><em><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Xin cảm ơn qu&iacute; kh&aacute;ch đ&atilde; đặt h&agrave;ng của ch&uacute;ng t&ocirc;i, ch&uacute;ng t&ocirc;i sẽ sớm xử l&iacute; đơn h&agrave;ng của qu&iacute; kh&aacute;ch trong khoảng thời gian sớm nhất!</span></em></code></p>`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => __awaiter(void 0, void 0, void 0, function* () {
+        if (error) {
+            res.status(400).json({
+                message: "Gửi email không thành công!",
+            });
+            return;
+        }
+        else {
+            console.log("Gửi thành công!");
+        }
+    }));
     res.render("client/pages/checkouts/success.pug", {
         pageTitle: "Đặt đơn thành công",
         pageDesc: "Đặt đơn thành công",

@@ -15,7 +15,7 @@ block main
                 div(class="flex items-center gap-2 text-sm py-[24px]")
                     span(class="text-gray-600") Trang chủ
                     span(class="text-gray-400") >
-                    span Giỏ hàng
+                    span Đặt hàng thành công
                 div(class=`flex items-center gap-x-[10px]`)
                     h1(class="text-xl font-medium text-[40px]") Thanh toán thành công
                     div(class=`text-[black]/40`) (#{order.inforProductItem ? order.inforProductItem.length : 0} sản phẩm)
@@ -92,7 +92,7 @@ block main
                                 //- div(class="flex gap-2 bg-gray-50 rounded-lg p-2 mb-4")
                                     input(type="text" placeholder="Thêm mã khuyến mại" class="bg-transparent w-full outline-none px-2")
                                     button(class="bg-black text-white px-4 py-2 rounded-lg") Áp dụng
-                                div(btn-submit=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.INDEX}/${INFOR_CUSTOMER.username}` redirect=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.SUCCESS}/${INFOR_CUSTOMER.username}` class="w-full bg-black text-white py-3 rounded-lg" class=`w-full block text-center`) Xác nhận đơn hàng
+                                //- div(btn-submit=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.INDEX}/${INFOR_CUSTOMER.username}` redirect=`${ROUTERS.CLIENT.CHECKOUT.PATH}${ROUTERS.CLIENT.CHECKOUT.SUCCESS}/${INFOR_CUSTOMER.username}` class="w-full bg-black text-white py-3 rounded-lg" class=`w-full block text-center`) Xác nhận đơn hàng
 
 
                             div(class=`flex-1 py-[20px] px-[24px] rounded-[20px] border-[1px] border-[#0000001A] flex flex-col gap-y-[24px]`) 

@@ -15,7 +15,7 @@ header(class=``)
                     div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Sản phẩm mới
                     div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Thương hiệu
                form(class="lg:hidden bg-[#F0F0F0] px-[16px] py-[12px] flex items-center gap-x-[12px] rounded-[62px] flex-1 relative" form-search = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.SEARCH}`)
-                    input(type="text" placeholder="Tìm kiếm sản phẩm..." class="bg-transparent outline-none w-full" name='name')
+                    input(value = key ? key : '' type="text" placeholder="Tìm kiếm sản phẩm..." class="bg-transparent outline-none w-full" name='name')
                     button(type='submit' class="fa-solid fa-magnifying-glass text-[24px] text-[#00000066] order-first")
                     //- div(class=`absolute top-[60px] left-[30px] bg-[white] rounded-[20px] w-full flex flex-col gap-y-[10px] z-[99]`)
                     //-      div(class=`font-bold text-[20px] py-[10px]`)  Kết quả tìm kiếm
@@ -52,8 +52,10 @@ header(class=``)
                div(class="flex gap-x-[14px]")
                     sl-icon(name="search" class="text-[24px] hidden lg:block")
                     - if(INFOR_CUSTOMER)
-                         a(href=`${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.INDEX}/${INFOR_CUSTOMER.username}`) 
+                         a(href=`${ROUTERS.CLIENT.CART.PATH}${ROUTERS.CLIENT.CART.INDEX}/${INFOR_CUSTOMER.username}` class=`relative`) 
                               sl-icon(name="cart2" class="text-[24px]")
+                              - if(CART > 0)
+                                   sl-badge(variant="danger" pill class=`absolute top-[-8px] right-[-10px]`) #{CART}
                     - else
                          a(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.LOGIN}`) 
                               sl-icon(name="cart2" class="text-[24px]")

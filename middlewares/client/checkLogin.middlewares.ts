@@ -5,6 +5,8 @@ import Role from "../../models/roles.models";
 import Customer from "../../models/customers.model";
 import ProductCategory from "../../models/productsCategories.model";
 import createTree from "../../helpers/createTree.helper";
+import console from "console";
+import Cart from "../../models/carts.model";
 
 const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,6 +31,10 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
       );
       if (INFOR_USER) {
         res.locals.INFOR_CUSTOMER = INFOR_USER;
+        const carts = await Cart.countDocuments({
+          customerId: INFOR_USER.id,
+        });
+        res.locals.CART = carts;
       } else {
         res.clearCookie("tokenCustomer");
       }

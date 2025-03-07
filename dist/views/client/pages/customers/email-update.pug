@@ -1,0 +1,16 @@
+extends ../../layouts/layouts.pug
+block css
+block script
+    script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(type="module" src="/client/js/customer/email-update.js") 
+
+block main
+    - if(INFOR_CUSTOMER)
+        div(class=``)
+            div(class=`container`)
+
+                button(btn-otp = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_CREATE_OTP}`) Nhận mã
+                input(placeholder='Mã OTP' code-otp)
+                input(placeholder='Email mới' new-email)
+                button(btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}`) Cập nhật Email

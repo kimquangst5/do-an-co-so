@@ -1,11 +1,19 @@
 extends ../../layouts/layouts.pug
 
 block css
-    link(rel="stylesheet" href="/client/css/carts/index.css")
+    //- link(rel="stylesheet" href="/client/css/carts/index.css")
+    link(rel="stylesheet" href="/client/css/checkouts/index.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css")
 block script
     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
     script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js")
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js")
+
+
     script(type='module' src="/client/js/checkouts/index.js" async) 
 
 block main
@@ -20,7 +28,7 @@ block main
                     h1(class="text-xl font-medium text-[40px]") Thông tin đơn hàng
                     div(class=`text-[black]/40`) (#{carts ? carts.length : 0} sản phẩm)
                 - if(carts && carts.length > 0)
-                    div(class=`py-[20px]`)
+                    //- div(class=`py-[20px]`)
                         div(class=`relative`) 
                             - if(Math.min(100, carts.totalPrice/500000*100) != 100)
                                 sl-progress-bar(value=Math.min(100, carts.totalPrice/500000*100) id='nhu')
@@ -38,7 +46,7 @@ block main
                             - else
                                 div(class=``) Bạn đã được
                                 div(class=`uppercase font-bold`) miễn phí vận chuyển
-                    div(class="gap-x-[20px] grid grid-cols-12")
+                    div(class="gap-x-[20px] grid grid-cols-12 py-[10px]")
                         div(class="col-span-8 rounded-[20px] px-[24px] py-[20px] border-[1px] border-[#0000001A] h-max")
 
                             h2(class="text-lg font-medium mb-6") Thông tin khách hàng
@@ -53,12 +61,18 @@ block main
                                 sl-input(placeholder='Địa chỉ (Số nhà + Tên đường)' size="small" class=`w-full` value=INFOR_CUSTOMER.address name='address')
                                     sl-icon(name='house-heart' slot="prefix")
                                 div(class=`flex items-center justify-between gap-[10px]`)
-                                    sl-select#city(size='small' placeholder="Tỉnh / Thành phố")
+                                    select#city(class="selectpicker" data-live-search="true")
                                         option(value='' selected) Chọn tỉnh thành
-                                    sl-select#district(size='small' placeholder="Quận / Huyện")
-                                        option(value='', selected) Chọn quận huyện
-                                    sl-select#ward(size='small' placeholder="Phường / Xã")
-                                        option(value='', selected) Chọn phường xã
+                                    select#district(class="selectpicker" data-live-search="true")
+                                        option(value='' selected) Chọn tỉnh thành
+                                    select#ward(class="selectpicker" data-live-search="true")
+                                        option(value='' selected) Chọn tỉnh thành
+                                    //- sl-select#city(size='small' placeholder="Tỉnh / Thành phố")
+                                    //-     option(value='' selected) Chọn tỉnh thành
+                                    //- sl-select#district(size='small' placeholder="Quận / Huyện")
+                                    //-     option(value='', selected) Chọn quận huyện
+                                    //- sl-select#ward(size='small' placeholder="Phường / Xã")
+                                    //-     option(value='', selected) Chọn phường xã
                                 sl-textarea(label='Ghi chú' name='note')
 
                         div(class="col-span-4 flex flex-col gap-y-[20px] overflow-y-auto ")

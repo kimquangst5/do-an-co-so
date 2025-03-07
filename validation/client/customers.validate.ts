@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import argon2 from "argon2";
 import Customer from "../../models/customers.model";
 import OTP from "../../models/otp.model";
+import console from "console";
 require("dotenv").config();
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -301,10 +302,141 @@ const forgotPasswordNewPassword = async (
   }
   next();
 };
+
+const infoCustomerUpdateEmailPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let errorArray = [];
+  const { email, otp } = req.body;
+  if (!otp) errorArray.push("Chưa nhập mã OTP");
+  if (!email) errorArray.push("Chưa nhập Email");
+  if (otp && email) {
+    const otpDatabase = await OTP.findOne({
+      email: res.locals.INFOR_CUSTOMER.email,
+    });
+    if (!otpDatabase) errorArray.push("Vui lòng gửi lại mã OTP");
+    else {
+      if (otpDatabase.code !== parseInt(otp))
+        errorArray.push("Mã OTP không hợp lệ!");
+      const emailRegex =
+        /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
+      if (emailRegex.test(email) == false) {
+        errorArray.push("Email không hợp lệ!");
+      }
+      if (otpDatabase.email === email)
+        errorArray.push("Email mới không được giống với Email cũ!");
+      const customer = await Customer.findOne({
+        email: email,
+      });
+      if (otpDatabase.email !== email && customer)
+        errorArray.push("Email mới này đã có người sử dụng!");
+    }
+  }
+  if (errorArray.length > 0) {
+    res.status(400).json({
+      message: errorArray.join("\n"),
+    });
+    return;
+  } else next();
+};
+
+const infoCustomerUpdatePhonePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let errorArray = [];
+  const { phone, otp } = req.body;
+  if (!otp) errorArray.push("Chưa nhập mã OTP");
+  if (!phone) errorArray.push("Chưa nhập Số điện thoại");
+  if (otp && phone) {
+    const otpDatabase = await OTP.findOne({
+      email: res.locals.INFOR_CUSTOMER.email,
+    });
+    if (!otpDatabase) errorArray.push("Vui lòng gửi lại mã OTP");
+    else {
+      if (otpDatabase.code !== parseInt(otp))
+        errorArray.push("Mã OTP không hợp lệ!");
+      const phoneRegex = /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/;
+
+      if (phoneRegex.test(phone) == false) {
+        errorArray.push("Số điện thoại không hợp lệ!");
+      }
+      if (res.locals.INFOR_CUSTOMER.phone === phone)
+        errorArray.push(
+          "Số điện thoại mới không được giống với số điện thoại cũ!"
+        );
+      const customer = await Customer.findOne({
+        phone: phone,
+      });
+      if (res.locals.INFOR_CUSTOMER.phone !== phone && customer)
+        errorArray.push("Số điện thoại mới này đã có người sử dụng!");
+    }
+  }
+  if (errorArray.length > 0) {
+    res.status(400).json({
+      message: errorArray.join("\n"),
+    });
+    return;
+  } else next();
+};
+const infoCustomerUpdatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  let errorArray = [];
+  // if (!oldPassword) errorArray.push("Chưa nhập mật khẩu cũ");
+  if (!newPassword) errorArray.push("Chưa nhập mật khẩu mới");
+  if (!confirmPassword) errorArray.push("Chưa nhập xác nhận mật khẩu");
+
+  if (newPassword && confirmPassword) {
+    const passwordRegex =
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    if (passwordRegex.test(newPassword) == false) {
+      errorArray.push(
+        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt"
+      );
+    }
+    if (newPassword !== confirmPassword) {
+      errorArray.push("MK mới và xác nhận MK không giống nhau");
+    }
+    console.log(res.locals.INFOR_CUSTOMER.password);
+    // console.log(
+    //   await argon2.verify(res.locals.INFOR_CUSTOMER.password, newPassword)
+    // );
+    if (res.locals.INFOR_CUSTOMER.password) {
+      if (newPassword !== oldPassword)
+        errorArray.push("MK mới và mật khẩu cũ không được giống!");
+
+      if (
+        (await argon2.verify(
+          res.locals.INFOR_CUSTOMER.password,
+          newPassword
+        )) == false
+      )
+        errorArray.push("MK cũ không đúng!");
+    }
+  }
+  if (errorArray.length > 0) {
+    res.status(400).json({
+      message: errorArray.join("\n"),
+    });
+    return;
+  } else next();
+};
+
 export {
   register,
   login,
   forgotPassword,
   forgotPasswordCheckOtp,
   forgotPasswordNewPassword,
+  infoCustomerUpdateEmailPost,
+  infoCustomerUpdatePhonePost,
+  infoCustomerUpdatePassword,
 };

@@ -5,6 +5,7 @@ import Customer from "../../models/customers.model";
 import ROUTERS from "../../constants/routes/index.routes";
 import axios from "axios";
 import OTP from "../../models/otp.model";
+const { Vonage } = require("@vonage/server-sdk");
 
 require("dotenv").config();
 const login = async (req: Request, res: Response) => {
@@ -253,8 +254,8 @@ const forgotPasswordCreateOTP = async (req: Request, res: Response) => {
   const mailOptions = {
     from: "kimquangst5@gmail.com",
     to: email,
-    subject: "Mã xác thực OTP quên mật khẩu!",
-    text: `Mã xác thực của bạn là ${createOTP}`,
+    subject: "Quên mật khẩu!",
+    text: `Mã xác thực OTP của bạn là ${createOTP}`,
   };
 
   transporter.sendMail(mailOptions, async (error: any, info: any) => {
@@ -335,6 +336,120 @@ const forgotPasswordNewPasswordPost = async (req: Request, res: Response) => {
   });
 };
 
+const infoCustomer = async (req: Request, res: Response) => {
+  res.render("client/pages/customers/infor.pug", {
+    pageTitle: "Thông tin khách hàng",
+  });
+};
+const infoCustomerUpdateInfor = async (req: Request, res: Response) => {
+  res.render("client/pages/customers/infor-update.pug", {
+    pageTitle: "Cập nhật thông tin khách hàng",
+  });
+};
+
+const infoCustomerUpdateEmail = async (req: Request, res: Response) => {
+  res.render("client/pages/customers/email-update.pug", {
+    pageTitle: "Cập nhật email khách hàng",
+  });
+};
+const infoCustomerCreateOtp = async (req: Request, res: Response) => {
+  console.log(res.locals.INFOR_CUSTOMER.id);
+  console.log(req.body);
+  const otp = await OTP.findOne({
+    email: res.locals.INFOR_CUSTOMER.email,
+  });
+  if (otp) {
+    res.status(400).json({
+      time: otp.expireAt,
+    });
+    return;
+  }
+
+  const email = res.locals.INFOR_CUSTOMER.email;
+  const nodemailer = require("nodemailer");
+  const otpGenerator = require("otp-generator");
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // use false for STARTTLS; true for SSL on port 465
+    auth: {
+      user: "kimquangst5@gmail.com",
+      pass: process.env.PASSWORD_APPLICATION,
+    },
+  });
+
+  const createOTP = otpGenerator.generate(6, {
+    digits: true,
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false,
+  });
+
+  const mailOptions = {
+    from: "kimquangst5@gmail.com",
+    to: email,
+    subject: "Khôi phục mật khẩu!",
+    text: `Mã xác thực OTP của bạn là ${createOTP}`,
+  };
+
+  transporter.sendMail(mailOptions, async (error: any, info: any) => {
+    if (error) {
+      res.status(400).json({
+        message: "Gửi email không thành công!",
+      });
+      return;
+    } else {
+      const newOTP = new OTP({
+        code: parseInt(createOTP),
+        email: email,
+        expireAt: Date.now() + 3 * 60 * 1000,
+      });
+      await newOTP.save();
+      res.json({
+        code: 200,
+      });
+      return;
+    }
+  });
+};
+const infoCustomerUpdateEmailPost = async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+  await Customer.updateOne(
+    {
+      _id: res.locals.INFOR_CUSTOMER.id,
+    },
+    {
+      email: email,
+    }
+  );
+  res.json({
+    code: 200,
+  });
+};
+const infoCustomerUpdatePhone = async (req: Request, res: Response) => {
+  res.render("client/pages/customers/phone-update.pug", {
+    pageTitle: "Cập nhật số điện thoại | Khách hàng",
+  });
+};
+const infoCustomerUpdatePhonePost = async (req: Request, res: Response) => {
+  await Customer.updateOne(
+    {
+      _id: res.locals.INFOR_CUSTOMER.id,
+    },
+    {
+      phone: req.body.phone,
+    }
+  );
+  res.json({
+    code: 200,
+  });
+};
+const infoCustomerUpdatePassword = async (req: Request, res: Response) => {
+  res.render("client/pages/customers/password-update.pug", {
+    pageTitle: "Đổi mật khẩu | Khách hàng",
+  });
+};
 export {
   login,
   register,
@@ -349,4 +464,12 @@ export {
   forgotPasswordCheckOtp,
   forgotPasswordNewPassword,
   forgotPasswordNewPasswordPost,
+  infoCustomer,
+  infoCustomerUpdateInfor,
+  infoCustomerUpdateEmail,
+  infoCustomerCreateOtp,
+  infoCustomerUpdateEmailPost,
+  infoCustomerUpdatePhone,
+  infoCustomerUpdatePhonePost,
+  infoCustomerUpdatePassword,
 };

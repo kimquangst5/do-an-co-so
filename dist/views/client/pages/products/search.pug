@@ -26,7 +26,7 @@ block main
                         each it in products
                             - if(it.priceNew)
                                 div(class="bg-none")
-                                    div(class=`group`)
+                                    a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it["slug"]}` class=`group`)
                                         - if(it.img_main.length == 0)
                                             img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="Image Error" class="w-full aspect-square object-cover rounded-[16px]")
                                         - else if(it.img_main.length == 1)

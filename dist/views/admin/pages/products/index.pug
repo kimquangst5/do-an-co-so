@@ -36,9 +36,12 @@ block script
      - if(ROLE.permission.includes("products-view"))
           script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
           script(src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js")
+
           script(src="/admin/js/products/index.js")
 
+
 block main
+
      - if(ROLE.permission.includes("products-view"))
           div()
                div(class=`pb-[10px] grid grid-cols-4 gap-[10px]`)
@@ -50,7 +53,11 @@ block main
                     sl-select(placeholder="---Trạng thái---" size="small" clearable filter-status)
                          sl-option(size="small" value="active") Đang bán
                          sl-option(size="small" value="inactive") Tạm ngưng
-
+                    select(class="hidden" data-hs-select = selectConfig )
+                         option(value="") Choose 
+                         option(value="AF") ab
+                         option(value="AX") cd
+                    div !{selectConfig}
 
                - if(products && products.length > 0)
                     table(class=`w-full`)

@@ -27,7 +27,7 @@ const sizeProduct_model_1 = __importDefault(require("../../models/sizeProduct.mo
 const mongodb_1 = require("mongodb");
 const productAssets_model_1 = __importDefault(require("../../models/productAssets.model"));
 const assets_model_1 = __importDefault(require("../../models/assets.model"));
-const console_1 = __importDefault(require("console"));
+const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const unidecode_1 = __importDefault(require("unidecode"));
 const detail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c, _d, e_2, _e, _f;
@@ -214,6 +214,7 @@ const search = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     data["priceNew"] = it["priceNew"];
                     data["price"] = it["price"];
                     data["discount"] = it["discount"];
+                    data["link"] = `${index_routes_1.default.CLIENT.PRODUCT.PATH}${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/${it["slug"]}`;
                     newProduct.push(data);
                 }
             }
@@ -225,7 +226,6 @@ const search = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
             finally { if (e_3) throw e_3.error; }
         }
-        console_1.default.log(newProduct);
         if (method == "trang") {
             res.render("client/pages/products/search.pug", {
                 products,

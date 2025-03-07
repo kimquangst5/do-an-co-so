@@ -170,10 +170,12 @@ const search = async (req: Request, res: Response) => {
         data["priceNew"] = it["priceNew"];
         data["price"] = it["price"];
         data["discount"] = it["discount"];
+        data[
+          "link"
+        ] = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it["slug"]}`;
         newProduct.push(data);
       }
     }
-    console.log(newProduct);
 
     if (method == "trang") {
       res.render("client/pages/products/search.pug", {

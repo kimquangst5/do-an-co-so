@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
+exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdatePhone = exports.infoCustomerUpdateEmailPost = exports.infoCustomerCreateOtp = exports.infoCustomerUpdateEmail = exports.infoCustomerUpdateInfor = exports.infoCustomer = exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const argon2_1 = __importDefault(require("argon2"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const axios_1 = __importDefault(require("axios"));
 const otp_model_1 = __importDefault(require("../../models/otp.model"));
+const { Vonage } = require("@vonage/server-sdk");
 require("dotenv").config();
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("client/pages/customers/login.pug", {
@@ -215,8 +216,8 @@ const forgotPasswordCreateOTP = (req, res) => __awaiter(void 0, void 0, void 0, 
     const mailOptions = {
         from: "kimquangst5@gmail.com",
         to: email,
-        subject: "Mã xác thực OTP quên mật khẩu!",
-        text: `Mã xác thực của bạn là ${createOTP}`,
+        subject: "Quên mật khẩu!",
+        text: `Mã xác thực OTP của bạn là ${createOTP}`,
     };
     transporter.sendMail(mailOptions, (error, info) => __awaiter(void 0, void 0, void 0, function* () {
         if (error) {
@@ -288,3 +289,114 @@ const forgotPasswordNewPasswordPost = (req, res) => __awaiter(void 0, void 0, vo
     });
 });
 exports.forgotPasswordNewPasswordPost = forgotPasswordNewPasswordPost;
+const infoCustomer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("client/pages/customers/infor.pug", {
+        pageTitle: "Thông tin khách hàng",
+    });
+});
+exports.infoCustomer = infoCustomer;
+const infoCustomerUpdateInfor = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("client/pages/customers/infor-update.pug", {
+        pageTitle: "Cập nhật thông tin khách hàng",
+    });
+});
+exports.infoCustomerUpdateInfor = infoCustomerUpdateInfor;
+const infoCustomerUpdateEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("client/pages/customers/email-update.pug", {
+        pageTitle: "Cập nhật email khách hàng",
+    });
+});
+exports.infoCustomerUpdateEmail = infoCustomerUpdateEmail;
+const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(res.locals.INFOR_CUSTOMER.id);
+    console.log(req.body);
+    const otp = yield otp_model_1.default.findOne({
+        email: res.locals.INFOR_CUSTOMER.email,
+    });
+    if (otp) {
+        res.status(400).json({
+            time: otp.expireAt,
+        });
+        return;
+    }
+    const email = res.locals.INFOR_CUSTOMER.email;
+    const nodemailer = require("nodemailer");
+    const otpGenerator = require("otp-generator");
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: "kimquangst5@gmail.com",
+            pass: process.env.PASSWORD_APPLICATION,
+        },
+    });
+    const createOTP = otpGenerator.generate(6, {
+        digits: true,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
+    });
+    const mailOptions = {
+        from: "kimquangst5@gmail.com",
+        to: email,
+        subject: "Khôi phục mật khẩu!",
+        text: `Mã xác thực OTP của bạn là ${createOTP}`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => __awaiter(void 0, void 0, void 0, function* () {
+        if (error) {
+            res.status(400).json({
+                message: "Gửi email không thành công!",
+            });
+            return;
+        }
+        else {
+            const newOTP = new otp_model_1.default({
+                code: parseInt(createOTP),
+                email: email,
+                expireAt: Date.now() + 3 * 60 * 1000,
+            });
+            yield newOTP.save();
+            res.json({
+                code: 200,
+            });
+            return;
+        }
+    }));
+});
+exports.infoCustomerCreateOtp = infoCustomerCreateOtp;
+const infoCustomerUpdateEmailPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, otp } = req.body;
+    yield customers_model_1.default.updateOne({
+        _id: res.locals.INFOR_CUSTOMER.id,
+    }, {
+        email: email,
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.infoCustomerUpdateEmailPost = infoCustomerUpdateEmailPost;
+const infoCustomerUpdatePhone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("client/pages/customers/phone-update.pug", {
+        pageTitle: "Cập nhật số điện thoại | Khách hàng",
+    });
+});
+exports.infoCustomerUpdatePhone = infoCustomerUpdatePhone;
+const infoCustomerUpdatePhonePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield customers_model_1.default.updateOne({
+        _id: res.locals.INFOR_CUSTOMER.id,
+    }, {
+        phone: req.body.phone,
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.infoCustomerUpdatePhonePost = infoCustomerUpdatePhonePost;
+const infoCustomerUpdatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("client/pages/customers/password-update.pug", {
+        pageTitle: "Đổi mật khẩu | Khách hàng",
+    });
+});
+exports.infoCustomerUpdatePassword = infoCustomerUpdatePassword;

@@ -16,6 +16,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const productsCategories_model_1 = __importDefault(require("../../models/productsCategories.model"));
 const createTree_helper_1 = __importDefault(require("../../helpers/createTree.helper"));
+const carts_model_1 = __importDefault(require("../../models/carts.model"));
 const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (req.cookies["alert-success"] == "xoa-cookie") {
@@ -32,6 +33,10 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             const INFOR_USER = yield customers_model_1.default.findById({ _id: user.id }).select("-token -password");
             if (INFOR_USER) {
                 res.locals.INFOR_CUSTOMER = INFOR_USER;
+                const carts = yield carts_model_1.default.countDocuments({
+                    customerId: INFOR_USER.id,
+                });
+                res.locals.CART = carts;
             }
             else {
                 res.clearCookie("tokenCustomer");

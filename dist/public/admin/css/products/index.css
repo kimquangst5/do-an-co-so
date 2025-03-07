@@ -5,3 +5,17 @@
 .avatar-group sl-avatar::part(base) {
   border: solid 2px var(--sl-color-neutral-0);
 }
+
+sl-option[aria-selected="true"]::part(base) {
+  background-color: transparent;
+  color: #ffa09b;
+  font-weight: bold;
+}
+
+sl-option[tabindex="0"]::part(base) {
+  background-color: transparent;
+  color: var(--sl-color-neutral-700);
+}
+sl-option[tabindex="0"]::part(base):hover {
+  background-color: #f4f4f5;
+}

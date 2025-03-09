@@ -53,12 +53,6 @@ block main
                     sl-select(placeholder="---Trạng thái---" size="small" clearable filter-status)
                          sl-option(size="small" value="active") Đang bán
                          sl-option(size="small" value="inactive") Tạm ngưng
-                    select(class="hidden" data-hs-select = selectConfig )
-                         option(value="") Choose 
-                         option(value="AF") ab
-                         option(value="AX") cd
-                    div !{selectConfig}
-
                - if(products && products.length > 0)
                     table(class=`w-full`)
                          thead
@@ -127,3 +121,32 @@ block main
                - else
                     +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
 
+
+
+
+          - if(pagination)
+               div(class=`flex items-center justify-between`) 
+                    nav
+                         ul(class=`flex items-center gap-x-[10px]`)
+                              li(class=`w-auto`)
+                                   button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-dau) Trang đầu
+                              li(class=`w-auto`)
+                                   button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-truoc) Trước
+                              - for(let i = Math.max(1, pagination.current - 3); i <= Math.min(pagination.totalPage, pagination.current + 3); i++)
+                                   li(class=`w-[40px] `)
+                                        button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang = i) #{i}
+                              li(class=`w-auto`)
+                                   button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-sau = pagination.totalPage) Sau
+                              li(class=`w-auto`)
+                                   button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-cuoi = pagination.totalPage) Trang cuối
+                    div(class=`flex flex-col items-center gap-[10px]`)
+                         div #{pagination.limit * (pagination.current - 1) + 1} - #{pagination.limit * pagination.current} trong số #{pagination.totalProduct} sản phẩm
+                         div(class=`flex gap-x-[5px]`)
+                              div(class=``) Hiển thị
+                              sl-select(size='small' class=`w-[100px]` value='5' so-trang)
+                                   sl-option(value='full') Tất cả
+                                   sl-option(value='5') 5
+                                   sl-option(value='10') 10
+                                   sl-option(value='15') 15
+                                   sl-option(value='20') 20
+                              div(class=``) sản phẩm

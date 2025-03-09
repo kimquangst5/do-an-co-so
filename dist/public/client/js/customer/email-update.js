@@ -1,3 +1,27 @@
+function OTPInput() {
+  const inputs = document.querySelectorAll("#otp > *[id]");
+  for (let i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener("keydown", function (event) {
+      if (event.key === "Backspace") {
+        inputs[i].value = "";
+        if (i !== 0) inputs[i - 1].focus();
+      } else {
+        if (i === inputs.length - 1 && inputs[i].value !== "") {
+          return true;
+        } else if (event.keyCode > 47 && event.keyCode < 58) {
+          inputs[i].value = event.key;
+          if (i !== inputs.length - 1) inputs[i + 1].focus();
+          event.preventDefault();
+        } else if (event.keyCode > 64 && event.keyCode < 91) {
+          inputs[i].value = String.fromCharCode(event.keyCode);
+          if (i !== inputs.length - 1) inputs[i + 1].focus();
+          event.preventDefault();
+        }
+      }
+    });
+  }
+}
+OTPInput();
 const btnOtp = () => {
   const btn = document.querySelector("[btn-otp]");
   if (!btn) return;
@@ -5,12 +29,10 @@ const btnOtp = () => {
     console.log("ok");
     const link = btn.getAttribute("btn-otp");
     if (!link) return;
-    console.log(link);
     showLoader();
     axios
       .post(link, {})
       .then((res) => {
-        console.log(res);
         if (res.status == 200) {
           localStorage.setItem(
             "alert-success",
@@ -24,7 +46,6 @@ const btnOtp = () => {
         }
       })
       .catch((error) => {
-        console.log(error.response.data.time);
         const expirationTime = new Date(error.response.data.time);
         const currentTime = new Date();
         const diffMs = expirationTime - currentTime;
@@ -52,20 +73,20 @@ const btnOtp = () => {
 btnOtp();
 
 const main = () => {
-  const codeOtp = document.querySelector("[code-otp]");
   const newEmail = document.querySelector("[new-email]");
   const btnUpdate = document.querySelector("[btn-update]");
   const link = btnUpdate.getAttribute("btn-update");
-  if (!link || !btnUpdate || !codeOtp || !newEmail) return;
+  const inputs = document.querySelectorAll("#otp > *[id]");
+  if (!link || !btnUpdate || !inputs || inputs.length <= 0 || !newEmail) return;
   btnUpdate.addEventListener("click", () => {
-    console.log(btnUpdate);
-    console.log(codeOtp.value);
-    console.log(newEmail.value);
+    let codeOtp = "";
+    inputs.forEach((input) => (codeOtp += input.value));
+
     showLoader();
     axios
       .post(link, {
         email: newEmail.value,
-        otp: codeOtp.value,
+        otp: codeOtp,
       })
       .then((res) => {
         if (res.status == 200) {

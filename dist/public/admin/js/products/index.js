@@ -223,3 +223,115 @@ const searchProduct = () => {
   input.value = url.searchParams.get("tim_kiem");
 };
 searchProduct();
+
+const pagination = () => {
+  const btnTrang = document.querySelectorAll("[trang]");
+  if (!btnTrang || btnTrang.length == 0) return;
+  btnTrang.forEach((trang) => {
+    trang.addEventListener("click", () => {
+      showLoader();
+      const url = new URL(location.href);
+      url.searchParams.set("trang", trang.getAttribute("trang"));
+      location.href = url.href;
+    });
+  });
+  const url = new URL(location.href);
+  if (url.searchParams.get("trang")) {
+    const btnTrang = document.querySelector(
+      `[trang = '${url.searchParams.get("trang")}']`
+    );
+    btnTrang.classList.add("bg-[#0EA5E9]", "text-[white]");
+  } else
+    document
+      .querySelector(`[trang = '1']`)
+      .classList.add("bg-[#0EA5E9]", "text-[white]");
+  const trangTruoc = document.querySelector("[trang-truoc]");
+  if (
+    url.searchParams.get("trang") &&
+    parseInt(url.searchParams.get("trang")) > 1
+  ) {
+    trangTruoc.addEventListener("click", () => {
+      showLoader();
+      url.searchParams.set(
+        "trang",
+        parseInt(url.searchParams.get("trang")) - 1
+      );
+      location.href = url.href;
+    });
+  }
+
+  const trangDau = document.querySelector("[trang-dau]");
+  if (
+    url.searchParams.get("trang") &&
+    parseInt(url.searchParams.get("trang")) > 1
+  ) {
+    trangDau.addEventListener("click", () => {
+      showLoader();
+      url.searchParams.set("trang", 1);
+      location.href = url.href;
+    });
+  }
+
+  const trangSau = document.querySelector("[trang-sau]");
+  trangSau.addEventListener("click", () => {
+    const url = new URL(location.href);
+    if (!url.searchParams.get("trang")) {
+      showLoader();
+      url.searchParams.set("trang", 2);
+      location.href = url.href;
+    } else {
+      if (
+        parseInt(url.searchParams.get("trang")) <
+        parseInt(trangSau.getAttribute("trang-sau"))
+      ) {
+        showLoader();
+        url.searchParams.set(
+          "trang",
+          parseInt(url.searchParams.get("trang")) + 1
+        );
+        location.href = url.href;
+      }
+    }
+  });
+
+  const trangCuoi = document.querySelector("[trang-cuoi]");
+  trangCuoi.addEventListener("click", () => {
+    const url = new URL(location.href);
+    if (!url.searchParams.get("trang")) {
+      showLoader();
+      url.searchParams.set(
+        "trang",
+        parseInt(trangCuoi.getAttribute("trang-cuoi"))
+      );
+      location.href = url.href;
+    } else {
+      if (
+        parseInt(url.searchParams.get("trang")) <
+        parseInt(trangCuoi.getAttribute("trang-cuoi"))
+      ) {
+        showLoader();
+        url.searchParams.set(
+          "trang",
+          parseInt(trangCuoi.getAttribute("trang-cuoi"))
+        );
+        location.href = url.href;
+      }
+    }
+  });
+};
+pagination();
+
+const soTrang = () => {
+  const select = document.querySelector("[so-trang]");
+  console.log(select);
+
+  if (!select) return;
+  select.addEventListener("sl-change", () => {
+    showLoader();
+    const url = new URL(location.href);
+    url.searchParams.set("sotrang", select.value);
+    location.href = url.href;
+  });
+};
+
+soTrang();

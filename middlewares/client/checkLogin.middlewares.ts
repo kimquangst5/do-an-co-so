@@ -27,7 +27,7 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       const INFOR_USER = await Customer.findById({ _id: user.id }).select(
-        "-token -password"
+        "-token "
       );
       if (INFOR_USER) {
         res.locals.INFOR_CUSTOMER = INFOR_USER;

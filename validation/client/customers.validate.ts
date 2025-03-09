@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import argon2 from "argon2";
 import Customer from "../../models/customers.model";
 import OTP from "../../models/otp.model";
-import console from "console";
 require("dotenv").config();
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -156,7 +155,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         customer.password,
         req.body.password
       );
-      console.log(checkPass);
       if (checkPass == false) {
         res.status(400).json({
           message: "Mật khẩu chưa đúng!",
@@ -205,7 +203,6 @@ const forgotPasswordCheckOtp = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
   const { email, code } = req.body;
   if (!email) {
     res.status(400).json({
@@ -390,7 +387,8 @@ const infoCustomerUpdatePassword = async (
 ) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   let errorArray = [];
-  // if (!oldPassword) errorArray.push("Chưa nhập mật khẩu cũ");
+  if (res.locals.INFOR_CUSTOMER.password && !oldPassword)
+    errorArray.push("Chưa nhập mật khẩu cũ");
   if (!newPassword) errorArray.push("Chưa nhập mật khẩu mới");
   if (!confirmPassword) errorArray.push("Chưa nhập xác nhận mật khẩu");
 
@@ -405,18 +403,13 @@ const infoCustomerUpdatePassword = async (
     if (newPassword !== confirmPassword) {
       errorArray.push("MK mới và xác nhận MK không giống nhau");
     }
-    console.log(res.locals.INFOR_CUSTOMER.password);
-    // console.log(
-    //   await argon2.verify(res.locals.INFOR_CUSTOMER.password, newPassword)
-    // );
     if (res.locals.INFOR_CUSTOMER.password) {
-      if (newPassword !== oldPassword)
+      if (newPassword === oldPassword)
         errorArray.push("MK mới và mật khẩu cũ không được giống!");
-
       if (
         (await argon2.verify(
           res.locals.INFOR_CUSTOMER.password,
-          newPassword
+          oldPassword
         )) == false
       )
         errorArray.push("MK cũ không đúng!");
@@ -429,7 +422,53 @@ const infoCustomerUpdatePassword = async (
     return;
   } else next();
 };
+const infoCustomerUpdateInfor = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { fullname, username, genders, birthday } = req.body;
+  let errorArray = [];
+  if (!fullname) errorArray.push("Chưa nhập họ tên!");
+  if (!username) errorArray.push("Chưa nhập tên đăng nhập!");
+  if (!genders) errorArray.push("Chưa nhập giới tính");
+  if (!birthday) errorArray.push("Chưa nhập ngày sinh");
 
+  if (fullname && username && genders && birthday) {
+    if (fullname.length < 6) errorArray.push("Họ và tên quá ngắn");
+    if (username.length <= 8) errorArray.push("Tên đăng nhập quá ngắn");
+    function calculateAge(birthDateString: string) {
+      let today = new Date();
+      let birthDate = new Date(birthDateString);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      let monthDiff = today.getMonth() - birthDate.getMonth();
+      let dayDiff = today.getDate() - birthDate.getDate();
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+      return age;
+    }
+    if (calculateAge(birthday) < 0)
+      errorArray.push(`Bạn là người tương lai :)`);
+    else if (calculateAge(birthday) < 18)
+      errorArray.push(`Bạn ${calculateAge(birthday)} tuổi hả`);
+
+    const customer = await Customer.countDocuments({
+      _id: {
+        $ne: res.locals.INFOR_CUSTOMER.id,
+      },
+      username: username,
+    });
+    if (customer > 0)
+      errorArray.push(`Tên đăng nhập đã được người khác sử dụng!`);
+  }
+  if (errorArray.length > 0) {
+    res.status(400).json({
+      message: errorArray.join("\n"),
+    });
+    return;
+  } else next();
+};
 export {
   register,
   login,
@@ -439,4 +478,5 @@ export {
   infoCustomerUpdateEmailPost,
   infoCustomerUpdatePhonePost,
   infoCustomerUpdatePassword,
+  infoCustomerUpdateInfor,
 };

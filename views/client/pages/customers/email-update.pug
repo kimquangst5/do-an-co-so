@@ -7,10 +7,28 @@ block script
 
 block main
     - if(INFOR_CUSTOMER)
-        div(class=``)
+        div(class=`bg-[#F5F5F5] h-full py-[20px]`)
             div(class=`container`)
 
-                button(btn-otp = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_CREATE_OTP}`) Nhận mã
-                input(placeholder='Mã OTP' code-otp)
-                input(placeholder='Email mới' new-email)
-                button(btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}`) Cập nhật Email
+                div(class=`mb-60 rounded-lg bg-white gap-y-5 shadow-2xl shadow-[rgba(0,0,0,.15)] p-6 w-max min-w-[50%] mx-auto flex flex-col`)
+                    h3(class=`text-[30px] font-bold`) Thay đổi Email
+                    div(class=`flex items-center justify-between border-[1px] border-[black] rounded-[7px] p-[10px]`) 
+                        div(class=`flex items-center gap-x-[8px] flex-1`) 
+                            div(class=`h-auto w-[10%]  aspect-square rounded-full bg-[black] flex items-center justify-center`)
+                                sl-icon(name='envelope' class=`text-[white]`) 
+                            div(class=`flex flex-col`) 
+                                div(class=`font-bold`) Lấy mã xác nhận qua email
+                                div(class=``) Email: #{INFOR_CUSTOMER.email}
+                        div(class=`h-auto w-[5%]  aspect-square rounded-full bg-[#333333] flex items-center justify-center`)
+                            sl-icon(name='check2' class=`text-[white]`) 
+                    button(btn-otp = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_CREATE_OTP}` class=`bg-[black] text-[white] rounded-lg py-[10px]`) Nhận mã
+                    div(class=``) Mã xác nhận:
+                    div#otp(class="flex items-center gap-x-[20px] mx-auto")
+                        input#first(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                        input#second(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                        input#third(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                        input#fourth(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                        input#fifth(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                        input#sixth(class="border-[2px]  w-[50px] h-[70px] rounded-full text-[2rem] text-center font-bold focus:border-[#FFA09B] outline-none focus:border-[4px]" type="text" maxlength="1")
+                    input(type="email" placeholder="Email mới" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" new-email)
+                    button(btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}` class=`bg-[black] text-[white] rounded-lg py-[10px]`) Cập nhật Email

@@ -67,6 +67,12 @@ router.get(
   controller.infoCustomerUpdateInfor
 );
 
+router.patch(
+  `${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}`,
+  CustomerValidate.infoCustomerUpdateInfor,
+  controller.infoCustomerUpdateInforPatch
+);
+
 router.get(
   `${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}`,
   controller.infoCustomerUpdateEmail
@@ -102,7 +108,7 @@ router.get(
 router.patch(
   `${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_PASSWORD}`,
   CustomerValidate.infoCustomerUpdatePassword,
-  controller.infoCustomerUpdatePassword
+  controller.infoCustomerUpdatePasswordPatch
 );
 
 export default router;

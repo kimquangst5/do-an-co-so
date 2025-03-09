@@ -30,7 +30,7 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.locals.treeCategories = treeCate;
         if (req.cookies.tokenCustomer) {
             const user = jsonwebtoken_1.default.verify(req.cookies.tokenCustomer, process.env.JWT_SECRET);
-            const INFOR_USER = yield customers_model_1.default.findById({ _id: user.id }).select("-token -password");
+            const INFOR_USER = yield customers_model_1.default.findById({ _id: user.id }).select("-token ");
             if (INFOR_USER) {
                 res.locals.INFOR_CUSTOMER = INFOR_USER;
                 const carts = yield carts_model_1.default.countDocuments({

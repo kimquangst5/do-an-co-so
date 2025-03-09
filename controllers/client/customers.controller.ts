@@ -5,7 +5,7 @@ import Customer from "../../models/customers.model";
 import ROUTERS from "../../constants/routes/index.routes";
 import axios from "axios";
 import OTP from "../../models/otp.model";
-const { Vonage } = require("@vonage/server-sdk");
+import console from "console";
 
 require("dotenv").config();
 const login = async (req: Request, res: Response) => {
@@ -347,14 +347,42 @@ const infoCustomerUpdateInfor = async (req: Request, res: Response) => {
   });
 };
 
+function capitalizeWords(str) {
+  str = str.toLowerCase();
+  const words = str.split(" ");
+  for (let i = 0; i < words.length; i++) {
+    const firstChar = words[i].charAt(0).toUpperCase();
+    const restOfWord = words[i].slice(1);
+    words[i] = firstChar + restOfWord;
+  }
+  return words.join(" ");
+}
+const infoCustomerUpdateInforPatch = async (req: Request, res: Response) => {
+  function convertDateFormat(dateStr) {
+    const [year, month, day] = dateStr.split("-");
+    return `${day}/${month}/${year}`;
+  }
+  req.body.birthday = convertDateFormat(req.body.birthday);
+  console.log(req.body.birthday);
+  (req.body.fullname = capitalizeWords(
+    req.body.fullname.trim().replace(/\s+/g, " ")
+  )),
+    await Customer.updateOne(
+      {
+        _id: res.locals.INFOR_CUSTOMER.id,
+      },
+      req.body
+    );
+  res.json({
+    code: 200,
+  });
+};
 const infoCustomerUpdateEmail = async (req: Request, res: Response) => {
   res.render("client/pages/customers/email-update.pug", {
     pageTitle: "Cập nhật email khách hàng",
   });
 };
 const infoCustomerCreateOtp = async (req: Request, res: Response) => {
-  console.log(res.locals.INFOR_CUSTOMER.id);
-  console.log(req.body);
   const otp = await OTP.findOne({
     email: res.locals.INFOR_CUSTOMER.email,
   });
@@ -366,6 +394,8 @@ const infoCustomerCreateOtp = async (req: Request, res: Response) => {
   }
 
   const email = res.locals.INFOR_CUSTOMER.email;
+  console.log(email);
+
   const nodemailer = require("nodemailer");
   const otpGenerator = require("otp-generator");
 
@@ -376,6 +406,9 @@ const infoCustomerCreateOtp = async (req: Request, res: Response) => {
     auth: {
       user: "kimquangst5@gmail.com",
       pass: process.env.PASSWORD_APPLICATION,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
@@ -395,6 +428,8 @@ const infoCustomerCreateOtp = async (req: Request, res: Response) => {
 
   transporter.sendMail(mailOptions, async (error: any, info: any) => {
     if (error) {
+      console.log(error);
+
       res.status(400).json({
         message: "Gửi email không thành công!",
       });
@@ -450,6 +485,21 @@ const infoCustomerUpdatePassword = async (req: Request, res: Response) => {
     pageTitle: "Đổi mật khẩu | Khách hàng",
   });
 };
+
+const infoCustomerUpdatePasswordPatch = async (req: Request, res: Response) => {
+  const { newPassword } = req.body;
+  await Customer.updateOne(
+    {
+      _id: res.locals.INFOR_CUSTOMER.id,
+    },
+    {
+      password: await argon2.hash(newPassword),
+    }
+  );
+  res.json({
+    code: 200,
+  });
+};
 export {
   login,
   register,
@@ -466,10 +516,12 @@ export {
   forgotPasswordNewPasswordPost,
   infoCustomer,
   infoCustomerUpdateInfor,
+  infoCustomerUpdateInforPatch,
   infoCustomerUpdateEmail,
   infoCustomerCreateOtp,
   infoCustomerUpdateEmailPost,
   infoCustomerUpdatePhone,
   infoCustomerUpdatePhonePost,
   infoCustomerUpdatePassword,
+  infoCustomerUpdatePasswordPatch,
 };

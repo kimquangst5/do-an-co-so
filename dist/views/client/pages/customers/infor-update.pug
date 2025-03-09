@@ -3,14 +3,21 @@ block css
 block script
     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
     script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
-    //- script(type="module" src="/client/js/customer/login.js") 
+    script(type="module" src="/client/js/customer/infor-update.js") 
 
 block main
     - if(INFOR_CUSTOMER)
+        - function convertDate(birthday) {
+        -   if (!birthday) return '';
+        -   var parts = birthday.split('/');
+        -   var day = parts[0].length === 1 ? '0' + parts[0] : parts[0];
+        -   var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
+        -   var year = parts[2];
+        -   return year + '-' + month + '-' + day;
+        - }
         div
             div(class="container mx-auto py-8")
                 div(class="grid grid-cols-12 gap-8")
-                    // Left Sidebar
                     div(class="col-span-3")
                         div(class="bg-white rounded-lg shadow p-4")
                             h2(class="text-lg font-semibold mb-4") Tài khoản của tôi
@@ -33,20 +40,20 @@ block main
                                 div(class="space-y-4")
                                     div(class="flex justify-between items-center space-x-4")
                                         label(class="block text-gray-600") Tên
-                                        sl-input(class="font-bold" value=INFOR_CUSTOMER.fullname size='small')
+                                        sl-input(class="font-bold" value=INFOR_CUSTOMER.fullname size='small' name='fullname')
                                     div(class="flex justify-between items-center space-x-4")
                                         label(class="block text-gray-600") Tên đăng nhập
-                                        sl-input(class="font-bold" value=INFOR_CUSTOMER.username size='small')
+                                        sl-input(class="font-bold" value=INFOR_CUSTOMER.username size='small' name='username')
                                     div(class="flex justify-between items-center space-x-4")
-                                        label(class="block text-gray-600") Giới tính
-                                        sl-select(class="font-bold" value=(INFOR_CUSTOMER.genders ? INFOR_CUSTOMER.genders : '') size='small')
+                                        label(class="block text-gray-600" ) Giới tính
+                                        sl-select(class="font-bold" value=(INFOR_CUSTOMER.genders ? INFOR_CUSTOMER.genders : '') size='small' placeholder='Chưa chọn' name='genders')
                                             sl-option(value='male') Nam
                                             sl-option(value='female') Nữ
                                         //- span(class="font-bold") #{INFOR_CUSTOMER.genders ? INFOR_CUSTOMER.genders == 'male' ? 'Nam' : 'Nữ' : 'Chưa có'}
                                     div(class="flex justify-between items-center space-x-4")
 
                                         label(class="block text-gray-600") Ngày sinh
-                                        sl-input(value=(parseInt(INFOR_CUSTOMER.birthday.split("/")[2], 10) + 20) + "-" + INFOR_CUSTOMER.birthday.split("/")[1].padStart(2, '0') + "-" + INFOR_CUSTOMER.birthday.split("/")[0].padStart(2, '0') type='date' class="font-bold" size='small')
+                                        sl-input(value=INFOR_CUSTOMER.birthday ? convertDate(INFOR_CUSTOMER.birthday) : '' type='date' class="font-bold" size='small' name='birthday' max=new Date().toISOString().split('T')[0])
 
                                     div(class="flex justify-between items-center space-x-4")
                                         label(class="block text-gray-600") Email
@@ -60,5 +67,5 @@ block main
                                             span(class="font-bold" type='number') #{INFOR_CUSTOMER.phone}
                                         //- span(class="font-bold") #{INFOR_CUSTOMER.phone ? INFOR_CUSTOMER.phone : 'Chưa có'}
                             div(class="flex justify-end gap-4 mt-8")
-                                button(class="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition")
+                                button(class="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition" btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}`)
                                     | Cập nhật

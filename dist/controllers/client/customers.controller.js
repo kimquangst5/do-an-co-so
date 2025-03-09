@@ -12,14 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdatePhone = exports.infoCustomerUpdateEmailPost = exports.infoCustomerCreateOtp = exports.infoCustomerUpdateEmail = exports.infoCustomerUpdateInfor = exports.infoCustomer = exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
+exports.infoCustomerUpdatePasswordPatch = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdatePhone = exports.infoCustomerUpdateEmailPost = exports.infoCustomerCreateOtp = exports.infoCustomerUpdateEmail = exports.infoCustomerUpdateInforPatch = exports.infoCustomerUpdateInfor = exports.infoCustomer = exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const argon2_1 = __importDefault(require("argon2"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const axios_1 = __importDefault(require("axios"));
 const otp_model_1 = __importDefault(require("../../models/otp.model"));
-const { Vonage } = require("@vonage/server-sdk");
+const console_1 = __importDefault(require("console"));
 require("dotenv").config();
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("client/pages/customers/login.pug", {
@@ -301,6 +301,32 @@ const infoCustomerUpdateInfor = (req, res) => __awaiter(void 0, void 0, void 0, 
     });
 });
 exports.infoCustomerUpdateInfor = infoCustomerUpdateInfor;
+function capitalizeWords(str) {
+    str = str.toLowerCase();
+    const words = str.split(" ");
+    for (let i = 0; i < words.length; i++) {
+        const firstChar = words[i].charAt(0).toUpperCase();
+        const restOfWord = words[i].slice(1);
+        words[i] = firstChar + restOfWord;
+    }
+    return words.join(" ");
+}
+const infoCustomerUpdateInforPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    function convertDateFormat(dateStr) {
+        const [year, month, day] = dateStr.split("-");
+        return `${day}/${month}/${year}`;
+    }
+    req.body.birthday = convertDateFormat(req.body.birthday);
+    console_1.default.log(req.body.birthday);
+    (req.body.fullname = capitalizeWords(req.body.fullname.trim().replace(/\s+/g, " "))),
+        yield customers_model_1.default.updateOne({
+            _id: res.locals.INFOR_CUSTOMER.id,
+        }, req.body);
+    res.json({
+        code: 200,
+    });
+});
+exports.infoCustomerUpdateInforPatch = infoCustomerUpdateInforPatch;
 const infoCustomerUpdateEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("client/pages/customers/email-update.pug", {
         pageTitle: "Cập nhật email khách hàng",
@@ -308,8 +334,6 @@ const infoCustomerUpdateEmail = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.infoCustomerUpdateEmail = infoCustomerUpdateEmail;
 const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(res.locals.INFOR_CUSTOMER.id);
-    console.log(req.body);
     const otp = yield otp_model_1.default.findOne({
         email: res.locals.INFOR_CUSTOMER.email,
     });
@@ -320,6 +344,7 @@ const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, fu
         return;
     }
     const email = res.locals.INFOR_CUSTOMER.email;
+    console_1.default.log(email);
     const nodemailer = require("nodemailer");
     const otpGenerator = require("otp-generator");
     const transporter = nodemailer.createTransport({
@@ -329,6 +354,9 @@ const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, fu
         auth: {
             user: "kimquangst5@gmail.com",
             pass: process.env.PASSWORD_APPLICATION,
+        },
+        tls: {
+            rejectUnauthorized: false,
         },
     });
     const createOTP = otpGenerator.generate(6, {
@@ -345,6 +373,7 @@ const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, fu
     };
     transporter.sendMail(mailOptions, (error, info) => __awaiter(void 0, void 0, void 0, function* () {
         if (error) {
+            console_1.default.log(error);
             res.status(400).json({
                 message: "Gửi email không thành công!",
             });
@@ -400,3 +429,15 @@ const infoCustomerUpdatePassword = (req, res) => __awaiter(void 0, void 0, void 
     });
 });
 exports.infoCustomerUpdatePassword = infoCustomerUpdatePassword;
+const infoCustomerUpdatePasswordPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { newPassword } = req.body;
+    yield customers_model_1.default.updateOne({
+        _id: res.locals.INFOR_CUSTOMER.id,
+    }, {
+        password: yield argon2_1.default.hash(newPassword),
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.infoCustomerUpdatePasswordPatch = infoCustomerUpdatePasswordPatch;

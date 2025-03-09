@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdateEmailPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPassword = exports.login = exports.register = void 0;
+exports.infoCustomerUpdateInfor = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdateEmailPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPassword = exports.login = exports.register = void 0;
 const argon2_1 = __importDefault(require("argon2"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const otp_model_1 = __importDefault(require("../../models/otp.model"));
-const console_1 = __importDefault(require("console"));
 require("dotenv").config();
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
@@ -155,7 +154,6 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         }
         else {
             const checkPass = yield argon2_1.default.verify(customer.password, req.body.password);
-            console_1.default.log(checkPass);
             if (checkPass == false) {
                 res.status(400).json({
                     message: "Mật khẩu chưa đúng!",
@@ -196,7 +194,6 @@ const forgotPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 });
 exports.forgotPassword = forgotPassword;
 const forgotPasswordCheckOtp = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console_1.default.log(req.body);
     const { email, code } = req.body;
     if (!email) {
         res.status(400).json({
@@ -372,6 +369,8 @@ exports.infoCustomerUpdatePhonePost = infoCustomerUpdatePhonePost;
 const infoCustomerUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { oldPassword, newPassword, confirmPassword } = req.body;
     let errorArray = [];
+    if (res.locals.INFOR_CUSTOMER.password && !oldPassword)
+        errorArray.push("Chưa nhập mật khẩu cũ");
     if (!newPassword)
         errorArray.push("Chưa nhập mật khẩu mới");
     if (!confirmPassword)
@@ -384,11 +383,10 @@ const infoCustomerUpdatePassword = (req, res, next) => __awaiter(void 0, void 0,
         if (newPassword !== confirmPassword) {
             errorArray.push("MK mới và xác nhận MK không giống nhau");
         }
-        console_1.default.log(res.locals.INFOR_CUSTOMER.password);
         if (res.locals.INFOR_CUSTOMER.password) {
-            if (newPassword !== oldPassword)
+            if (newPassword === oldPassword)
                 errorArray.push("MK mới và mật khẩu cũ không được giống!");
-            if ((yield argon2_1.default.verify(res.locals.INFOR_CUSTOMER.password, newPassword)) == false)
+            if ((yield argon2_1.default.verify(res.locals.INFOR_CUSTOMER.password, oldPassword)) == false)
                 errorArray.push("MK cũ không đúng!");
         }
     }
@@ -402,3 +400,53 @@ const infoCustomerUpdatePassword = (req, res, next) => __awaiter(void 0, void 0,
         next();
 });
 exports.infoCustomerUpdatePassword = infoCustomerUpdatePassword;
+const infoCustomerUpdateInfor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { fullname, username, genders, birthday } = req.body;
+    let errorArray = [];
+    if (!fullname)
+        errorArray.push("Chưa nhập họ tên!");
+    if (!username)
+        errorArray.push("Chưa nhập tên đăng nhập!");
+    if (!genders)
+        errorArray.push("Chưa nhập giới tính");
+    if (!birthday)
+        errorArray.push("Chưa nhập ngày sinh");
+    if (fullname && username && genders && birthday) {
+        if (fullname.length < 6)
+            errorArray.push("Họ và tên quá ngắn");
+        if (username.length <= 8)
+            errorArray.push("Tên đăng nhập quá ngắn");
+        function calculateAge(birthDateString) {
+            let today = new Date();
+            let birthDate = new Date(birthDateString);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let monthDiff = today.getMonth() - birthDate.getMonth();
+            let dayDiff = today.getDate() - birthDate.getDate();
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+            return age;
+        }
+        if (calculateAge(birthday) < 0)
+            errorArray.push(`Bạn là người tương lai :)`);
+        else if (calculateAge(birthday) < 18)
+            errorArray.push(`Bạn ${calculateAge(birthday)} tuổi hả`);
+        const customer = yield customers_model_1.default.countDocuments({
+            _id: {
+                $ne: res.locals.INFOR_CUSTOMER.id,
+            },
+            username: username,
+        });
+        if (customer > 0)
+            errorArray.push(`Tên đăng nhập đã được người khác sử dụng!`);
+    }
+    if (errorArray.length > 0) {
+        res.status(400).json({
+            message: errorArray.join("\n"),
+        });
+        return;
+    }
+    else
+        next();
+});
+exports.infoCustomerUpdateInfor = infoCustomerUpdateInfor;

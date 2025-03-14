@@ -33,7 +33,7 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         .sort({
         position: -1,
     })
-        .limit(4);
+        .limit(10);
     try {
         for (var _g = true, products_1 = __asyncValues(products), products_1_1; products_1_1 = yield products_1.next(), _a = products_1_1.done, !_a; _g = true) {
             _c = products_1_1.value;

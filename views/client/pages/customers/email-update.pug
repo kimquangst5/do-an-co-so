@@ -7,6 +7,16 @@ block script
 
 block main
     - if(INFOR_CUSTOMER)
+        div(class=`py-[20px] bg-transparent`)
+            div(class=`container`)
+                sl-breadcrumb
+                    sl-breadcrumb-item(href='/')
+                        sl-icon(slot="prefix", name="house")
+                        | Trang chủ
+                    sl-breadcrumb-item(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}`) Thông tin cá nhân
+                    sl-breadcrumb-item(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}`) Sửa thông tin
+                    sl-breadcrumb-item() Chỉnh sửa Email
+
         div(class=`bg-[#F5F5F5] h-full py-[20px]`)
             div(class=`container`)
 

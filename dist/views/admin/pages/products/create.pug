@@ -1,13 +1,12 @@
 extends ../../layouts/layouts.pug
 include ../../mixins/createTree.mixin.pug
+include ../../mixins/back-list.pug
 
 block header
     h1 Thêm sản phẩm mới
 
 block hb
-    sl-button(size="small" href = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`)
-        sl-icon(slot="prefix" name="arrow-up-left-circle")
-        | Quay lại danh sách
+    +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`)
     - if(ROLE.permission.includes("products-create"))
         sl-button(variant="primary" size="small" btn-create-new-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
             sl-icon(slot="prefix" name="plus-circle")

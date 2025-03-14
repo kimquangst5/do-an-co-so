@@ -28,6 +28,7 @@ export interface RouterAdmin {
   COLOR_PRODUCT?: GeneralRoutes;
   SIZE?: GeneralRoutes;
   PRODUCT_CATEGORY?: GeneralRoutes;
+  CUSTOMERS?: GeneralRoutes;
 }
 
 const ROUTER_ADMIN: RouterAdmin = {
@@ -79,6 +80,16 @@ const ROUTER_ADMIN: RouterAdmin = {
     UPDATE: "/update",
     DELETE: "/delete",
   },
+  CUSTOMERS: {
+    PATH: "/Khách_hàng",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_kích_thước_sản_phẩm",
+    READ: "/detail",
+    UPDATE: "/Cập_nhật_thông_tin_khách_hàng",
+    DELETE: "/Xóa_khách_hàng",
+    TRASH: "/Thùng_rác",
+
+  }
 };
 
 const ENCODED_ROUTER_ADMIN = encodeRouterPathsSync(ROUTER_ADMIN);

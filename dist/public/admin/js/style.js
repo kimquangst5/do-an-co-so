@@ -53,6 +53,29 @@ const showLoader = () => {
   const loader = document.querySelector("[wait-load]");
   loader.classList.remove("hidden");
 };
+
+
+const questionYesNo = (icon = "success", title, text, confirmButtonText, confirmButtonColor, cancelButtonText, cancelButtonColor, onConfirm ) => {
+  Swal.fire({
+    showCancelButton: true,
+    title: title,
+    text: text,
+    icon: icon,
+    confirmButtonText: confirmButtonText,
+    confirmButtonColor: confirmButtonColor,
+    cancelButtonText: cancelButtonText,
+    cancelButtonColor: cancelButtonColor,
+  }).then((result) => {
+    if (result.isConfirmed && typeof onConfirm === 'function') {
+      onConfirm();
+    }
+  });
+}
+
+const closeLoader = () => {
+  const loader = document.querySelector("[wait-load]");
+  loader.classList.add("hidden");
+};
 // const drawer = document.querySelector('.drawer-scrolling');
 // const openButton = document.querySelector('[open-sider]');
 // const closeButton = drawer.querySelector('sl-button[variant="primary"]');

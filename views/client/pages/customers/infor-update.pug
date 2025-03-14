@@ -7,7 +7,7 @@ block script
 
 block main
     - if(INFOR_CUSTOMER)
-        - function convertDate(birthday) {
+        - convertDate = (birthday) => {
         -   if (!birthday) return '';
         -   var parts = birthday.split('/');
         -   var day = parts[0].length === 1 ? '0' + parts[0] : parts[0];

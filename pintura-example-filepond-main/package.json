@@ -1,0 +1,22 @@
+{
+    "private": true,
+    "name": "pintura-example-filepond",
+    "version": "0.0.0",
+    "author": "Rik Schennink at PQINA",
+    "license": "https://pqina.nl/pintura/license/",
+    "homepage": "https://pqina.nl/pintura/",
+    "description": "A Pintura FilePond example Project",
+    "main": "index.js",
+    "scripts": {
+        "start": "npx http-server"
+    },
+    "dependencies": {
+        "@pqina/filepond-plugin-image-editor": "^9.x",
+        "@pqina/pintura": "^8.x",
+        "filepond": "^4.x",
+        "filepond-plugin-file-poster": "^2.x"
+    },
+    "devDependencies": {
+        "http-server": "^14.1.1"
+    }
+}

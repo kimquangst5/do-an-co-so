@@ -1,0 +1,82 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/back-list.pug
+
+
+block header
+    h1 Cập nhật thông tin khách hàng
+block css
+     //- link(rel="stylesheet", href="/node_modules/@pqina/pintura/pintura.css")
+     //- link(rel="stylesheet", href="/node_modules/filepond/dist/filepond.min.css")
+     //- link(rel="stylesheet", href="/node_modules/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.min.css")
+     
+     
+     link(rel="stylesheet", href="https://unpkg.com/filepond@^4/dist/filepond.css")
+     link(rel="stylesheet", href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css")
+     link(rel="stylesheet", href="https://unpkg.com/filepond@^4/dist/filepond.css")
+     link(rel="stylesheet", href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css")
+     link(rel="stylesheet", href="https://unpkg.com/@pqina/pintura@latest/dist/pintura.css")
+
+block script
+     // Các plugin FilePond khác
+     script(src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js")
+     script(src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js")
+     script(src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js")
+     script(src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js")
+     script(src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js")
+     script(src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js")
+     script(src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.js")
+     script(src="https://unpkg.com/filepond@^4/dist/filepond.js")
+
+     // Load Pintura (build UMD)
+     link(rel="stylesheet", href="https://unpkg.com/@pqina/pintura@latest/dist/pintura.css")
+     script(src="https://unpkg.com/@pqina/pintura@latest/dist/pintura.umd.min.js")
+
+     // Sau đó load FilePond Plugin Image Edit
+     link(rel="stylesheet", href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css")
+     script(src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js")
+
+     script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js")
+     script(type='module' src="/admin/js/customers/update.js")
+     //- script(type='module' src="/admin/js/customers/update-test.js")
+
+block hb
+     +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.INDEX}`)
+     sl-button(variant="primary", size="small" btn-update = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.UPDATE}/${customer.id}`)
+          sl-icon(slot="prefix", name="plus-circle")
+          | Cập nhật
+
+
+
+block main
+     - convertDate = (birthday) => {
+     -   if (!birthday) return '';
+     -   var parts = birthday.split('/');
+     -   var day = parts[0].length === 1 ? '0' + parts[0] : parts[0];
+     -   var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
+     -   var year = parts[2];
+     -   return year + '-' + month + '-' + day;
+     - }
+     div(class="grid grid-cols-2 gap-x-5") 
+          div(class="flex flex-col gap-y-[20px]") 
+               sl-input(placeholder="Tên khách hàng", size="medium", label='Tên khách hàng' value=customer.fullname name='fullname')
+                    sl-icon(name="person", slot="prefix")
+               sl-input(placeholder="Tên đăng nhập", size="medium", label='Tên đăng nhập' value=customer.username name='username')
+                    sl-icon(name="person", slot="prefix")
+               sl-input(type='email' placeholder="Email", size="medium", label='Email' value=customer.email name='email')
+                    sl-icon(name="envelope-at", slot="prefix")
+               sl-input(type='date' placeholder="Sinh nhật", size="medium", label='Sinh nhật' value=convertDate(customer.birthday) name='birthday')
+                    sl-icon(name="cake2", slot="prefix")
+               sl-input(type='number' placeholder="Số điện thoại", size="medium", label='Số điện thoại' value=customer.phone name='phone')
+                    sl-icon(name="telephone", slot="prefix")
+               sl-select(placeholder="Giới tính", size="medium", label='Giới tính' value=customer.genders name='genders')
+                    sl-option(value='male') Nam
+                    sl-option(value='female') Nữ
+                    sl-icon(name="person", slot="prefix")
+               sl-radio-group(placeholder="Trạng thái", size="medium", label='Trạng thái' value=customer.status name='status')
+                    sl-radio(value='active') Hoạt động
+                    sl-radio(value='inactive') Tạm dừng
+          div(class="flex items-center justify-center gap-x-[10px]")
+               //- div(class="") Avatar
+                    //- img(src=(customer.avatar ? customer.avatar : ''), alt="" class="w-auto")
+               input(type="file", class="filepond", name="filepond", accept="image/png, image/jpeg, image/gif" class="" data-avatar=customer.avatar class="w-[200px]")
+

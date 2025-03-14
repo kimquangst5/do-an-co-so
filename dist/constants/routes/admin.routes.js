@@ -50,6 +50,15 @@ const ROUTER_ADMIN = {
         UPDATE: "/update",
         DELETE: "/delete",
     },
+    CUSTOMERS: {
+        PATH: "/Khách_hàng",
+        INDEX: "/Tổng_quan",
+        CREATE: "/Tạo_kích_thước_sản_phẩm",
+        READ: "/detail",
+        UPDATE: "/Cập_nhật_thông_tin_khách_hàng",
+        DELETE: "/Xóa_khách_hàng",
+        TRASH: "/Thùng_rác",
+    }
 };
 const ENCODED_ROUTER_ADMIN = (0, encodeRouterPaths_1.encodeRouterPathsSync)(ROUTER_ADMIN);
 exports.default = ENCODED_ROUTER_ADMIN;

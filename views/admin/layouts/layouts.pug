@@ -36,7 +36,7 @@ html(lang="en")
           //- script(src="https://cdn.tailwindcss.com")
           script(src="/tailwind.config.js")
 
-     body(class="font-main")
+     body(class="")
           include ../partials/loader.pug
 
           sl-split-panel(class=`h-screen overflow-y-auto` position-in-pixels="250")
@@ -50,4 +50,5 @@ html(lang="en")
      script(src="https://cdn.jsdelivr.net/npm/tw-elements/js/tw-elements.umd.min.js")
      script(type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js")
      block script
+     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
      script(src="/admin/js/style.js")

@@ -1,3 +1,27 @@
+function OTPInput() {
+  const inputs = document.querySelectorAll("#otp > *[id]");
+  for (let i = 0; i < inputs.length; i++) {
+    inputs[i].addEventListener("keydown", function (event) {
+      if (event.key === "Backspace") {
+        inputs[i].value = "";
+        if (i !== 0) inputs[i - 1].focus();
+      } else {
+        if (i === inputs.length - 1 && inputs[i].value !== "") {
+          return true;
+        } else if (event.keyCode > 47 && event.keyCode < 58) {
+          inputs[i].value = event.key;
+          if (i !== inputs.length - 1) inputs[i + 1].focus();
+          event.preventDefault();
+        } else if (event.keyCode > 64 && event.keyCode < 91) {
+          inputs[i].value = String.fromCharCode(event.keyCode);
+          if (i !== inputs.length - 1) inputs[i + 1].focus();
+          event.preventDefault();
+        }
+      }
+    });
+  }
+}
+OTPInput();
 const btnOtp = () => {
   const btn = document.querySelector("[btn-otp]");
   if (!btn) return;
@@ -52,17 +76,19 @@ const btnOtp = () => {
 btnOtp();
 
 const main = () => {
-  const codeOtp = document.querySelector("[code-otp]");
   const newPhone = document.querySelector("[new-phone]");
   const btnUpdate = document.querySelector("[btn-update]");
   const link = btnUpdate.getAttribute("btn-update");
-  if (!link || !btnUpdate || !codeOtp || !newPhone) return;
+  const inputs = document.querySelectorAll("#otp > *[id]");
+  if (!link || !btnUpdate || !inputs || inputs.length <= 0 || !newPhone) return;
   btnUpdate.addEventListener("click", () => {
     showLoader();
+    let codeOtp = "";
+    inputs.forEach((input) => (codeOtp += input.value));
     axios
       .post(link, {
         phone: newPhone.value,
-        otp: codeOtp.value,
+        otp: codeOtp,
       })
       .then((res) => {
         if (res.status == 200) {

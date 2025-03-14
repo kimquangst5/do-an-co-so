@@ -253,3 +253,31 @@ const blockDevTool = () => {
   });
 };
 // blockDevTool();
+
+
+const animation = () => {
+  // const container = document.querySelector('.animation-scroll');
+  const animation = document.querySelectorAll('sl-animation');
+  if(!animation || animation.length == 0) return
+  animation.forEach(it => {
+    const box = it.querySelector('.box');
+    console.log(it.children[0]);
+    
+    // Watch for the box to enter and exit the viewport. Note that we're observing the box, not the animation element!
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        // Start the animation when the box enters the viewport
+        it.play = true;
+      } else {
+        it.play = false;
+        it.currentTime = 0;
+      }
+    });
+    // if(box)
+      observer.observe(it.children[0]);
+  })
+  
+
+}
+
+animation()

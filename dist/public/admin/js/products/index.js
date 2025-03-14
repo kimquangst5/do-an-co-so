@@ -323,7 +323,6 @@ pagination();
 
 const soTrang = () => {
   const select = document.querySelector("[so-trang]");
-  console.log(select);
 
   if (!select) return;
   select.addEventListener("sl-change", () => {
@@ -332,6 +331,12 @@ const soTrang = () => {
     url.searchParams.set("sotrang", select.value);
     location.href = url.href;
   });
+
+  const url = new URL(location.href)
+  if(url.searchParams.get('sotrang')){
+    select.defaultValue = url.searchParams.get('sotrang')
+
+  }
 };
 
 soTrang();

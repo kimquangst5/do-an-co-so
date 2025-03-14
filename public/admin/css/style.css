@@ -1,3 +1,28 @@
+@font-face {
+     font-family: 'Poppins';
+     src: url('/font/FzPoppins/FZ Poppins-Regular.ttf') format('truetype');
+     font-weight: normal;
+     font-style: normal;
+ }
+ 
+ @font-face {
+     font-family: 'Poppins';
+     src: url('/font/FzPoppins/FZ Poppins-Bold.ttf') format('truetype');
+     font-weight: bold;
+     font-style: normal;
+ }
+ 
+ @font-face {
+     font-family: 'Poppins';
+     src: url('/font/FzPoppins/FZ Poppins-Italic.ttf') format('truetype');
+     font-weight: normal;
+     font-style: italic;
+ }
+
+ body {
+     font-family: 'Poppins', sans-serif;
+ }
+
 sl-details::part(base) {
      border: 0px;
      overflow: visible !important;

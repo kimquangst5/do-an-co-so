@@ -1,10 +1,13 @@
 extends ../../layouts/layouts.pug
 include ../../mixins/createTree.mixin.pug
+include ../../mixins/back-list.pug
 
 block header
      h1 Cập nhật sản phẩm
 
 block hb
+
+     +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.INDEX}`)
      - if(ROLE.permission.includes('products-update'))
           sl-button(variant='primary' size='small' btn-update-product = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${products._id}`)
                sl-icon(slot='prefix' name='plus-circle')

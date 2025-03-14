@@ -23,10 +23,15 @@ app.locals.ROUTERS = ROUTERS;
 app.use(express.static(`${__dirname}/public`));
 
 const isDist = __dirname.includes("dist");
+const nodeModulesPathTinymce = isDist
+? path.join(__dirname, "..", "node_modules", "tinymce")
+: path.join(__dirname, "node_modules", "tinymce");
+app.use(`/tinymce`, express.static(nodeModulesPathTinymce));
+
 const nodeModulesPath = isDist
-  ? path.join(__dirname, "..", "node_modules", "tinymce")
-  : path.join(__dirname, "node_modules", "tinymce");
-app.use(`/tinymce`, express.static(nodeModulesPath));
+? path.join(__dirname, "..", "node_modules")
+: path.join(__dirname, "node_modules");
+app.use('/node_modules', express.static(nodeModulesPath));
 // app.get("/tinymce", (req: Request, res: Response) => {
 //   res.setHeader("Content-Type", "text/javascript");
 //   res.sendFile(path.join(__dirname, "node_modules", "tinymce"));

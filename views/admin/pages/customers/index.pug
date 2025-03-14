@@ -1,0 +1,47 @@
+extends ../../layouts/layouts.pug
+
+block header
+    h1 Danh sách khách hàng
+
+block css
+
+block script
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/customers/index.js")
+
+block hb
+    sl-button(variant="primary", size="small" btn-create-color-product)
+        sl-icon(slot="prefix", name="plus-circle")
+        | Thêm mới
+    
+
+
+block main
+     div(class="overflow-x-auto  rounded-lg")
+          table(class="min-w-full ")
+               thead
+                    tr(class="border border-b-[#A6A6A6]")
+                         th(class="sticky left-0 z-[20]  px-4 py-2") Tên khách hàng
+                         th(class="px-4 py-2") Tên đăng nhập
+                         th(class="px-4 py-2") Email
+                         th(class="px-4 py-2") Sinh nhật
+                         th(class="px-4 py-2") Số điện thoại
+                         th(class="px-4 py-2") Giới tính
+                         th(class="px-4 py-2") Trạng thái
+               tbody
+                    each it in customers
+                         tr(class="group hover:bg-[#FFFFCF] ")
+                              td(class="sticky left-0 z-[20] px-4 py-2")
+                                   div(class="flex flex-col gap-y-[10px]") 
+                                        div #{it.fullname}
+                                        div(class="text-[14px] flex items-center gap-x-[10px] opacity-0 group-hover:opacity-[100%]")
+                                             a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.UPDATE}/${it._id}` class=`text-[#5277FF]`) Chỉnh sửa
+                                             button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.TRASH}/${it._id}` class=`text-[#FFA09B]`) Xóa
+                              td(class="px-4 py-2") #{it.username}
+                              td(class="px-4 py-2") #{it.email}
+                              td(class="px-4 py-2 text-center") #{it.birthday ? it.birthday : '-'}
+                              td(class="px-4 py-2 text-center") #{it.phone ? it.phone : '-'}
+                              td(class="px-4 py-2 text-center") #{it.genders ? (it.genders == 'male' ? 'Nam' : 'Nữ') : '-'}
+                              td(class="px-4 py-2")
+                                   sl-badge(pill variant=(it.status == 'active' ? 'success' : 'danger')) #{it.status ? (it.status == 'active' ? 'Hoạt động' : 'Tạm dừng') : '-'}
+

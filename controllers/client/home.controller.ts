@@ -16,7 +16,7 @@ const index = async (req: Request, res: Response) => {
     .sort({
       position: -1,
     })
-    .limit(4);
+    .limit(10);
   for await (const it of products) {
     it["img_main"] = [];
     const img = await ProductAssets.find({

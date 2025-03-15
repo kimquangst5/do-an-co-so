@@ -4,9 +4,16 @@ block header
     h1 Danh sách khách hàng
 
 block css
-
+     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css")
+     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css")
+     link(rel="stylesheet", href="/admin/css/customers/index.css")
 block script
-    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js")
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js")
+
     script(src="/admin/js/customers/index.js")
 
 block hb
@@ -17,6 +24,8 @@ block hb
 
 
 block main
+
+          
      div(class="overflow-x-auto  rounded-lg")
           table(class="min-w-full ")
                thead
@@ -34,9 +43,52 @@ block main
                               td(class="sticky left-0 z-[20] px-4 py-2")
                                    div(class="flex flex-col gap-y-[10px]") 
                                         div #{it.fullname}
-                                        div(class="text-[14px] flex items-center gap-x-[10px] opacity-0 group-hover:opacity-[100%]")
+                                        div(class="text-[14px] flex items-center gap-x-[10px] ")
                                              a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.UPDATE}/${it._id}` class=`text-[#5277FF]`) Chỉnh sửa
                                              button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.TRASH}/${it._id}` class=`text-[#FFA09B]`) Xóa
+                                             button(btn-edit-address = it.id class=`text-[#FA6B04]`) Địa chỉ 
+                              sl-dialog(label=`Địa chỉ | ${it.fullname}` class="dialog-width" style="--width: 50vw;" class="z-[99]" dialog-address = it.id open = false) 
+                                   div(class="flex justify-end")
+                                        sl-tooltip(content='Load lại' class="")
+                                             sl-button(variant="default" size="medium" circle btn-reload-data-address = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.GET_ADDRESS}/${it.id}` link = it.id)
+                                                  sl-icon(name="arrow-repeat" label="Settings")
+                                        sl-button(class="ml-[20px]" btn-add-address = it.id) Thêm địa chỉ mới
+                                   - if(it.address && it.address.length > 0)
+                                        div(class="py-[20px]")
+                                             sl-radio-group(value='1' class="" parent = it.id)
+                                                  //- each address in it.address
+                                                       sl-radio(value=address.id class="mb-[15px] relative py-[20px] border-b-[1px] border-b-[#A6A6A6]")
+                                                            div(class="w-full") 
+                                                                 div(class="flex flex-1 flex-col gap-y-[20px]")
+                                                                      div(class="mr-auto flex items-center gap-x-[10px]") 
+                                                                           div(class="font-bold text-[18px]") #{address.fullname}
+                                                                           div(class="") | #{address.phone}
+                                                                      div(class="mr-auto  text-justify") #{address.address} 
+                                                                      - if(address.default == true)
+                                                                           sl-button(class="mr-auto" variant="warning") Mặc định
+
+                                                                 sl-button(variant="neutral" class="ml-auto block absolute right-0 top-0" ) Cập nhật
+                                        sl-button(slot="footer") Hủy
+                                   sl-button(slot="footer" variant="primary" btn-update-default =  `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.UPDATE_ADDRESS_DEFAULT}/${it.id}` link = it.id) Ok
+                              sl-dialog(label="Thêm địa chỉ" class="dialog-width z-[200] relative" style="--width: 50vw;" dialog-add-address = it.id open = false)
+                                   div(class="flex flex-col gap-y-[20px]") 
+                                        sl-input(label='Họ tên' required class="" name='fullname')
+                                        sl-input(type='number' label='Số điện thoại' required  class="" name='phone')
+                                        div(class="flex flex-col gap-y-[10px]") 
+                                             label(for='city' class="before:content-['*'] before:text-red-500 before:mr-1") Tỉnh/Thành phố
+                                             select(city label='sdfdsf' required class="selectpicker" data-live-search="true" class="w-full")
+                                                  option(value='' selected) Chọn Tỉnh/Thành phố
+                                        div(class="flex flex-col gap-y-[10px]") 
+                                             label(for='city' class="before:content-['*'] before:text-red-500 before:mr-1") Quận/Huyện
+                                             select(district class="selectpicker" data-live-search="true" class="w-full")
+                                                  option(value='' selected) Chọn Quận/Huyện
+                                        div(class="flex flex-col gap-y-[10px]") 
+                                             label(for='city' class="before:content-['*'] before:text-red-500 before:mr-1") Xã/Phường
+                                             select(ward class="selectpicker" data-live-search="true" class="w-full")
+                                                  option(value='' selected) Chọn Xã/Phường
+                                        sl-input(label='Số nhà / Ngõ / Đường' required  name='address')
+                                   sl-button(slot="footer") Hủy
+                                   sl-button(slot="footer" variant="primary" btn-create-address = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.CREATE_ADDRESS}/${it._id}` link = it.id) Thêm
                               td(class="px-4 py-2") #{it.username}
                               td(class="px-4 py-2") #{it.email}
                               td(class="px-4 py-2 text-center") #{it.birthday ? it.birthday : '-'}

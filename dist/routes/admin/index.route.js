@@ -20,6 +20,7 @@ const sizeProduct_route_1 = __importDefault(require("./sizeProduct.route"));
 const auth_route_1 = __importDefault(require("./auth.route"));
 const productsCategory_route_1 = __importDefault(require("./productsCategory.route"));
 const customer_route_1 = __importDefault(require("./customer.route"));
+const orders_route_1 = __importDefault(require("./orders.route"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const checkLogin_middlewares_1 = __importDefault(require("../../middlewares/admin/checkLogin.middlewares"));
 const index = (app) => __awaiter(void 0, void 0, void 0, function* () {
@@ -30,6 +31,7 @@ const index = (app) => __awaiter(void 0, void 0, void 0, function* () {
     app.use(`/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.COLOR_PRODUCT.PATH}`, checkLogin_middlewares_1.default, colorProduct_route_1.default);
     app.use(`/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.SIZE.PATH}`, checkLogin_middlewares_1.default, sizeProduct_route_1.default);
     app.use(`/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.CUSTOMERS.PATH}`, checkLogin_middlewares_1.default, customer_route_1.default);
+    app.use(`/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ORDERS.PATH}`, checkLogin_middlewares_1.default, orders_route_1.default);
     app.use(`/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.LOGIN}`, auth_route_1.default);
 });
 exports.default = index;

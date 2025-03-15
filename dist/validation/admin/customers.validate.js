@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePatch = exports.updatePatch = void 0;
+exports.createAddress = exports.deletePatch = exports.updatePatch = void 0;
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 require("dotenv").config();
 const mongodb_1 = require("mongodb");
@@ -104,3 +104,7 @@ const deletePatch = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.deletePatch = deletePatch;
+const createAddress = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    next();
+});
+exports.createAddress = createAddress;

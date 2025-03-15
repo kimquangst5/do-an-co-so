@@ -95,6 +95,36 @@ const checkLogin = async (req: Request, res: Response, next: NextFunction) => {
             link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.INDEX}`,
           },
         ],
+      },{
+        name: "Khách hàng",
+        icon: "person",
+        childrent: [
+          {
+            name: "Thêm khách hàng mới",
+            icon: "plus-circle",
+            // link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.CREATE}`,
+          },
+          {
+            name: "Danh sách",
+            icon: "list",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}${ROUTERS.ADMIN.CUSTOMERS.INDEX}`,
+          },
+        ],
+      },{
+        name: "Đơn hàng",
+        icon: "person",
+        childrent: [
+          {
+            name: "Thêm đơn hàng",
+            icon: "plus-circle",
+            // link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.CREATE}`,
+          },
+          {
+            name: "Danh sách",
+            icon: "list",
+            link: `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ORDERS.PATH}${ROUTERS.ADMIN.ORDERS.INDEX}`,
+          },
+        ],
       },
     ];
     res.locals.siderArray = siderArray;

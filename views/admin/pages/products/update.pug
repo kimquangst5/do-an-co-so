@@ -76,23 +76,24 @@ block main
                          div(class=`grid grid-cols-2`)
                               div(class=`text-[#AFAFAF] font-bold`) Cập nhật bởi
                               div(class=`font-bold`) #{products.updatetor ? products.updatetor : 'Chưa ai cập nhật'}
-          sl-details(summary='Thông tin sản phẩm' open)
-               sl-input(label='Tên sản phẩm' required size='small' name='name-product' value=products.name)
-               sl-select(value=products.categories max-options-visible=6 clearable  multiple  size='small' label='Danh mục cha' required name='category-parent' placeholder='Không chọn nếu là danh mục cha' )
-                    - if(listCategories && listCategories.length > 0)
-                         +createTree(listCategories)
-                    - else
-                         sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
+          sl-details(summary='Thông tin sản phẩm' open class="")
+               div(class="flex flex-col gap-y-[20px]") 
+                    sl-input(label='Tên sản phẩm' required size='small' name='name-product' value=products.name)
+                    sl-select(value=products.categories max-options-visible=6 clearable  multiple  size='small' label='Danh mục cha' required name='category-parent' placeholder='Không chọn nếu là danh mục cha' )
+                         - if(listCategories && listCategories.length > 0)
+                              +createTree(listCategories)
+                         - else
+                              sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
 
-               sl-input(label='Vị trí' size='small' placeholder='Tự động tăng...' name='position' value=products.position)
-               sl-input(label='Đường dẫn' size='small' placeholder='Tự động tạo ra theo tên của sản phẩm...' value=products.slug name='slug')
+                    sl-input(label='Vị trí' size='small' placeholder='Tự động tăng...' name='position' value=products.position)
+                    sl-input(label='Đường dẫn' required size='small' placeholder='Tự động tạo ra theo tên của sản phẩm...' value=products.slug name='slug')
 
-               sl-radio-group(label='Trạng thái sản phẩm' name='status-product' size='small' value=products.status)
-                    sl-radio(value='active') Đang bán
-                    sl-radio(value='inactive') Tạm dừng
-               sl-radio-group(label='Sản phẩm nổi bật' size='small' value=products.featured.toString() name='featured')
-                    sl-radio(value='true') Có
-                    sl-radio(value='false') Không
+                    sl-radio-group(required label='Trạng thái sản phẩm' name='status-product' size='small' value=products.status)
+                         sl-radio(value='active') Đang bán
+                         sl-radio(value='inactive') Tạm dừng
+                    sl-radio-group(required label='Sản phẩm nổi bật' size='small' value=products.featured.toString() name='featured')
+                         sl-radio(value='true') Có
+                         sl-radio(value='false') Không
 
           sl-details(summary='Ảnh sản phẩm' open  )
                div(class='custom-file-container' data-upload-id='upload-image-preview-main')

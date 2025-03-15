@@ -14,6 +14,12 @@ interface Roles extends GeneralRoutes {
   PERMISSION?: string;
 }
 
+interface Customer extends GeneralRoutes {
+  CREATE_ADDRESS?: string;
+  GET_ADDRESS?: string;
+  UPDATE_ADDRESS_DEFAULT?: string;
+}
+
 interface Product extends GeneralRoutes {
   CHANGE_STATUS?: string;
   CHANGE_STATUS_MANY_PRODUCT?: string;
@@ -28,7 +34,8 @@ export interface RouterAdmin {
   COLOR_PRODUCT?: GeneralRoutes;
   SIZE?: GeneralRoutes;
   PRODUCT_CATEGORY?: GeneralRoutes;
-  CUSTOMERS?: GeneralRoutes;
+  CUSTOMERS?: Customer;
+  ORDERS?: GeneralRoutes;
 }
 
 const ROUTER_ADMIN: RouterAdmin = {
@@ -88,7 +95,19 @@ const ROUTER_ADMIN: RouterAdmin = {
     UPDATE: "/Cập_nhật_thông_tin_khách_hàng",
     DELETE: "/Xóa_khách_hàng",
     TRASH: "/Thùng_rác",
+    CREATE_ADDRESS: "/Thêm_địa_chỉ",
+    GET_ADDRESS: '/Lấy_địa_chỉ',
+    UPDATE_ADDRESS_DEFAULT: '/Cập_nhật_địa_chỉ_mặc_định'
 
+  },
+  ORDERS: {
+    PATH: "/Đơn_hàng",
+    INDEX: "/Tổng_quan",
+    CREATE: "/Tạo_đơn_hàng",
+    READ: "/chi_tiết",
+    UPDATE: "/cập_nhật",
+    DELETE: "/xóa",
+    TRASH: "/rác",
   }
 };
 

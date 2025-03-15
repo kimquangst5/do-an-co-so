@@ -58,6 +58,18 @@ const ROUTER_ADMIN = {
         UPDATE: "/Cập_nhật_thông_tin_khách_hàng",
         DELETE: "/Xóa_khách_hàng",
         TRASH: "/Thùng_rác",
+        CREATE_ADDRESS: "/Thêm_địa_chỉ",
+        GET_ADDRESS: '/Lấy_địa_chỉ',
+        UPDATE_ADDRESS_DEFAULT: '/Cập_nhật_địa_chỉ_mặc_định'
+    },
+    ORDERS: {
+        PATH: "/Đơn_hàng",
+        INDEX: "/Tổng_quan",
+        CREATE: "/Tạo_đơn_hàng",
+        READ: "/chi_tiết",
+        UPDATE: "/cập_nhật",
+        DELETE: "/xóa",
+        TRASH: "/rác",
     }
 };
 const ENCODED_ROUTER_ADMIN = (0, encodeRouterPaths_1.encodeRouterPathsSync)(ROUTER_ADMIN);

@@ -14,5 +14,8 @@ router.patch(`${ROUTERS.ADMIN.CUSTOMERS.UPDATE}/:id`, CustomerValidate.updatePat
 
 
 router.patch(`${ROUTERS.ADMIN.CUSTOMERS.TRASH}/:id`, CustomerValidate.deletePatch, controller.deletePatch);
+router.post(`${ROUTERS.ADMIN.CUSTOMERS.CREATE_ADDRESS}/:id`, CustomerValidate.createAddress, controller.createAddress);
+router.put(`${ROUTERS.ADMIN.CUSTOMERS.GET_ADDRESS}/:id`, controller.getAddress);
+router.patch(`${ROUTERS.ADMIN.CUSTOMERS.UPDATE_ADDRESS_DEFAULT}/:customer/:id`, controller.updateAddressDefault);
 
 export default router;

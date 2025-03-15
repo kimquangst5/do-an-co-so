@@ -107,6 +107,34 @@ const checkLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
                         link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ROLES.PATH}${index_routes_1.default.ADMIN.ROLES.INDEX}`,
                     },
                 ],
+            }, {
+                name: "Khách hàng",
+                icon: "person",
+                childrent: [
+                    {
+                        name: "Thêm khách hàng mới",
+                        icon: "plus-circle",
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.CUSTOMERS.PATH}${index_routes_1.default.ADMIN.CUSTOMERS.INDEX}`,
+                    },
+                ],
+            }, {
+                name: "Đơn hàng",
+                icon: "person",
+                childrent: [
+                    {
+                        name: "Thêm đơn hàng",
+                        icon: "plus-circle",
+                    },
+                    {
+                        name: "Danh sách",
+                        icon: "list",
+                        link: `/${index_routes_1.default.ADMIN.AUTH}${index_routes_1.default.ADMIN.ORDERS.PATH}${index_routes_1.default.ADMIN.ORDERS.INDEX}`,
+                    },
+                ],
             },
         ];
         res.locals.siderArray = siderArray;

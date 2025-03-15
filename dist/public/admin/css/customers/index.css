@@ -1,0 +1,20 @@
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: black !important;
+  color: white;
+}
+
+.btn:hover,
+.btn {
+  background-color: transparent !important;
+}
+
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){
+  width: 100% !important;
+}
+
+.dropdown-toggle::after{
+  position: absolute;
+  right: 20px;
+}

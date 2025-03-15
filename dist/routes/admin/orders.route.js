@@ -38,16 +38,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const multer_1 = __importDefault(require("multer"));
-const controller = __importStar(require("../../controllers/admin/customers.controller"));
+const controller = __importStar(require("../../controllers/admin/orders.controller"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
-const CustomerValidate = __importStar(require("../../validation/admin/customers.validate"));
 const router = express_1.default.Router();
 const upload = (0, multer_1.default)();
-router.get(`${index_routes_1.default.ADMIN.CUSTOMERS.INDEX}`, controller.index);
-router.get(`${index_routes_1.default.ADMIN.CUSTOMERS.UPDATE}/:id`, controller.update);
-router.patch(`${index_routes_1.default.ADMIN.CUSTOMERS.UPDATE}/:id`, CustomerValidate.updatePatch, controller.updatePatch);
-router.patch(`${index_routes_1.default.ADMIN.CUSTOMERS.TRASH}/:id`, CustomerValidate.deletePatch, controller.deletePatch);
-router.post(`${index_routes_1.default.ADMIN.CUSTOMERS.CREATE_ADDRESS}/:id`, CustomerValidate.createAddress, controller.createAddress);
-router.put(`${index_routes_1.default.ADMIN.CUSTOMERS.GET_ADDRESS}/:id`, controller.getAddress);
-router.patch(`${index_routes_1.default.ADMIN.CUSTOMERS.UPDATE_ADDRESS_DEFAULT}/:customer/:id`, controller.updateAddressDefault);
+router.get(`${index_routes_1.default.ADMIN.ORDERS.INDEX}`, controller.index);
 exports.default = router;

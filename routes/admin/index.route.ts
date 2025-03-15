@@ -7,6 +7,7 @@ import sizeProduct from "./sizeProduct.route";
 import auth from "./auth.route";
 import productsCategories from "./productsCategory.route";
 import customers from "./customer.route";
+import orders from "./orders.route";
 import ROUTERS from "../../constants/routes/index.routes";
 import checkLogin from "../../middlewares/admin/checkLogin.middlewares";
 
@@ -45,6 +46,11 @@ const index = async (app: Application) => {
     `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.CUSTOMERS.PATH}`,
     checkLogin,
     customers
+  );
+  app.use(
+    `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ORDERS.PATH}`,
+    checkLogin,
+    orders
   );
   app.use(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.LOGIN}`, auth);
 };

@@ -3,25 +3,25 @@
      src: url('/font/FzPoppins/FZ Poppins-Regular.ttf') format('truetype');
      font-weight: normal;
      font-style: normal;
- }
- 
- @font-face {
+}
+
+@font-face {
      font-family: 'Poppins';
      src: url('/font/FzPoppins/FZ Poppins-Bold.ttf') format('truetype');
      font-weight: bold;
      font-style: normal;
- }
- 
- @font-face {
+}
+
+@font-face {
      font-family: 'Poppins';
      src: url('/font/FzPoppins/FZ Poppins-Italic.ttf') format('truetype');
      font-weight: normal;
      font-style: italic;
- }
+}
 
- body {
+body {
      font-family: 'Poppins', sans-serif;
- }
+}
 
 sl-details::part(base) {
      border: 0px;
@@ -205,4 +205,14 @@ sl-switch::part(thumb) {
 sl-switch.switch__control {
      background-color: #FFA09B;
      border: 0;
+}
+
+*[required]::part(form-control-label)::after {
+     content: none;
+}
+
+*[required]::part(form-control-label)::before {
+     content: '*';
+     color: #FA4F64;
+     font-size: larger;
 }

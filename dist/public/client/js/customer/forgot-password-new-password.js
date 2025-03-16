@@ -9,9 +9,6 @@ const main = () => {
     const confirmPassword = document.querySelector(
       "sl-input[name='confirm-password']"
     );
-    console.log(email.value);
-    console.log(password.value);
-    console.log(confirmPassword.value);
 
     showLoader();
     axios

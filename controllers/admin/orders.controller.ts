@@ -8,13 +8,7 @@ const index = async (req: Request, res: Response) => {
   }).sort({
     createdAt: -1
   })
-  orders.forEach(it => {
-    
-    console.log(it['inforProductItem']);
-  });
-  for await (const it of orders) {
-    
-  }
+  
   res.render('admin/pages/orders/index.pug', {
      pageTitle: 'Đơn hàng',
      orders: orders

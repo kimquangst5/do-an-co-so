@@ -26,7 +26,6 @@ const btnOtp = () => {
   const btn = document.querySelector("[btn-otp]");
   if (!btn) return;
   btn.addEventListener("click", () => {
-    console.log("ok");
     const link = btn.getAttribute("btn-otp");
     if (!link) return;
     showLoader();

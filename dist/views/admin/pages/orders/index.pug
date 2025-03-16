@@ -1,6 +1,6 @@
 extends ../../layouts/layouts.pug
 include ../../mixins/btn-redirect.mixin.pug
-
+//- include ../../mixins/formatPhone.pug
 block header
      h1 Danh sách sản phẩm
 
@@ -60,17 +60,19 @@ block main
                                    th
                                         sl-checkbox()
                                    th
-                                        div(class=``) Tên sản phẩm
+                                        div(class=``) Khách hàng
                                    th
-                                        sl-icon(name="images" class=`text-[20px]`)
+                                        div(class=``) Nhân viên
                                    th
-                                        div(class=``) Giá
+                                        div(class=``) SĐT
+                                   th
+                                        div(class=``) Tổng tiền
                                    th
                                         div(class=``) Trạng thái
-                                   th
-                                        div(class=``) Vị trí
                                    th 
-                                        div(class=``) Tạo bởi
+                                        div(class=``) Ngày tạo
+                                   th 
+                                        div(class=``) Loại đơn hàng
                          tbody
                               each it in orders
                                    tr(class=`group hover:bg-[#FFFFCF]`)
@@ -84,6 +86,12 @@ block main
                                                             a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${it._id}` class=`text-[#5277FF]`) Chỉnh sửa
                                                        - if(ROLE.permission.includes("products-delete"))
                                                             button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}` class=`text-[#FFA09B]`) Xóa
+                                        td
+                                             div #{it.createdBy ? it.createdBy : 'Chưa có'}
+                                        td
+                                             div #{it.inforCustomer.phone ? it.inforCustomer.phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1.$2.$3') : 'Chưa có'}
+                                        td
+                                             div #{it.createdBy ? it.createdBy : 'Chưa có'}
                                         //- td
                                         //-      div(class=`flex items-center justify-center gap-x-[5px] `) 
                                         //-           - if(!it.images || it.images.length == 0)

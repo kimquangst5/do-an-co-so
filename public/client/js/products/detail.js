@@ -136,8 +136,6 @@ const comment = () => {
     if (!link) return;
     const rating = document.querySelector("sl-rating");
     const comment = document.querySelector("sl-textarea");
-    console.log(rating.value);
-    console.log(comment.value);
     axios
       .post(link, {
         rating: rating.value,

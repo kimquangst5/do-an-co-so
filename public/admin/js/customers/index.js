@@ -273,19 +273,20 @@ const dialogAddressFunction = () => {
 }
 dialogAddressFunction()
 const reloadDataAddress = (id) => {
+     showLoader()
      const dialog = document.querySelector(`[dialog-address = '${id}']`)
      const btn = dialog.querySelector('[btn-reload-data-address]')
      const link = btn.getAttribute('btn-reload-data-address')
      
      if (!link) return
      
-     axios.put(link).then(res => {
+     axios.put(link).then(async (res) => {
           if (res.status == 200) {
                if (res.data && res.data.length > 0) {
                     
                     const parent = dialog.querySelector(`sl-radio-group[parent = '${id}']`)
                     let htmlChildAddress = ''
-                    res.data.forEach(async (it) => {
+                    for (const it of res.data) {
                          let newAddress = await getLocationNames(it.city, it.district, it.ward)
                          let addressNew = `${it.address}, ${newAddress.wards}, ${newAddress.districts}, ${newAddress.city}`
 
@@ -321,9 +322,10 @@ const reloadDataAddress = (id) => {
                          `
                          if(parent)
                          parent.innerHTML = htmlChildAddress
-
-                    });
+                    }
+                    
                     if(!parent) location.reload()
+                    closeLoader()
                }
 
           }

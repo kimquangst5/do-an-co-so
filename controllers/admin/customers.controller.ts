@@ -81,7 +81,8 @@ const createAddress = async (req: Request, res: Response) => {
     { _id: req.params.id, "address.default": true }, // Tìm các địa chỉ có `default: true`
     { $set: { "address.$[].default": false } } // Cập nhật tất cả thành `false`
   );
-
+  req.body.fullname = capitalizeWords(req.body.fullname.trim().replace(/\s+/g, ' '))
+  req.body.address = capitalizeWords(req.body.address.trim().replace(/\s+/g, ' '))
   await Customer.updateOne(
     {
       _id: new ObjectId(req.params.id),
@@ -110,17 +111,15 @@ const getAddress = async (req: Request, res: Response) => {
 };
 const updateAddressDefault = async (req: Request, res: Response) => {
   const { customer, id } = req.params
-  console.log(customer);
-  console.log(id);
   
   await Customer.updateMany(
-    { _id: customer, "address.default": true }, // Tìm các địa chỉ có `default: true`
-    { $set: { "address.$[].default": false } } // Cập nhật tất cả thành `false`
+    { _id: customer, "address.default": true },
+    { $set: { "address.$[].default": false } }
   );
 
   await Customer.updateOne(
     { _id: customer, "address._id": new ObjectId(id) },
-    { $set: { "address.$.default": true } } // Cập nhật tất cả thành `false`
+    { $set: { "address.$.default": true } }
   );
   res.json({
     code: 200

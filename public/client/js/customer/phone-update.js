@@ -48,7 +48,6 @@ const btnOtp = () => {
         }
       })
       .catch((error) => {
-        console.log(error.response.data.time);
         const expirationTime = new Date(error.response.data.time);
         const currentTime = new Date();
         const diffMs = expirationTime - currentTime;
@@ -86,7 +85,7 @@ const main = () => {
     let codeOtp = "";
     inputs.forEach((input) => (codeOtp += input.value));
     axios
-      .post(link, {
+      .patch(link, {
         phone: newPhone.value,
         otp: codeOtp,
       })

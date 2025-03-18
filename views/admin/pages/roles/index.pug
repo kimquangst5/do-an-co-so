@@ -13,7 +13,7 @@ block css
 
 
 block script
-
+    script(src="/admin/js/roles/index.js") 
 
 block main
     - if(ROLE.permission.includes("roles-view"))
@@ -30,17 +30,19 @@ block main
                                 div(class=``) Trạng thái
                             th 
                                 div(class=``) Tạo bởi
+                            th 
+                                div(class=``) Ngày tạo
                     tbody
                         each it in roles
                             tr(class=`group`)
                                 td
                                     sl-checkbox(class=`flex justify-center`)
-                                td(class=``)
+                                td
                                     div(class=`flex flex-col gap-y-[5px] justify-center`) 
                                         div(class=`font-bold text-[18px] line-clamp-1` name-product) #{it.name}
                                         div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[14px]`)
                                             a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.UPDATE}/${it._id}`) Chỉnh sửa
-                                            button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}`) Xóa
+                                            button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.TRASH}/${it._id}`) Xóa
                                 td
                                     div(class=`flex justify-center items-center`)
                                         - if(it.status == 'active')
@@ -49,6 +51,12 @@ block main
                                             sl-button(variant="danger" size="small" pill) Tạm dừng
                                 td
                                     div(class=`flex items-center justify-center gap-x-[5px] `) 
-                                        sl-badge(variant="primary" pill) #{it.author}
+                                        sl-badge(variant="primary" pill) #{it.author ? it.author : 'Chưa có'}
+                                td
+                                    div(class="flex gap-x-[10px] items-center") 
+
+                                        sl-format-date(hour="numeric" minute="numeric" hour-format="12" date=it.createdAt)
+                                        div |
+                                        sl-format-date(lang="vi" date=it.createdAt)
             - else
                 +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)

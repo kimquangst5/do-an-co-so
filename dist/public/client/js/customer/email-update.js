@@ -83,7 +83,7 @@ const main = () => {
 
     showLoader();
     axios
-      .post(link, {
+      .patch(link, {
         email: newEmail.value,
         otp: codeOtp,
       })

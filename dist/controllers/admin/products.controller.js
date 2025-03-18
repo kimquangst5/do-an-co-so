@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changeStatusMany = exports.changeStatus = exports.trashPatch = exports.updatePatch = exports.getImage = exports.update = exports.createPost = exports.create = exports.index = void 0;
+exports.deleteMany = exports.deleteProduct = exports.trash = exports.changeStatusMany = exports.changeStatus = exports.trashPatch = exports.updatePatch = exports.getImage = exports.update = exports.createPost = exports.create = exports.index = void 0;
 const index_service_1 = require("../../services/admin/index.service");
 const mongodb_1 = require("mongodb");
 const products_model_1 = __importDefault(require("../../models/products.model"));
@@ -31,6 +31,7 @@ const productAssets_model_1 = __importDefault(require("../../models/productAsset
 const assets_model_1 = __importDefault(require("../../models/assets.model"));
 const unidecode_1 = __importDefault(require("unidecode"));
 const console_1 = __importDefault(require("console"));
+const accounts_model_1 = __importDefault(require("../../models/accounts.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c, _d, e_2, _e, _f;
     const find = {
@@ -340,11 +341,23 @@ const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.updatePatch = updatePatch;
 const trashPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    yield products_model_1.default.updateOne({
-        _id: id,
-    }, {
-        deleted: true,
-    });
+    if (req.body.type && req.body.type == "restore") {
+        yield products_model_1.default.updateOne({
+            _id: id,
+        }, {
+            deleted: false,
+            updatedBy: new mongodb_1.ObjectId(res.locals.INFOR_USER.id),
+            $unset: { deletedBy: "" },
+        });
+    }
+    else {
+        yield products_model_1.default.updateOne({
+            _id: id,
+        }, {
+            deleted: true,
+            deletedBy: res.locals.INFOR_USER.id,
+        });
+    }
     res.json({
         code: 200,
     });
@@ -380,3 +393,130 @@ const changeStatusMany = (req, res) => __awaiter(void 0, void 0, void 0, functio
     });
 });
 exports.changeStatusMany = changeStatusMany;
+const trash = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_6, _b, _c, _d, e_7, _e, _f;
+    const find = {
+        deleted: true,
+    };
+    if (req.query.trang_thai) {
+        find["status"] = req.query.trang_thai;
+    }
+    const search = req.query.tim_kiem || "";
+    if (typeof search === "string") {
+        const findSlug = (0, unidecode_1.default)(search.trim().replace(/\s+/g, "-"));
+        const regexTitle = new RegExp(search, "i");
+        const regexSlug = new RegExp(findSlug, "i");
+        const regexSlugDb = new RegExp(search.trim().replace(/\s+/g, "-"), "i");
+        find["$or"] = [
+            {
+                title: regexTitle,
+            },
+            {
+                slug: regexSlug,
+            },
+            {
+                slug: regexSlugDb,
+            },
+        ];
+    }
+    let pagination = {
+        current: req.query.trang ? parseInt(req.query.trang) : 1,
+        limit: req.query.sotrang
+            ? req.query.sotrang == "full"
+                ? yield products_model_1.default.countDocuments(find)
+                : parseInt(req.query.sotrang)
+            : 5,
+    };
+    pagination["totalProduct"] = yield products_model_1.default.countDocuments(find);
+    pagination["totalPage"] = Math.ceil(pagination["totalProduct"] / pagination.limit);
+    if (pagination.current > pagination.totalPage)
+        pagination.current = 1;
+    pagination["skip"] = (pagination.current - 1) * pagination.limit;
+    const products = yield products_model_1.default.find(find)
+        .lean()
+        .sort({
+        position: -1,
+    })
+        .limit(pagination["limit"])
+        .skip(pagination["skip"]);
+    try {
+        for (var _g = true, products_2 = __asyncValues(products), products_2_1; products_2_1 = yield products_2.next(), _a = products_2_1.done, !_a; _g = true) {
+            _c = products_2_1.value;
+            _g = false;
+            const it = _c;
+            const productItem = yield index_service_1.productItemService.get({
+                productId: it["_id"],
+            });
+            if (productItem.length > 0) {
+                it["priceNew"] = yield productItem.map((item) => Math.ceil(item.price - item.price * (item.discount / 100)));
+            }
+            const author = yield index_service_1.accountsService.get({
+                _id: it.createdBy,
+            });
+            if (author.length > 0)
+                it["author"] = author[0]["fullname"];
+            const productAssets = yield index_service_1.productAssetsService.get({
+                productId: it["_id"],
+                deleted: false,
+            });
+            it["images"] = [];
+            try {
+                for (var _h = true, productAssets_3 = (e_7 = void 0, __asyncValues(productAssets)), productAssets_3_1; productAssets_3_1 = yield productAssets_3.next(), _d = productAssets_3_1.done, !_d; _h = true) {
+                    _f = productAssets_3_1.value;
+                    _h = false;
+                    const element = _f;
+                    const assets = yield index_service_1.assetsService.get({
+                        _id: element.assetsId,
+                    });
+                    it["images"].push(assets[0]);
+                }
+            }
+            catch (e_7_1) { e_7 = { error: e_7_1 }; }
+            finally {
+                try {
+                    if (!_h && !_d && (_e = productAssets_3.return)) yield _e.call(productAssets_3);
+                }
+                finally { if (e_7) throw e_7.error; }
+            }
+            const userDelete = yield accounts_model_1.default.findOne({
+                _id: new mongodb_1.ObjectId(it["deletedBy"]),
+            });
+            if (userDelete)
+                it["author_delete"] = userDelete.fullname;
+        }
+    }
+    catch (e_6_1) { e_6 = { error: e_6_1 }; }
+    finally {
+        try {
+            if (!_g && !_a && (_b = products_2.return)) yield _b.call(products_2);
+        }
+        finally { if (e_6) throw e_6.error; }
+    }
+    res.render("admin/pages/products/trash.pug", {
+        pageTitle: "Thùng rác sản phẩm",
+        pageDesc: "Thùng rác sản phẩm",
+        products: products,
+        pagination,
+    });
+});
+exports.trash = trash;
+const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console_1.default.log(req.params);
+    yield products_model_1.default.deleteOne({
+        _id: new mongodb_1.ObjectId(req.params.id),
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.deleteProduct = deleteProduct;
+const deleteMany = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newId = req.body.id.map((id) => new mongodb_1.ObjectId(id));
+    yield products_model_1.default.deleteMany({
+        _id: newId,
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.deleteMany = deleteMany;

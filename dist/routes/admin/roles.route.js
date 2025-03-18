@@ -45,6 +45,7 @@ router.get(`${index_routes_1.default.ADMIN.ROLES.CREATE}`, controller.create);
 router.post(`${index_routes_1.default.ADMIN.ROLES.CREATE}`, controller.createPost);
 router.get(`${index_routes_1.default.ADMIN.ROLES.UPDATE}/:id`, controller.update);
 router.patch(`${index_routes_1.default.ADMIN.ROLES.UPDATE}/:id`, controller.updatePatch);
+router.patch(`${index_routes_1.default.ADMIN.ROLES.TRASH}/:id`, controller.deletePatch);
 router.get(`${index_routes_1.default.ADMIN.ROLES.PERMISSION}`, controller.permission);
 router.patch(`${index_routes_1.default.ADMIN.ROLES.PERMISSION}`, controller.permissionPatch);
 exports.default = router;

@@ -9,7 +9,7 @@ block script
     script(type='module' src="/client/js/checkouts/success.js" async) 
 
 block main
-    - if(INFOR_CUSTOMER)
+    - if(INFOR_CUSTOMER.id == order.inforCustomer.customerId)
         div(class="h-full")
             div(class=`container`) 
                 div(class="max-w-7xl mx-auto")

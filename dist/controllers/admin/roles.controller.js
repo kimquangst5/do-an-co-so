@@ -12,13 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.update = exports.updatePatch = exports.permissionPatch = exports.permission = exports.createPost = exports.create = exports.index = void 0;
+exports.deletePatch = exports.update = exports.updatePatch = exports.permissionPatch = exports.permission = exports.createPost = exports.create = exports.index = void 0;
 const roles_models_1 = __importDefault(require("../../models/roles.models"));
 const index_service_1 = require("../../services/admin/index.service");
+const mongodb_1 = require("mongodb");
+const accounts_model_1 = __importDefault(require("../../models/accounts.model"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const roles = yield roles_models_1.default.find({
         deleted: false,
     });
+    for (const it of roles) {
+        if (it.createdBy) {
+            const user = yield accounts_model_1.default.findOne({
+                _id: it.createdBy,
+            });
+            it['author'] = user.fullname;
+        }
+    }
     res.render("admin/pages/roles/index.pug", {
         pageTitle: "Danh sách nhóm quyền",
         pageDesc: "Danh sách nhóm quyền",
@@ -34,6 +44,7 @@ const create = (req, res) => {
 };
 exports.create = create;
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    req.body.createdBy = new mongodb_1.ObjectId(res.locals.INFOR_USER.id);
     const newRole = index_service_1.rolesService.create(req.body);
     res.json({
         code: 200,
@@ -84,3 +95,15 @@ const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
 });
 exports.updatePatch = updatePatch;
+const deletePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    yield roles_models_1.default.updateOne({
+        _id: new mongodb_1.ObjectId(req.params.id)
+    }, {
+        deleted: true
+    });
+    console.log(req.params);
+    res.json({
+        code: 200
+    });
+});
+exports.deletePatch = deletePatch;

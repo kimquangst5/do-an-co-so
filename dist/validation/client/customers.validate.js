@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.infoCustomerUpdateInfor = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdateEmailPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPassword = exports.login = exports.register = void 0;
+exports.infoCustomerUpdateInfor = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePatch = exports.infoCustomerUpdateEmailPatch = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPassword = exports.login = exports.register = void 0;
 const argon2_1 = __importDefault(require("argon2"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
 const otp_model_1 = __importDefault(require("../../models/otp.model"));
@@ -288,7 +288,7 @@ const forgotPasswordNewPassword = (req, res, next) => __awaiter(void 0, void 0, 
     next();
 });
 exports.forgotPasswordNewPassword = forgotPasswordNewPassword;
-const infoCustomerUpdateEmailPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const infoCustomerUpdateEmailPatch = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let errorArray = [];
     const { email, otp } = req.body;
     if (!otp)
@@ -326,8 +326,8 @@ const infoCustomerUpdateEmailPost = (req, res, next) => __awaiter(void 0, void 0
     else
         next();
 });
-exports.infoCustomerUpdateEmailPost = infoCustomerUpdateEmailPost;
-const infoCustomerUpdatePhonePost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.infoCustomerUpdateEmailPatch = infoCustomerUpdateEmailPatch;
+const infoCustomerUpdatePhonePatch = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let errorArray = [];
     const { phone, otp } = req.body;
     if (!otp)
@@ -365,7 +365,7 @@ const infoCustomerUpdatePhonePost = (req, res, next) => __awaiter(void 0, void 0
     else
         next();
 });
-exports.infoCustomerUpdatePhonePost = infoCustomerUpdatePhonePost;
+exports.infoCustomerUpdatePhonePatch = infoCustomerUpdatePhonePatch;
 const infoCustomerUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { oldPassword, newPassword, confirmPassword } = req.body;
     let errorArray = [];

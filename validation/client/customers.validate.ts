@@ -300,7 +300,7 @@ const forgotPasswordNewPassword = async (
   next();
 };
 
-const infoCustomerUpdateEmailPost = async (
+const infoCustomerUpdateEmailPatch = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -340,7 +340,7 @@ const infoCustomerUpdateEmailPost = async (
   } else next();
 };
 
-const infoCustomerUpdatePhonePost = async (
+const infoCustomerUpdatePhonePatch = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -475,8 +475,8 @@ export {
   forgotPassword,
   forgotPasswordCheckOtp,
   forgotPasswordNewPassword,
-  infoCustomerUpdateEmailPost,
-  infoCustomerUpdatePhonePost,
+  infoCustomerUpdateEmailPatch,
+  infoCustomerUpdatePhonePatch,
   infoCustomerUpdatePassword,
   infoCustomerUpdateInfor,
 };

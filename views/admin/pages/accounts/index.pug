@@ -9,6 +9,9 @@ block hb
 
 block css
 
+block script
+    script(src="/admin/js/accounts/index.js") 
+
 
 block main
     sl-details(summary="Danh sách tài khoản quản trị" open)
@@ -41,8 +44,8 @@ block main
                                 div(class=`flex flex-col gap-y-[5px] justify-center`) 
                                     div(class=`font-bold text-left text-[18px] line-clamp-1` name-product) #{it.fullname}
                                     div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[14px]`)
-                                        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${it._id}`) Chỉnh sửa
-                                        button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}`) Xóa
+                                        a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.UPDATE}/${it._id}`) Chỉnh sửa
+                                        button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.TRASH}/${it._id}`) Xóa
                             td
                                 div(class=`flex items-center justify-center gap-x-[5px] `) 
                                     - if(!it.images || it.images.length == 0)
@@ -77,6 +80,6 @@ block main
 
 
 
-block script
+
 
     

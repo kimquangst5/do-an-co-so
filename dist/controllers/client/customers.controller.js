@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.infoCustomerUpdatePasswordPatch = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePost = exports.infoCustomerUpdatePhone = exports.infoCustomerUpdateEmailPost = exports.infoCustomerCreateOtp = exports.infoCustomerUpdateEmail = exports.infoCustomerUpdateInforPatch = exports.infoCustomerUpdateInfor = exports.infoCustomer = exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
+exports.infoCustomerUpdatePasswordPatch = exports.infoCustomerUpdatePassword = exports.infoCustomerUpdatePhonePatch = exports.infoCustomerUpdatePhone = exports.infoCustomerUpdateEmailPatch = exports.infoCustomerCreateOtp = exports.infoCustomerUpdateEmail = exports.infoCustomerUpdateInforPatch = exports.infoCustomerUpdateInfor = exports.infoCustomer = exports.forgotPasswordNewPasswordPost = exports.forgotPasswordNewPassword = exports.forgotPasswordCheckOtp = exports.forgotPasswordOtp = exports.forgotPasswordCreateOTP = exports.forgotPassword = exports.loginGoogleCallback = exports.loginGoogle = exports.logout = exports.loginPost = exports.registerPost = exports.register = exports.login = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const argon2_1 = __importDefault(require("argon2"));
 const customers_model_1 = __importDefault(require("../../models/customers.model"));
@@ -394,7 +394,7 @@ const infoCustomerCreateOtp = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }));
 });
 exports.infoCustomerCreateOtp = infoCustomerCreateOtp;
-const infoCustomerUpdateEmailPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const infoCustomerUpdateEmailPatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, otp } = req.body;
     yield customers_model_1.default.updateOne({
         _id: res.locals.INFOR_CUSTOMER.id,
@@ -405,14 +405,14 @@ const infoCustomerUpdateEmailPost = (req, res) => __awaiter(void 0, void 0, void
         code: 200,
     });
 });
-exports.infoCustomerUpdateEmailPost = infoCustomerUpdateEmailPost;
+exports.infoCustomerUpdateEmailPatch = infoCustomerUpdateEmailPatch;
 const infoCustomerUpdatePhone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("client/pages/customers/phone-update.pug", {
         pageTitle: "Cập nhật số điện thoại | Khách hàng",
     });
 });
 exports.infoCustomerUpdatePhone = infoCustomerUpdatePhone;
-const infoCustomerUpdatePhonePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const infoCustomerUpdatePhonePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield customers_model_1.default.updateOne({
         _id: res.locals.INFOR_CUSTOMER.id,
     }, {
@@ -422,7 +422,7 @@ const infoCustomerUpdatePhonePost = (req, res) => __awaiter(void 0, void 0, void
         code: 200,
     });
 });
-exports.infoCustomerUpdatePhonePost = infoCustomerUpdatePhonePost;
+exports.infoCustomerUpdatePhonePatch = infoCustomerUpdatePhonePatch;
 const infoCustomerUpdatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.render("client/pages/customers/password-update.pug", {
         pageTitle: "Đổi mật khẩu | Khách hàng",

@@ -1,5 +1,5 @@
 extends ../../layouts/layouts.pug
-
+include ../../mixins/back-list.pug
 block header
     h1 Thêm tài khoản quản trị
 
@@ -12,6 +12,7 @@ block script
     script(src="/admin/js/accounts/create.js")
 
 block hb
+    +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.INDEX}`)
     sl-button(variant="primary" size="small" btn-create-new-account = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.CREATE}`)
         sl-icon(slot="prefix" name="plus-circle")
         | Thêm mới
@@ -19,17 +20,18 @@ block hb
 
 block main
     sl-details(summary="Thông tin cơ bản" open)
-        sl-input(label="Họ và tên" size="small" name="fullname" class=``)
-        - if(listRole && listRole.length > 0)
-            sl-select(label="Nhóm quyền" size="small" name="roles")
-                each it in listRole
-                    sl-option(value=it.id size="small")
-                        sl-icon(slot="prefix" name="person-gear")
-                        | #{it.name}
-                        sl-icon(slot="suffix" name="patch-check")
+        div(class="flex flex-col gap-y-[20px]") 
+            sl-input(label="Họ và tên" size="small" name="fullname" required)
+            - if(listRole && listRole.length > 0)
+                sl-select(label="Nhóm quyền" size="small" name="roles" required)
+                    each it in listRole
+                        sl-option(value=it.id size="small")
+                            sl-icon(slot="prefix" name="person-gear")
+                            | #{it.name}
+                            sl-icon(slot="suffix" name="patch-check")
 
 
-        sl-input(label="Tên đăng nhập" size="small" name="usename")
-        sl-input(label="Email" size="small" type='email' name="email")
-        sl-input(label="Mật khẩu" type="password" password-toggle size="small" name="password")
+            sl-input(label="Tên đăng nhập" size="small" name="usename" required)
+            sl-input(label="Email" size="small" type='email' name="email" required)
+            sl-input(label="Mật khẩu" type="password" password-toggle size="small" name="password" required)
 

@@ -2,7 +2,7 @@ extends ../../layouts/layouts.pug
 include ../../mixins/btn-redirect.mixin.pug
 //- include ../../mixins/formatPhone.pug
 block header
-     h1 Danh sách sản phẩm
+     h1 Danh sách đơn hàng
 
 block hb
      sl-button(variant="primary" size="small" btn-export-excel) Xuất file Excel
@@ -91,42 +91,22 @@ block main
                                         td
                                              div #{it.inforCustomer.phone ? it.inforCustomer.phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1.$2.$3') : 'Chưa có'}
                                         td
-                                             div #{it.createdBy ? it.createdBy : 'Chưa có'}
-                                        //- td
-                                        //-      div(class=`flex items-center justify-center gap-x-[5px] `) 
-                                        //-           - if(!it.images || it.images.length == 0)
-                                        //-                sl-badge(variant="danger" size="small" pill) Chưa tạo
-
-                                        //-           - else if(it.images && it.images.length > 0)
-                                        //-                div(class="avatar-group")
-                                        //-                     each img, i in it.images
-                                        //-                          - if(i + 1 <= 3 && img && img.path)
-                                        //-                               sl-avatar(image=img.path, label=img.name)
-                                        //-                     - if(it.images.length > 3)
-                                        //-                          sl-avatar(label="Avatar with an image icon")
-                                        //-                               sl-icon(slot="icon" name="cloud-arrow-up")
-                                        //- td
-                                        //-      div(class=`flex items-center justify-center gap-x-[5px] `) 
-                                        //-           - if(!it.priceNew)
-                                        //-                sl-badge(variant="danger" size="small" pill) Chưa tạo
-                                        //-           - else if(it.priceNew.length > 1)
-                                        //-                sl-format-number(value=Math.min(...it.priceNew))
-                                        //-                p -
-                                        //-                sl-format-number(value=Math.max(...it.priceNew))
-                                        //-           - else
-                                        //-                sl-format-number(value=Math.min(...it.priceNew))
-                                        //- td
-                                        //-      div(class=`flex justify-center items-center`)
-                                        //-           - if(it.status == 'active')
-                                        //-                sl-button(variant="success" size="small" pill change-status = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS}/${it._id}`) Hoạt động
-                                        //-           - else if(it.status == 'inactive')
-                                        //-                sl-button(variant="danger" size="small" pill change-status = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS}/${it._id}`) Tạm dừng
-                                        //- td
-                                        //-      div #{it.position}
-                                        //- td
-                                        //-      div(class=`flex items-center justify-center gap-x-[5px] `) 
-                                        //-           sl-badge(variant="primary" pill) #{it.author}
-               
+                                             div(class="flex justify-center") 
+                                                  sl-format-number(type="currency" currency="VND" value=it.totalPrice lang="vi")
+                                        td
+                                             div(class="flex justify-center") 
+                                                  - if(it.status == 'cho-xac-nhan')
+                                                       sl-badge(variant="primary") Chờ xác nhận
+                                        td
+                                             div(class="flex justify-center gap-x-[10px]") 
+                                                  sl-format-date(hour="numeric" minute="numeric" hour-format="12" date=it.createdAt)
+                                                  sl-format-date(lang="vi" date=it.createdAt)
+                                        td
+                                             div(class="flex justify-center") 
+                                                  - if(it.type == 'online')
+                                                       sl-badge(variant="success") Online
+                                                  - else
+                                                       sl-badge(variant="warning") Tại quầy
                - else
                     +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
 

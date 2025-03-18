@@ -121,7 +121,7 @@ const changeStatusMany = async () => {
         Swal.fire({
           showCancelButton: true,
           title: `Xóa sản phẩm?`,
-          text: `Bạn chắc muốn xóa ${listItem.length} sản phẩm đã chọn?`,
+          text: `Bạn chắc muốn xóa ${itemChecked.length} sản phẩm đã chọn?`,
           icon: "warning",
           confirmButtonText: "Xóa",
           confirmButtonColor: "#FFA09B",
@@ -243,8 +243,8 @@ const pagination = () => {
     btnTrang.classList.add("bg-[#0EA5E9]", "text-[white]");
   } else
     document
-      .querySelector(`[trang = '1']`)
-      .classList.add("bg-[#0EA5E9]", "text-[white]");
+    .querySelector(`[trang = '1']`)
+    .classList.add("bg-[#0EA5E9]", "text-[white]");
   const trangTruoc = document.querySelector("[trang-truoc]");
   if (
     url.searchParams.get("trang") &&
@@ -333,7 +333,7 @@ const soTrang = () => {
   });
 
   const url = new URL(location.href)
-  if(url.searchParams.get('sotrang')){
+  if (url.searchParams.get('sotrang')) {
     select.defaultValue = url.searchParams.get('sotrang')
 
   }

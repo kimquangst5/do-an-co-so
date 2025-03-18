@@ -46,6 +46,7 @@
     "unidecode": "^1.1.0"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
     "@types/unidecode": "^0.1.3",

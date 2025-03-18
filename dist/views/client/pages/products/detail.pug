@@ -4,15 +4,16 @@ block css
      link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" type="text/css")
      script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
 
-     link(rel="stylesheet" href="/client/css/products/detail.css")
+     //- link(rel="stylesheet" href="/client/css/products/detail.css")
 block script
      script(type="module" src="/client/js/products/detail.js")
 
 block main
-     div(class="")
+     div ok
+     //- div(class="")
           div(class="container flex gap-x-[40px] items-center mt-[24px] lg:justify-between")
                div(class="")
-                    //- div(class="grid grid-cols-2 gap-x-[40px] pt-[40px] ")
+                    div(class="grid grid-cols-2 gap-x-[40px] pt-[40px] ")
                          div(class=`flex flex-row-reverse`)
                               - if(product["images"])
                                    - if(product["images"].length == 0)

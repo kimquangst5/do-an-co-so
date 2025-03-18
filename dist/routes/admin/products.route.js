@@ -58,4 +58,7 @@ router.patch(`${index_routes_1.default.ADMIN.PRODUCT.UPDATE}/:id`, upload.fields
 router.patch(`${index_routes_1.default.ADMIN.PRODUCT.TRASH}/:id`, controller.trashPatch);
 router.patch(`${index_routes_1.default.ADMIN.PRODUCT.CHANGE_STATUS}/:id`, controller.changeStatus);
 router.patch(`${index_routes_1.default.ADMIN.PRODUCT.CHANGE_STATUS_MANY_PRODUCT}`, controller.changeStatusMany);
+router.get(`${index_routes_1.default.ADMIN.PRODUCT.TRASH}`, controller.trash);
+router.delete(`${index_routes_1.default.ADMIN.PRODUCT.DELETE}/:id`, controller.deleteProduct);
+router.delete(`${index_routes_1.default.ADMIN.PRODUCT.DELETE_MANY}`, controller.deleteMany);
 exports.default = router;

@@ -95,5 +95,5 @@ block main
                               td(class="px-4 py-2 text-center") #{it.phone ? it.phone : '-'}
                               td(class="px-4 py-2 text-center") #{it.genders ? (it.genders == 'male' ? 'Nam' : 'Nữ') : '-'}
                               td(class="px-4 py-2")
-                                   sl-badge(pill variant=(it.status == 'active' ? 'success' : 'danger')) #{it.status ? (it.status == 'active' ? 'Hoạt động' : 'Tạm dừng') : '-'}
+                                   sl-badge(pill variant=(it.status == 'active' ? 'success' : 'danger')) #{it.status ? (it.status == 'active' ? 'Kích hoạt' : 'Tạm khóa') : '-'}
 

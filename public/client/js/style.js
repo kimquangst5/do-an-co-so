@@ -252,7 +252,7 @@ const blockDevTool = () => {
     e.preventDefault();
   });
 };
-// blockDevTool();
+blockDevTool();
 
 
 const animation = () => {
@@ -261,7 +261,6 @@ const animation = () => {
   if(!animation || animation.length == 0) return
   animation.forEach(it => {
     const box = it.querySelector('.box');
-    console.log(it.children[0]);
     
     // Watch for the box to enter and exit the viewport. Note that we're observing the box, not the animation element!
     const observer = new IntersectionObserver(entries => {

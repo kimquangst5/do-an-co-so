@@ -1,4 +1,5 @@
 extends ../../layouts/layouts.pug
+include ../../mixins/back-list.pug
 
 block header
     h1 Chỉnh sửa nhóm quyền
@@ -12,6 +13,7 @@ block script
     script(src="/admin/js/roles/update.js")
 
 block hb
+    +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.INDEX}`)
     sl-button(variant="primary", size="small" btn-update-role = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.UPDATE}/${role._id}`)
         sl-icon(slot="prefix", name="plus-circle")
         | Cập nhật

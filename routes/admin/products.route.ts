@@ -41,4 +41,10 @@ router.patch(
   controller.changeStatusMany
 );
 
+router.get(`${ROUTERS.ADMIN.PRODUCT.TRASH}`, controller.trash);
+
+router.delete(`${ROUTERS.ADMIN.PRODUCT.DELETE}/:id`, controller.deleteProduct);
+
+router.delete(`${ROUTERS.ADMIN.PRODUCT.DELETE_MANY}`, controller.deleteMany);
+
 export default router;

@@ -6,8 +6,6 @@ const filter = () => {
     const priceMin = document.querySelector("[filter-price-min]");
     const priceMax = document.querySelector("[filter-price-max]");
     if (!priceMin || !priceMax) return;
-    console.log(priceMin.value);
-    console.log(priceMax.value);
     const data = [];
     if (priceMin.value && priceMax.value) {
       const url = new URL(location.href);
@@ -46,7 +44,6 @@ const filter = () => {
           url.searchParams.set("kichthuoc", it.kichthuoc);
         }
       });
-      console.log(url.href);
       location.href = url.href;
     }
   });

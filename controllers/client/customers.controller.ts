@@ -448,7 +448,7 @@ const infoCustomerCreateOtp = async (req: Request, res: Response) => {
     }
   });
 };
-const infoCustomerUpdateEmailPost = async (req: Request, res: Response) => {
+const infoCustomerUpdateEmailPatch = async (req: Request, res: Response) => {
   const { email, otp } = req.body;
   await Customer.updateOne(
     {
@@ -467,7 +467,7 @@ const infoCustomerUpdatePhone = async (req: Request, res: Response) => {
     pageTitle: "Cập nhật số điện thoại | Khách hàng",
   });
 };
-const infoCustomerUpdatePhonePost = async (req: Request, res: Response) => {
+const infoCustomerUpdatePhonePatch = async (req: Request, res: Response) => {
   await Customer.updateOne(
     {
       _id: res.locals.INFOR_CUSTOMER.id,
@@ -519,9 +519,9 @@ export {
   infoCustomerUpdateInforPatch,
   infoCustomerUpdateEmail,
   infoCustomerCreateOtp,
-  infoCustomerUpdateEmailPost,
+  infoCustomerUpdateEmailPatch,
   infoCustomerUpdatePhone,
-  infoCustomerUpdatePhonePost,
+  infoCustomerUpdatePhonePatch,
   infoCustomerUpdatePassword,
   infoCustomerUpdatePasswordPatch,
 };

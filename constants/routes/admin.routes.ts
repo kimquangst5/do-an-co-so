@@ -23,6 +23,7 @@ interface Customer extends GeneralRoutes {
 interface Product extends GeneralRoutes {
   CHANGE_STATUS?: string;
   CHANGE_STATUS_MANY_PRODUCT?: string;
+  DELETE_MANY?: string;
 }
 
 export interface RouterAdmin {
@@ -51,6 +52,7 @@ const ROUTER_ADMIN: RouterAdmin = {
     CHANGE_STATUS_MANY_PRODUCT: "/Cập_nhật_trạng_thái_nhiều_sản_phẩm",
     DELETE: "/Xóa_sản_phẩm",
     TRASH: "/Thùng_rác",
+    DELETE_MANY: "/Xóa_nhiều_sản_phẩm",
   },
   PRODUCT_CATEGORY: {
     PATH: "/Danh_mục_sản_phẩm",
@@ -65,11 +67,14 @@ const ROUTER_ADMIN: RouterAdmin = {
     CREATE: "/Tạo_nhóm_quyền",
     UPDATE: "/Cập_nhật",
     PERMISSION: "/Phân_quyền",
+    TRASH: "/Thùng_rác",
   },
   ACCOUNT: {
     PATH: "/Tài_khoản",
     INDEX: "/Tổng_quan",
     CREATE: "/Tạo_tài_khoản",
+    UPDATE: "/Cập_nhật_tài_khoản",
+    TRASH: "/Xóa_tài_khoản",
   },
   COLOR_PRODUCT: {
     PATH: "/Màu_sản_phẩm",
@@ -96,9 +101,8 @@ const ROUTER_ADMIN: RouterAdmin = {
     DELETE: "/Xóa_khách_hàng",
     TRASH: "/Thùng_rác",
     CREATE_ADDRESS: "/Thêm_địa_chỉ",
-    GET_ADDRESS: '/Lấy_địa_chỉ',
-    UPDATE_ADDRESS_DEFAULT: '/Cập_nhật_địa_chỉ_mặc_định'
-
+    GET_ADDRESS: "/Lấy_địa_chỉ",
+    UPDATE_ADDRESS_DEFAULT: "/Cập_nhật_địa_chỉ_mặc_định",
   },
   ORDERS: {
     PATH: "/Đơn_hàng",
@@ -108,7 +112,7 @@ const ROUTER_ADMIN: RouterAdmin = {
     UPDATE: "/cập_nhật",
     DELETE: "/xóa",
     TRASH: "/rác",
-  }
+  },
 };
 
 const ENCODED_ROUTER_ADMIN = encodeRouterPathsSync(ROUTER_ADMIN);

@@ -4,6 +4,7 @@ import { STATUS_ORDER } from "../constants/enum";
 const orderSchema = new mongoose.Schema(
   {
     inforCustomer: {
+      customerId: mongoose.SchemaTypes.ObjectId,
       fullname: String,
       email: String,
       phone: String,
@@ -21,6 +22,11 @@ const orderSchema = new mongoose.Schema(
         quantity: Number,
       },
     ],
+    shipping_fee: Number,
+    type: {
+      type: String,
+      default: "online",
+    },
     status: {
       type: String,
       // enum: Object.values(STATUS_ORDER.WAIT_CONFIRMATION),

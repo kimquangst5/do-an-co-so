@@ -8,10 +8,6 @@ const main = () => {
     const genders = document.querySelector("[name='genders']");
     const birthday = document.querySelector("[name='birthday']");
     if (!link || !fullname || !username || !genders || !birthday) return;
-    console.log(fullname.value);
-    console.log(username.value);
-    console.log(genders.value);
-    console.log(birthday.value);
     showLoader();
     axios
       .patch(link, {

@@ -32,6 +32,7 @@ const order_model_1 = __importDefault(require("../../models/order.model"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const axios_1 = __importDefault(require("axios"));
 const console_1 = __importDefault(require("console"));
+const capitalizeWords_helper_1 = require("../../helpers/capitalizeWords.helper");
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c;
     const carts = yield carts_model_1.default.find({
@@ -89,26 +90,16 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.index = index;
-function capitalizeWords(str) {
-    str = str.toLowerCase();
-    const words = str.split(" ");
-    for (let i = 0; i < words.length; i++) {
-        const firstChar = words[i].charAt(0).toUpperCase();
-        const restOfWord = words[i].slice(1);
-        words[i] = firstChar + restOfWord;
-    }
-    return words.join(" ");
-}
 const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_2, _b, _c;
     let { fullname, email, phone, address, city, district, ward, note, cart } = req.body;
     const data = {
         inforCustomer: {
             customerId: new mongodb_1.ObjectId(res.locals.INFOR_CUSTOMER.id),
-            fullname: capitalizeWords(fullname.trim().replace(/\s+/g, " ")),
+            fullname: (0, capitalizeWords_helper_1.capitalizeWords)(fullname.trim().replace(/\s+/g, " ")),
             email: email,
             phone: phone,
-            address: capitalizeWords(address.trim().replace(/\s+/g, " ")),
+            address: (0, capitalizeWords_helper_1.capitalizeWords)(address.trim().replace(/\s+/g, " ")),
             city: parseInt(city),
             district: parseInt(district),
             ward: parseInt(ward),
@@ -149,6 +140,10 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         finally { if (e_2) throw e_2.error; }
     }
+    if (totalPrice >= 500000)
+        data["shipping_fee"] = 0;
+    else
+        data["shipping_fee"] = 20000;
     const order = new order_model_1.default(data);
     yield order.save();
     order.inforProductItem["totalPrice"] = totalPrice;
@@ -214,9 +209,7 @@ const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 </div>
 </div>
 <h2><code><span style="font-family: verdana, geneva, sans-serif;">II. Th&ocirc;ng tin đơn h&agrave;ng (${order.inforProductItem.length} sản phẩm)</span></code></h2>
-<p style="padding-left: 40px;"><code><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Th&agrave;nh tiền: <strong>${order.inforProductItem["totalPrice"] >= 500000
-            ? order.inforProductItem["totalPrice"]
-            : order.inforProductItem["totalPrice"] + 20000} đồng</strong></span></code></p>
+<p style="padding-left: 40px;"><code><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Th&agrave;nh tiền: <strong>${order.inforProductItem["totalPrice"] + order.shipping_fee} đồng</strong></span></code></p>
 <p>&nbsp;</p>
 <p style="text-align: right;"><code><em><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Xin cảm ơn qu&iacute; kh&aacute;ch đ&atilde; đặt h&agrave;ng của ch&uacute;ng t&ocirc;i, ch&uacute;ng t&ocirc;i sẽ sớm xử l&iacute; đơn h&agrave;ng của qu&iacute; kh&aacute;ch trong khoảng thời gian sớm nhất!</span></em></code></p>`,
     };

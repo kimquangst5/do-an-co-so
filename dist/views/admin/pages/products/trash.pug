@@ -1,0 +1,155 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/btn-redirect.mixin.pug
+
+block header
+     h1 Danh sách sản phẩm
+
+block hb
+     sl-button(variant="primary" size="small" btn-export-excel) Xuất file Excel
+     - if(ROLE.permission.includes("products-create"))
+          +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
+     - if(ROLE.permission.includes("products-update"))
+          sl-dropdown(delete = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.DELETE_MANY}`)
+               sl-button(slot="trigger", caret variant="primary" size="small")
+                    sl-icon(slot="prefix" name="pen")
+                    | Hành động
+               sl-menu
+                    sl-menu-item(value="trash-product")
+                         | Xóa sản phẩm
+                         sl-icon(slot="prefix" name="trash")
+                    sl-menu-item(value="restore-product")
+                         | Khôi phục sản phẩm
+                         sl-icon(slot="prefix" name="arrow-repeat")
+
+
+block css
+     //- - if(ROLE.permission.includes("products-view"))
+     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.css")
+     link(rel="stylesheet" href="/admin/css/products/index.css")
+
+block script
+     //- - if(ROLE.permission.includes("products-view"))
+     script(src="https://cdn.jsdelivr.net/npm/sweetalert2@11")
+     script(src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.7/dist/viewer.min.js")
+
+     script(src="/admin/js/products/trash.js")
+
+
+block main
+
+     //- - if(ROLE.permission.includes("products-view"))
+     div()
+          div(class=`pb-[10px] grid grid-cols-4 gap-[10px]`)
+               form(class="input-validation-required" search-product)
+                    sl-input(placeholder="Tìm kiếm..." size="small" name='search')
+                         //- button(type="submit" slot="prefix")
+                         sl-icon(type="submit" name="search-heart" slot="prefix")
+
+               sl-select(placeholder="---Trạng thái---" size="small" clearable filter-status)
+                    sl-option(size="small" value="active") Đang bán
+                    sl-option(size="small" value="inactive") Tạm ngưng
+          - if(products && products.length > 0)
+               table(class=`w-full`)
+                    thead
+                         tr
+                              th
+                                   sl-checkbox()
+                              th
+                                   div(class=``) Tên sản phẩm
+                              th
+                                   sl-icon(name="images" class=`text-[20px]`)
+                              th
+                                   div(class=``) Giá
+                              th
+                                   div(class=``) Trạng thái
+                              th
+                                   div(class=``) Vị trí
+                              th 
+                                   div(class=``) Tạo bởi
+                              th 
+                                   div(class=``) Xóa bởi
+                    tbody
+                         each it in products
+                              tr(class=`group hover:bg-[#FFFFCF]`)
+                                   td
+                                        sl-checkbox(value=it._id class=`flex justify-center`)
+                                   td(class=``)
+                                        div(class=`flex flex-col gap-y-[5px] justify-center`) 
+                                             div(class=`font-bold text-[18px] line-clamp-1` name-product) #{it.name}
+                                             div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[13px]`)
+                                                  - if(ROLE.permission.includes("products-update"))
+                                                       button(restore=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.TRASH}/${it._id}`  class=`text-[#5277FF]`) Khôi phục
+                                                  - if(ROLE.permission.includes("products-delete"))
+                                                       button(trash=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.DELETE}/${it._id}` class=`text-[#FFA09B]`) Xóa
+                                   td
+                                        div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                             - if(!it.images || it.images.length == 0)
+                                                  sl-badge(variant="danger" size="small" pill) Chưa tạo
+
+                                             - else if(it.images && it.images.length > 0)
+                                                  div(class="avatar-group")
+                                                       each img, i in it.images
+                                                            - if(i + 1 <= 3 && img && img.path)
+                                                                 sl-avatar(image=img.path, label=img.name)
+                                                       - if(it.images.length > 3)
+                                                            sl-avatar(label="Avatar with an image icon")
+                                                                 sl-icon(slot="icon" name="cloud-arrow-up")
+                                   td
+                                        div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                             - if(!it.priceNew)
+                                                  sl-badge(variant="danger" size="small" pill) Chưa tạo
+                                             - else if(it.priceNew.length > 1)
+                                                  sl-format-number(value=Math.min(...it.priceNew))
+                                                  p -
+                                                  sl-format-number(value=Math.max(...it.priceNew))
+                                             - else
+                                                  sl-format-number(value=Math.min(...it.priceNew))
+                                   td
+                                        div(class=`flex justify-center items-center`)
+                                             - if(it.status == 'active')
+                                                  sl-button(variant="success" size="small" pill change-status = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS}/${it._id}`) Hoạt động
+                                             - else if(it.status == 'inactive')
+                                                  sl-button(variant="danger" size="small" pill change-status = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS}/${it._id}`) Tạm dừng
+                                   td
+                                        div #{it.position}
+                                   td
+                                        div(class=`flex items-center justify-center gap-x-[5px] `) 
+                                             sl-badge(variant="primary" pill) #{it.author}
+                                   td
+                                        - if(it.author_delete)
+                                             div(class="flex justify-center gap-x-[10px]")
+                                                  sl-badge(variant="neutral") #{it.author_delete ? it.author_delete : '-'}
+                                                  sl-format-date(hour="numeric" minute="numeric" hour-format="12" date=it.updatedAt)
+                                                  sl-format-date(lang="vi" date=it.updatedAt)
+          - else
+               +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
+
+
+
+
+     - if(pagination)
+          div(class=`flex items-center justify-between`) 
+               nav
+                    ul(class=`flex items-center gap-x-[10px]`)
+                         li(class=`w-auto`)
+                              button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-dau) Trang đầu
+                         li(class=`w-auto`)
+                              button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-truoc) Trước
+                         - for(let i = Math.max(1, pagination.current - 3); i <= Math.min(pagination.totalPage, pagination.current + 3); i++)
+                              li(class=`w-[40px] `)
+                                   button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang = i) #{i}
+                         li(class=`w-auto`)
+                              button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-sau = pagination.totalPage) Sau
+                         li(class=`w-auto`)
+                              button(href="£" class=`px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:inline dark:bg-gray-800 dark:text-gray-200  hover:bg-[#0EA5E9] dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200` trang-cuoi = pagination.totalPage) Trang cuối
+               div(class=`flex flex-col items-center gap-[10px]`)
+                    div #{pagination.limit * (pagination.current - 1) + 1} - #{pagination.limit * pagination.current} trong số #{pagination.totalProduct} sản phẩm
+                    div(class=`flex gap-x-[5px]`)
+                         div(class=``) Hiển thị
+                         sl-select(size='small' class=`w-[100px]` value='5' so-trang)
+                              sl-option(value='full') Tất cả
+                              sl-option(value='5') 5
+                              sl-option(value='10') 10
+                              sl-option(value='15') 15
+                              sl-option(value='20') 20
+                         div(class=``) sản phẩm

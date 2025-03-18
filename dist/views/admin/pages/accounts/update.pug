@@ -1,0 +1,36 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/back-list.pug
+block header
+    h1 Chỉnh sửa tài khoản | #{account.fullname}
+
+block css
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/themes/light.css" async)
+
+block script
+    script(type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.19.1/cdn/shoelace-autoloader.js" async)
+    script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js") 
+    script(src="/admin/js/accounts/update.js")
+
+block hb
+    +back-list(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.INDEX}`)
+    sl-button(variant='primary' size='small' btn-update-account = `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ACCOUNT.PATH}${ROUTERS.ADMIN.ACCOUNT.UPDATE}/${account._id}`)
+        sl-icon(slot='prefix' name='plus-circle')
+        | Cập nhật
+
+
+block main
+    sl-details(summary="Thông tin cơ bản" open)
+        div(class="flex flex-col gap-y-[20px]") 
+            sl-input(label="Họ và tên" size="small" name="fullname" required value=account.fullname)
+            - if(listRole && listRole.length > 0)
+                sl-select(label="Nhóm quyền" size="small" name="roles" required value=account.roles)
+                    each it in listRole
+                        sl-option(value=it.id size="small")
+                            sl-icon(slot="prefix" name="person-gear")
+                            | #{it.name}
+                            sl-icon(slot="suffix" name="patch-check")
+
+
+            sl-input(label="Tên đăng nhập" size="small" name="username" required value=account.usename)
+            sl-input(label="Email" size="small" type='email' name="email" required value=account.email)
+

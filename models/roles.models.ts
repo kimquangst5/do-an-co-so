@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { STATUS } from "../constants/enum";
+import mongoose from "mongoose";
 
 const rolesSchema = new Schema(
   {
@@ -14,6 +15,8 @@ const rolesSchema = new Schema(
       type: String,
       default: STATUS.ACTIVE,
     },
+    createdBy: mongoose.SchemaTypes.ObjectId,
+    deletedBy: mongoose.SchemaTypes.ObjectId,
   },
   {
     timestamps: true,

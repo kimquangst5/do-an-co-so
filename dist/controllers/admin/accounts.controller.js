@@ -19,10 +19,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPost = exports.create = exports.index = void 0;
+exports.deletePatch = exports.updatePatch = exports.update = exports.createPost = exports.create = exports.index = void 0;
+const mongodb_1 = require("mongodb");
 const index_service_1 = require("../../services/admin/index.service");
 const roles_models_1 = __importDefault(require("../../models/roles.models"));
 const accounts_model_1 = __importDefault(require("../../models/accounts.model"));
+const capitalizeWords_helper_1 = require("../../helpers/capitalizeWords.helper");
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, e_1, _b, _c;
     const accounts = yield accounts_model_1.default.find({
@@ -71,3 +73,44 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.createPost = createPost;
+const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const account = yield accounts_model_1.default.findOne({
+        deleted: false,
+        _id: new mongodb_1.ObjectId(id),
+    }).select("-token -password");
+    const listRole = yield roles_models_1.default.find({
+        deleted: false,
+        status: "active",
+    });
+    res.render("admin/pages/accounts/update.pug", {
+        pageTitle: "Cập nhật tài khoản",
+        account: account,
+        listRole: listRole,
+    });
+});
+exports.update = update;
+const updatePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    req.body.fullname = (0, capitalizeWords_helper_1.capitalizeWords)(req.body.fullname.trim().replace(/\s+/g, " "));
+    yield accounts_model_1.default.updateOne({
+        deleted: false,
+        _id: new mongodb_1.ObjectId(id),
+    }, req.body);
+    res.json({
+        code: 200,
+    });
+});
+exports.updatePatch = updatePatch;
+const deletePatch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params);
+    yield accounts_model_1.default.updateOne({
+        _id: new mongodb_1.ObjectId(req.params.id),
+    }, {
+        deleted: true,
+    });
+    res.json({
+        code: 200,
+    });
+});
+exports.deletePatch = deletePatch;

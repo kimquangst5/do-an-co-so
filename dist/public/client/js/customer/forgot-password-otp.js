@@ -72,7 +72,6 @@ const main = () => {
       })
       .catch((error) => {
         closeLoader();
-        console.log(error.response.data.message);
 
         localStorage.setItem(
           "alert-error",

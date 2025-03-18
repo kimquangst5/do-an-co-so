@@ -18,6 +18,7 @@ import ProductAssets from "../../models/productAssets.model";
 import Assets from "../../models/assets.model";
 import unidecode from "unidecode";
 import console from "console";
+import Account from "../../models/accounts.model";
 
 const index = async (req: Request, res: Response) => {
   const find = {
@@ -301,14 +302,28 @@ const updatePatch = async (req: Request, res: Response) => {
 
 const trashPatch = async (req: Request, res: Response) => {
   const { id } = req.params;
-  await Product.updateOne(
-    {
-      _id: id,
-    },
-    {
-      deleted: true,
-    }
-  );
+  if (req.body.type && req.body.type == "restore") {
+    await Product.updateOne(
+      {
+        _id: id,
+      },
+      {
+        deleted: false,
+        updatedBy: new ObjectId(res.locals.INFOR_USER.id),
+        $unset: { deletedBy: "" },
+      }
+    );
+  } else {
+    await Product.updateOne(
+      {
+        _id: id,
+      },
+      {
+        deleted: true,
+        deletedBy: res.locals.INFOR_USER.id,
+      }
+    );
+  }
   res.json({
     code: 200,
   });
@@ -350,6 +365,112 @@ const changeStatusMany = async (req: Request, res: Response) => {
     code: 200,
   });
 };
+
+const trash = async (req: Request, res: Response) => {
+  const find = {
+    deleted: true,
+  };
+  if (req.query.trang_thai) {
+    find["status"] = req.query.trang_thai;
+  }
+  const search = req.query.tim_kiem || "";
+  if (typeof search === "string") {
+    const findSlug = unidecode(search.trim().replace(/\s+/g, "-"));
+    const regexTitle = new RegExp(search, "i");
+    const regexSlug = new RegExp(findSlug, "i");
+    const regexSlugDb = new RegExp(search.trim().replace(/\s+/g, "-"), "i");
+    find["$or"] = [
+      {
+        title: regexTitle,
+      },
+      {
+        slug: regexSlug,
+      },
+      {
+        slug: regexSlugDb,
+      },
+    ];
+  }
+
+  let pagination: any = {
+    current: req.query.trang ? parseInt(req.query.trang as string) : 1,
+    limit: req.query.sotrang
+      ? req.query.sotrang == "full"
+        ? await Product.countDocuments(find)
+        : parseInt(req.query.sotrang as string)
+      : 5,
+  };
+  pagination["totalProduct"] = await Product.countDocuments(find);
+  pagination["totalPage"] = Math.ceil(
+    pagination["totalProduct"] / pagination.limit
+  );
+  if (pagination.current > pagination.totalPage) pagination.current = 1;
+  pagination["skip"] = (pagination.current - 1) * pagination.limit;
+  const products = await Product.find(find)
+    .lean()
+    .sort({
+      position: -1,
+    })
+    .limit(pagination["limit"])
+    .skip(pagination["skip"]);
+  for await (const it of products) {
+    const productItem = await productItemService.get({
+      productId: it["_id"],
+    });
+    if (productItem.length > 0) {
+      it["priceNew"] = await productItem.map((item) =>
+        Math.ceil(item.price - item.price * (item.discount / 100))
+      );
+    }
+    const author = await accountsService.get({
+      _id: it.createdBy,
+    });
+    if (author.length > 0) it["author"] = author[0]["fullname"];
+
+    const productAssets = await productAssetsService.get({
+      productId: it["_id"],
+      deleted: false,
+    });
+    it["images"] = [];
+    for await (const element of productAssets) {
+      const assets = await assetsService.get({
+        _id: element.assetsId,
+      });
+      it["images"].push(assets[0]);
+    }
+    const userDelete = await Account.findOne({
+      _id: new ObjectId(it["deletedBy"]),
+    });
+    if (userDelete) it["author_delete"] = userDelete.fullname;
+  }
+
+  res.render("admin/pages/products/trash.pug", {
+    pageTitle: "Thùng rác sản phẩm",
+    pageDesc: "Thùng rác sản phẩm",
+    products: products,
+    pagination,
+  });
+};
+
+const deleteProduct = async (req: Request, res: Response) => {
+  console.log(req.params);
+  await Product.deleteOne({
+    _id: new ObjectId(req.params.id),
+  });
+  res.json({
+    code: 200,
+  });
+};
+
+const deleteMany = async (req: Request, res: Response) => {
+  const newId = req.body.id.map((id) => new ObjectId(id));
+  await Product.deleteMany({
+    _id: newId,
+  });
+  res.json({
+    code: 200,
+  });
+};
 export {
   index,
   create,
@@ -360,4 +481,7 @@ export {
   trashPatch,
   changeStatus,
   changeStatusMany,
+  trash,
+  deleteProduct,
+  deleteMany,
 };

@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import { ObjectId } from "mongodb";
 import {
   accountsService,
   rolesService,
 } from "../../services/admin/index.service";
 import Role from "../../models/roles.models";
 import Account from "../../models/accounts.model";
+import { capitalizeWords } from "../../helpers/capitalizeWords.helper";
 
 const index = async (req: Request, res: Response) => {
   const accounts = await Account.find({
@@ -51,4 +53,53 @@ const createPost = async (req: Request, res: Response) => {
   });
 };
 
-export { index, create, createPost };
+const update = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const account = await Account.findOne({
+    deleted: false,
+    _id: new ObjectId(id),
+  }).select("-token -password");
+  const listRole = await Role.find({
+    deleted: false,
+    status: "active",
+  });
+  res.render("admin/pages/accounts/update.pug", {
+    pageTitle: "Cập nhật tài khoản",
+    account: account,
+    listRole: listRole,
+  });
+};
+const updatePatch = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  req.body.fullname = capitalizeWords(
+    req.body.fullname.trim().replace(/\s+/g, " ")
+  );
+
+  await Account.updateOne(
+    {
+      deleted: false,
+      _id: new ObjectId(id),
+    },
+    req.body
+  );
+  res.json({
+    code: 200,
+  });
+};
+const deletePatch = async (req: Request, res: Response) => {
+  console.log(req.params);
+  await Account.updateOne(
+    {
+      _id: new ObjectId(req.params.id),
+    },
+    {
+      deleted: true,
+    }
+  );
+  res.json({
+    code: 200,
+  });
+};
+
+export { index, create, createPost, update, updatePatch, deletePatch };

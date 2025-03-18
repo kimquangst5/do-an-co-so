@@ -83,10 +83,10 @@ router.post(
   controller.infoCustomerCreateOtp
 );
 
-router.post(
+router.patch(
   `${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}`,
-  CustomerValidate.infoCustomerUpdateEmailPost,
-  controller.infoCustomerUpdateEmailPost
+  CustomerValidate.infoCustomerUpdateEmailPatch,
+  controller.infoCustomerUpdateEmailPatch
 );
 
 router.get(
@@ -94,10 +94,10 @@ router.get(
   controller.infoCustomerUpdatePhone
 );
 
-router.post(
+router.patch(
   `${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_PHONE}`,
-  CustomerValidate.infoCustomerUpdatePhonePost,
-  controller.infoCustomerUpdatePhonePost
+  CustomerValidate.infoCustomerUpdatePhonePatch,
+  controller.infoCustomerUpdatePhonePatch
 );
 
 router.get(

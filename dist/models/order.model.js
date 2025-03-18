@@ -7,6 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const enum_1 = require("../constants/enum");
 const orderSchema = new mongoose_1.default.Schema({
     inforCustomer: {
+        customerId: mongoose_1.default.SchemaTypes.ObjectId,
         fullname: String,
         email: String,
         phone: String,
@@ -24,6 +25,11 @@ const orderSchema = new mongoose_1.default.Schema({
             quantity: Number,
         },
     ],
+    shipping_fee: Number,
+    type: {
+        type: String,
+        default: "online",
+    },
     status: {
         type: String,
         default: enum_1.STATUS_ORDER.WAIT_CONFIRMATION,

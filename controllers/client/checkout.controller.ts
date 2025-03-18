@@ -12,6 +12,7 @@ import { it } from "node:test";
 import ROUTERS from "../../constants/routes/index.routes";
 import axios from "axios";
 import console from "console";
+import { capitalizeWords } from "../../helpers/capitalizeWords.helper";
 
 const index = async (req: Request, res: Response) => {
   const carts = await Cart.find({
@@ -64,16 +65,7 @@ const index = async (req: Request, res: Response) => {
     carts: carts,
   });
 };
-function capitalizeWords(str) {
-  str = str.toLowerCase();
-  const words = str.split(" ");
-  for (let i = 0; i < words.length; i++) {
-    const firstChar = words[i].charAt(0).toUpperCase();
-    const restOfWord = words[i].slice(1);
-    words[i] = firstChar + restOfWord;
-  }
-  return words.join(" ");
-}
+
 const create = async (req: Request, res: Response) => {
   let { fullname, email, phone, address, city, district, ward, note, cart } =
     req.body;
@@ -113,6 +105,8 @@ const create = async (req: Request, res: Response) => {
     };
     data.inforProductItem.push(dataItem);
   }
+  if (totalPrice >= 500000) data["shipping_fee"] = 0;
+  else data["shipping_fee"] = 20000;
 
   const order = new Order(data);
   await order.save();
@@ -208,9 +202,7 @@ const create = async (req: Request, res: Response) => {
       order.inforProductItem.length
     } sản phẩm)</span></code></h2>
 <p style="padding-left: 40px;"><code><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Th&agrave;nh tiền: <strong>${
-      order.inforProductItem["totalPrice"] >= 500000
-        ? order.inforProductItem["totalPrice"]
-        : order.inforProductItem["totalPrice"] + 20000
+      order.inforProductItem["totalPrice"] + order.shipping_fee
     } đồng</strong></span></code></p>
 <p>&nbsp;</p>
 <p style="text-align: right;"><code><em><span style="font-family: verdana, geneva, sans-serif; font-size: 14pt;">Xin cảm ơn qu&iacute; kh&aacute;ch đ&atilde; đặt h&agrave;ng của ch&uacute;ng t&ocirc;i, ch&uacute;ng t&ocirc;i sẽ sớm xử l&iacute; đơn h&agrave;ng của qu&iacute; kh&aacute;ch trong khoảng thời gian sớm nhất!</span></em></code></p>`,

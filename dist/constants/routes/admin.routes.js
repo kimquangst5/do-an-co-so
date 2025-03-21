@@ -75,6 +75,10 @@ const ROUTER_ADMIN = {
         DELETE: "/xóa",
         TRASH: "/rác",
     },
+    PATH: {
+        PATH: "/Đường_dẫn",
+        INDEX: "/Tổng_quan",
+    },
 };
 const ENCODED_ROUTER_ADMIN = (0, encodeRouterPaths_1.encodeRouterPathsSync)(ROUTER_ADMIN);
 exports.default = ENCODED_ROUTER_ADMIN;

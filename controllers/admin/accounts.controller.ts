@@ -17,6 +17,12 @@ const index = async (req: Request, res: Response) => {
       _id: acc.roles,
     });
     acc["role_name"] = role.name;
+    if (acc.createdBy) {
+      const author = await Account.findOne({
+        _id: acc.createdBy,
+      });
+      acc["author"] = author.fullname;
+    }
   }
   // accounts.forEach(async (acc) => {
   //   const role = await Role.findOne({

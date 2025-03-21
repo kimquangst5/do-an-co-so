@@ -55,7 +55,7 @@ block main
                - if(products && products.length > 0)
                     table(class=`w-full`)
                          thead
-                              tr
+                              tr(class="")
                                    th
                                         sl-checkbox()
                                    th
@@ -72,12 +72,13 @@ block main
                                         div(class=``) Tạo bởi
                          tbody
                               each it in products
-                                   tr(class=`group hover:bg-[#FFFFCF]`)
+                                   tr(class=`group hover:bg-[#FFFFCF] w-full`)
                                         td
                                              sl-checkbox(value=it._id class=`flex justify-center`)
-                                        td(class=``)
+                                        td(class=`w-[70vh]`)
                                              div(class=`flex flex-col gap-y-[5px] justify-center`) 
-                                                  div(class=`font-bold text-[18px] line-clamp-1` name-product) #{it.name}
+                                                  sl-tooltip(content=it.name)
+                                                       div(class=`font-bold text-[18px] line-clamp-1` name-product) #{it.name}
                                                   div(class=`opacity-0 group-hover:opacity-[100%] flex items-center gap-x-[10px] text-[13px]`)
                                                        - if(ROLE.permission.includes("products-update"))
                                                             a(href=`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.UPDATE}/${it._id}` class=`text-[#5277FF]`) Chỉnh sửa
@@ -117,6 +118,7 @@ block main
                                         td
                                              div(class=`flex items-center justify-center gap-x-[5px] `) 
                                                   sl-badge(variant="primary" pill) #{it.author}
+                                                  sl-relative-time(date="2020-07-15T09:17:00-04:00" lang="vi-VND")
                - else
                     +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}${ROUTERS.ADMIN.PRODUCT.CREATE}`)
 

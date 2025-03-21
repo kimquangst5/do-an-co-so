@@ -37,12 +37,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-const controller = __importStar(require("../../controllers/client/products.controller"));
+const multer_1 = __importDefault(require("multer"));
+const controller = __importStar(require("../../controllers/admin/path.controller"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
-router.get(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug`, controller.detail);
-router.get(`${index_routes_1.default.CLIENT.PRODUCT.SEARCH}/:method`, controller.search);
-router.put(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug/getSize`, controller.getSize);
-router.post(`${index_routes_1.default.CLIENT.PRODUCT.DETAIL}/:slug/getItem`, controller.getItem);
-router.get(`${index_routes_1.default.CLIENT.PRODUCT.INDEX}`, controller.index);
+const router = express_1.default.Router();
+const upload = (0, multer_1.default)();
+router.get(`${index_routes_1.default.ADMIN.PATH.INDEX}`, controller.index);
 exports.default = router;

@@ -29,6 +29,10 @@ const main = () => {
     const info = document.querySelector("[name='info']");
     const password = document.querySelector("[name='password']");
     const link = btnLogin.getAttribute("btn-login");
+    console.log(info);
+    console.log(password);
+    console.log(link);
+
     if (info && password && link) {
       axios
         .post(link, {
@@ -47,7 +51,12 @@ const main = () => {
           } else if (res.status == 504) {
             location.reload();
           }
-        });
+        })
+        .catch(error => {
+          // location.reload()
+          console.log(error);
+
+        })
     }
   });
 

@@ -9,6 +9,8 @@ import Assets from "../../models/assets.model";
 import console from "console";
 import ROUTERS from "../../constants/routes/index.routes";
 import unidecode from "unidecode";
+import ProductCategory from "../../models/productsCategories.model";
+import { log } from "util";
 
 const detail = async (req: Request, res: Response) => {
   const { slug } = req.params;
@@ -183,7 +185,6 @@ const search = async (req: Request, res: Response) => {
         key,
       });
     } else {
-      // console.log(newProduct);
       res.json({
         code: 200,
         products: newProduct,
@@ -193,5 +194,143 @@ const search = async (req: Request, res: Response) => {
     res.status(400);
   }
 };
+const index = async (req: Request, res: Response) => {
+  const { khoanggia, mausac, kichthuoc } = req.query;
 
-export { detail, getSize, getItem, search };
+  // Tìm kiếm sản phẩm với điều kiện cơ bản
+  const findProduct = {
+    status: "active",
+    deleted: false,
+  };
+
+  // Xử lý sắp xếp
+  let sortProduct = {};
+  if (typeof req.query.sapxep === "string") {
+    const name = req.query.sapxep.split("-")[0];
+    const value = req.query.sapxep.split("-")[1];
+    if (name === "tensanpham") {
+      sortProduct["name"] = value === "tangdan" ? 1 : -1;
+    } else if (name === "sanpham")
+      sortProduct["position"] = value === "moinhat" ? -1 : 1;
+    // else if (name === "sanpham")
+  } else {
+    sortProduct["position"] = -1;
+  }
+
+  // Lấy danh sách sản phẩm
+  let products = await Product.find(findProduct).sort(sortProduct);
+
+  // Lọc sản phẩm theo màu sắc, kích thước và khoảng giá
+  const listProduct = [];
+  await Promise.all(
+    products.map(async (it) => {
+      const find = { productId: it.id };
+
+      if (mausac) {
+        const color = await ColorProduct.findOne({ slug: mausac });
+        find["color"] = color ? color.id : it.id;
+      }
+      if (kichthuoc) {
+        const size = await SizeProduct.findOne({ slug: kichthuoc });
+        find["size"] = size ? size.id : it.id;
+      }
+
+      const items = await ProductItem.findOne(find);
+      if (items) {
+        if (khoanggia) {
+          const [min, max] = khoanggia.toString().split("-").map(Number);
+          const price = Math.ceil(
+            items.price - items.price * (items.discount / 100)
+          );
+          if (price >= min && price <= max) {
+            listProduct.push(it);
+          }
+        } else if (typeof req.query.sapxep === "string") {
+          const name = req.query.sapxep.split("-")[0];
+          const value = req.query.sapxep.split("-")[1];
+          if (name == "danggiam") {
+            if (value == "true" && items.discount > 0) listProduct.push(it);
+            if (value == "false" && items.discount == 0) listProduct.push(it);
+          }
+        } else {
+          listProduct.push(it);
+        }
+      }
+    })
+  );
+
+  // Thêm thông tin hình ảnh và giá cho sản phẩm
+  await Promise.all(
+    listProduct.map(async (it) => {
+      // Thêm hình ảnh chính
+      it["img_main"] = [];
+      const img = await ProductAssets.find({ productId: it.id, type: "main" });
+      if (img.length > 0) {
+        it["img_main"] = await Promise.all(
+          img.map(async (image) => {
+            const assets__main = await Assets.findOne({ _id: image.assetsId });
+            return assets__main.path;
+          })
+        );
+      }
+
+      // Tính giá và giảm giá
+      const listItem = await ProductItem.find({ productId: it.id });
+      if (listItem.length > 0) {
+        const minItem = listItem.reduce((min, item) =>
+          Math.ceil(item.price - item.price * (item.discount / 100)) <
+          Math.ceil(min.price - min.price * (min.discount / 100))
+            ? item
+            : min
+        );
+        it["priceNew"] = Math.ceil(
+          minItem.price - minItem.price * (minItem.discount / 100)
+        );
+        it.price = minItem.price;
+        it.discount = minItem.discount;
+      }
+    })
+  );
+
+  // Sắp xếp theo giá nếu có
+  if (typeof req.query.sapxep === "string") {
+    const name = req.query.sapxep.split("-")[0];
+    const value = req.query.sapxep.split("-")[1];
+    if (name === "gia") {
+      listProduct.sort((a, b) =>
+        value === "tangdan" ? a.priceNew - b.priceNew : b.priceNew - a.priceNew
+      );
+    }
+  } else {
+    listProduct.sort((a, b) => b.position - a.position);
+  }
+
+  // Phân trang
+  let pagination = {
+    current: req.query.trang ? parseInt(req.query.trang as string) : 1,
+    limit: 9,
+  };
+  pagination["totalProduct"] = listProduct.length;
+  pagination["totalPage"] = Math.ceil(
+    pagination["totalProduct"] / pagination.limit
+  );
+  if (pagination.current > pagination["totalPage"]) pagination.current = 1;
+  pagination["skip"] = (pagination.current - 1) * pagination.limit;
+  const paginatedList = listProduct.slice(
+    pagination["skip"],
+    pagination["skip"] + pagination.limit
+  );
+
+  // Lấy danh sách màu sắc và kích thước
+  const listColors = await ColorProduct.find({ status: "active" });
+  const listSizes = await SizeProduct.find({ status: "active" });
+
+  res.render("client/pages/products/index.pug", {
+    pageTitle: "Danh sách sản phẩm",
+    products: paginatedList,
+    listColors,
+    listSizes,
+    pagination,
+  });
+};
+export { index, detail, getSize, getItem, search };

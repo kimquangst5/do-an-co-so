@@ -37,6 +37,7 @@ export interface RouterAdmin {
   PRODUCT_CATEGORY?: GeneralRoutes;
   CUSTOMERS?: Customer;
   ORDERS?: GeneralRoutes;
+  PATH?: GeneralRoutes;
 }
 
 const ROUTER_ADMIN: RouterAdmin = {
@@ -112,6 +113,10 @@ const ROUTER_ADMIN: RouterAdmin = {
     UPDATE: "/cập_nhật",
     DELETE: "/xóa",
     TRASH: "/rác",
+  },
+  PATH: {
+    PATH: "/Đường_dẫn",
+    INDEX: "/Tổng_quan",
   },
 };
 

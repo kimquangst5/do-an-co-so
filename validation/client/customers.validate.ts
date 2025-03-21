@@ -5,130 +5,70 @@ import OTP from "../../models/otp.model";
 require("dotenv").config();
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
-  const data = req.body;
-  if (!data.fullname) {
-    res.status(400).json({
-      message: "Chưa nhập Họ tên!",
-    });
-    return;
-  }
-  if (data.fullname.length < 6) {
-    res.status(400).json({
-      message: "Họ và tên quá ngắn",
-    });
-    return;
-  }
-  if (!data.username) {
-    res.status(400).json({
-      message: "Chưa nhập tên đăng nhập!",
-    });
-    return;
-  }
-  if (data.username.length <= 8) {
-    res.status(400).json({
-      message: "Tên đăng nhập quá ngắn",
-    });
-    return;
-  }
-  if (!data.email) {
-    res.status(400).json({
-      message: "Chưa nhập email!",
-    });
-    return;
-  }
+  const { fullname, username, email, password, confirmPassword } = req.body;
+  let errorArray = [];
+  if (!fullname) errorArray.push("Chưa nhập họ tên!");
+  if (fullname.length < 6) errorArray.push("Họ và tên quá ngắn");
+  if (!username) errorArray.push("Chưa nhập tên đăng nhập!");
+  if (username.length <= 8) errorArray.push("Tên đăng nhập quá ngắn");
+
+  if (!email) errorArray.push("Chưa nhập email!");
   const emailRegex =
     /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
-  if (emailRegex.test(data.email) == false) {
-    res.status(400).json({
-      message: "Email không hợp lệ!",
-    });
-    return;
-  }
+  if (emailRegex.test(email) == false) errorArray.push("Email không hợp lệ!");
 
-  if (!data.password) {
-    res.status(400).json({
-      message: "Chưa nhập mật khẩu!",
-    });
-    return;
-  }
+  if (!password) errorArray.push("Chưa nhập mật khẩu!");
 
   const passwordRegex =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-  if (passwordRegex.test(data.password) == false) {
-    res.status(400).json({
-      message:
-        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt",
-    });
-    return;
-  }
+  if (passwordRegex.test(password) == false)
+    errorArray.push(
+      "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt"
+    );
 
-  if (!data.confirmPassword) {
-    res.status(400).json({
-      message: "Chưa nhập xác nhận mật khẩu!",
-    });
-    return;
-  }
+  if (!confirmPassword) errorArray.push("Chưa nhập xác nhận mật khẩu!");
 
-  if (data.password != data.confirmPassword) {
-    res.status(400).json({
-      message: "MK và xác nhận MK không giống!",
-    });
-    return;
-  }
+  if (password != confirmPassword)
+    errorArray.push("MK và xác nhận MK không giống!");
 
   const checkUsername = await Customer.findOne({
-    username: data.username,
+    username: username,
   });
-  if (checkUsername) {
-    res.status(400).json({
-      message: "Tên đăng nhập đã tồn tại!",
-    });
-    return;
-  }
+  if (checkUsername) errorArray.push("Tên đăng nhập đã tồn tại!");
 
   const checkEmail = await Customer.findOne({
-    email: data.email,
+    email: email,
   });
-  if (checkEmail) {
+  if (checkEmail) errorArray.push("Email đã tồn tại!");
+
+  if (/\s/.test(username))
+    errorArray.push("Tên đăng nhập không được có khoảng trắng!");
+
+  if (errorArray.length > 0) {
     res.status(400).json({
-      message: "Email đã tồn tại!",
+      message: errorArray.join("\n"),
     });
     return;
-  }
-
-  next();
+  } else next();
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   const data = req.body;
-  if (!data.username) {
-    res.status(400).json({
-      message: "Chưa nhập tên đăng nhập hoặc email!",
-    });
-    return;
-  }
-  if (data.username.length <= 8) {
-    res.status(400).json({
-      message: "Tên đăng nhập quá ngắn",
-    });
-    return;
-  }
-  if (!data.password) {
-    res.status(400).json({
-      message: "Chưa nhập mật khẩu!",
-    });
-    return;
-  }
+  let errorArray = [];
+  if (!data.username) errorArray.push("Chưa nhập tên đăng nhập hoặc email!");
+
+  if (data.username.length <= 8) errorArray.push("Tên đăng nhập quá ngắn");
+
+  if (!data.password) errorArray.push("Chưa nhập mật khẩu!");
+
   const passwordRegex =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-  if (passwordRegex.test(data.password) == false) {
-    res.status(400).json({
-      message:
-        "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt",
-    });
-    return;
-  }
+  if (passwordRegex.test(data.password) == false)
+    errorArray.push(
+      "Mật khẩu không hợp lệ!\nTối thiểu là 8 ký tự.\nÍt nhất một chữ hoa.\nÍt nhất một chữ thường\nÍt nhất một số.\n Ít nhất một ký tự đặc biệt"
+    );
+
   const customer = await Customer.findOne({
     $or: [
       {
@@ -139,30 +79,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       },
     ],
   });
-  if (!customer) {
-    res.status(400).json({
-      message: "Tên đăng nhập chưa đúng!",
-    });
-    return;
-  } else {
-    if (!customer.password) {
-      res.status(400).json({
-        message: "Vui lòng đăng nhập bằng Google!",
-      });
-      return;
-    } else {
+  if (!customer) errorArray.push("Tên đăng nhập chưa đúng!");
+  else {
+    if (!customer.password) errorArray.push("Vui lòng đăng nhập bằng Google!");
+    else {
       const checkPass = await argon2.verify(
         customer.password,
         req.body.password
       );
-      if (checkPass == false) {
-        res.status(400).json({
-          message: "Mật khẩu chưa đúng!",
-        });
-        return;
-      } else next();
+      if (checkPass == false) errorArray.push("Mật khẩu chưa đúng!");
     }
   }
+  if (errorArray.length > 0) {
+    res.status(400).json({
+      message: errorArray.join("\n"),
+    });
+    return;
+  } else next();
 };
 
 const forgotPassword = async (

@@ -86,7 +86,10 @@ block main
                               sl-option(value='' disabled) Chưa có danh mục nào được thêm, vui lòng thêm danh mục mới!!!
 
                     sl-input(label='Vị trí' size='small' placeholder='Tự động tăng...' name='position' value=products.position)
-                    sl-input(label='Đường dẫn' required size='small' placeholder='Tự động tạo ra theo tên của sản phẩm...' value=products.slug name='slug')
+
+                    div(class="flex items-center")
+                         sl-input(label='Đường dẫn'  disabled required size='small' value = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/`) 
+                         sl-input(label='sản phẩm' size='small' placeholder='Tự động tạo ra theo tên của sản phẩm...' value=products.slug name='slug')
 
                     sl-radio-group(required label='Trạng thái sản phẩm' name='status-product' size='small' value=products.status)
                          sl-radio(value='active') Đang bán

@@ -8,10 +8,13 @@ import auth from "./auth.route";
 import productsCategories from "./productsCategory.route";
 import customers from "./customer.route";
 import orders from "./orders.route";
+import path from "./path.route";
 import ROUTERS from "../../constants/routes/index.routes";
 import checkLogin from "../../middlewares/admin/checkLogin.middlewares";
+import checkRoute from "../../middlewares/admin/checkRoute.middlewares";
 
 const index = async (app: Application) => {
+  app.use(checkRoute);
   app.use(
     `/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}`,
     checkLogin,
@@ -52,6 +55,7 @@ const index = async (app: Application) => {
     checkLogin,
     orders
   );
+  app.use(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PATH.PATH}`, checkLogin, path);
   app.use(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.LOGIN}`, auth);
 };
 export default index;

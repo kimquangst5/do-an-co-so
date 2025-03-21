@@ -39,6 +39,12 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 _id: acc.roles,
             });
             acc["role_name"] = role.name;
+            if (acc.createdBy) {
+                const author = yield accounts_model_1.default.findOne({
+                    _id: acc.createdBy,
+                });
+                acc["author"] = author.fullname;
+            }
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }

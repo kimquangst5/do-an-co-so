@@ -73,6 +73,7 @@ block main
                                     - else if(it.status == 'inactive')
                                         sl-button(variant="danger" size="small" pill) Tạm dừng
                             td
+                                div #{it.author}
                                 //- div(class=`flex items-center justify-center gap-x-[5px] `) 
                                     sl-badge(variant="primary" pill) #{it.author}
         - else

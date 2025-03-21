@@ -32,6 +32,15 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -40,25 +49,30 @@ const express_1 = __importDefault(require("express"));
 const multer_1 = __importDefault(require("multer"));
 const controller = __importStar(require("../../controllers/admin/products.controller"));
 const uploadCloud = __importStar(require("../../middlewares/admin/uploadCloud.middlewares"));
-const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
+const paths_model_1 = __importDefault(require("../../models/paths.model"));
 const router = express_1.default.Router();
 const upload = (0, multer_1.default)();
-router.get(`${index_routes_1.default.ADMIN.PRODUCT.INDEX}`, controller.index);
-router.get(`${index_routes_1.default.ADMIN.PRODUCT.CREATE}`, controller.create);
-router.post(`${index_routes_1.default.ADMIN.PRODUCT.CREATE}`, upload.fields([
-    { name: "images_main", maxCount: 2 },
-    { name: "images_sub", maxCount: 10 },
-]), uploadCloud.multi, controller.createPost);
-router.get(`${index_routes_1.default.ADMIN.PRODUCT.UPDATE}/:id`, controller.update);
-router.get(`${index_routes_1.default.ADMIN.PRODUCT.UPDATE}/:id/getImage`, controller.getImage);
-router.patch(`${index_routes_1.default.ADMIN.PRODUCT.UPDATE}/:id`, upload.fields([
-    { name: "images_main", maxCount: 2 },
-    { name: "images_sub", maxCount: 10 },
-]), uploadCloud.multi, controller.updatePatch);
-router.patch(`${index_routes_1.default.ADMIN.PRODUCT.TRASH}/:id`, controller.trashPatch);
-router.patch(`${index_routes_1.default.ADMIN.PRODUCT.CHANGE_STATUS}/:id`, controller.changeStatus);
-router.patch(`${index_routes_1.default.ADMIN.PRODUCT.CHANGE_STATUS_MANY_PRODUCT}`, controller.changeStatusMany);
-router.get(`${index_routes_1.default.ADMIN.PRODUCT.TRASH}`, controller.trash);
-router.delete(`${index_routes_1.default.ADMIN.PRODUCT.DELETE}/:id`, controller.deleteProduct);
-router.delete(`${index_routes_1.default.ADMIN.PRODUCT.DELETE_MANY}`, controller.deleteMany);
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    const paths = yield paths_model_1.default.find();
+    const ROUTERS = paths[0];
+    router.get(`${ROUTERS.ADMIN.PRODUCT.INDEX}`, controller.index);
+    router.get(`${ROUTERS.ADMIN.PRODUCT.CREATE}`, controller.create);
+    router.post(`${ROUTERS.ADMIN.PRODUCT.CREATE}`, upload.fields([
+        { name: "images_main", maxCount: 2 },
+        { name: "images_sub", maxCount: 10 },
+    ]), uploadCloud.multi, controller.createPost);
+    router.get(`${ROUTERS.ADMIN.PRODUCT.UPDATE}/:id`, controller.update);
+    router.get(`${ROUTERS.ADMIN.PRODUCT.UPDATE}/:id/getImage`, controller.getImage);
+    router.patch(`${ROUTERS.ADMIN.PRODUCT.UPDATE}/:id`, upload.fields([
+        { name: "images_main", maxCount: 2 },
+        { name: "images_sub", maxCount: 10 },
+    ]), uploadCloud.multi, controller.updatePatch);
+    router.patch(`${ROUTERS.ADMIN.PRODUCT.TRASH}/:id`, controller.trashPatch);
+    router.patch(`${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS}/:id`, controller.changeStatus);
+    router.patch(`${ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS_MANY_PRODUCT}`, controller.changeStatusMany);
+    router.get(`${ROUTERS.ADMIN.PRODUCT.TRASH}`, controller.trash);
+    router.delete(`${ROUTERS.ADMIN.PRODUCT.DELETE}/:id`, controller.deleteProduct);
+    router.delete(`${ROUTERS.ADMIN.PRODUCT.DELETE_MANY}`, controller.deleteMany);
+});
+main();
 exports.default = router;

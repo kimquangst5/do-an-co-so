@@ -1,0 +1,96 @@
+extends ../../layouts/layouts.pug
+include ../../mixins/btn-redirect.mixin.pug
+
+block header
+     h1 Quản lí đường dẫn
+
+block hb
+     +btn-redirect(`/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.ROLES.PATH}${ROUTERS.ADMIN.ROLES.PERMISSION}`, 'Cập nhật')
+
+
+block css
+
+
+block script
+     //- script(src="/admin/js/path/index.js") 
+
+block main
+     sl-details(summary="Quản trị" open)
+          sl-details(summary="Sản phẩm" open)
+               div(class="flex flex-col gap-y-[20px]") 
+                    div(class="grid grid-cols-3")
+                         div(class="") Đường dẫn: 
+                         sl-input(value=ROUTERS.ADMIN.PRODUCT.PATH size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Danh sách sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.INDEX size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Thêm sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.CREATE size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Cập nhật sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full inline-block")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.UPDATE size='small')
+                              sl-input(size='small' disabled value=`/ID_SẢN_PHẨM` class="w-max inline-flex")
+                    div(class="grid grid-cols-3") 
+                         div(class="") Thùng_rác
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.TRASH size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Thay đổi trạng thái 1 sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS size='small')
+                              sl-input(size='small' disabled value=`/ID_SẢN_PHẨM` class="w-max inline-flex")
+                    div(class="grid grid-cols-3") 
+                         div(class="") Thay đổi trạng thái nhiều sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.CHANGE_STATUS_MANY_PRODUCT size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Xóa 1 sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.DELETE size='small')
+                              sl-input(size='small' disabled value=`/ID_SẢN_PHẨM` class="w-max inline-flex")
+                    div(class="grid grid-cols-3") 
+                         div(class="") Xóa nhiều sản phẩm
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT.DELETE_MANY size='small')
+
+          sl-details(summary="Danh mục sản phẩm" open)
+               div(class="flex flex-col gap-y-[20px]") 
+                    div(class="grid grid-cols-3")
+                         div(class="") Đường dẫn: 
+                         sl-input(value=ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Danh sách danh mục
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT_CATEGORY.INDEX size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Thêm danh mục
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT_CATEGORY.CREATE size='small')
+                    div(class="grid grid-cols-3") 
+                         div(class="") Cập nhật danh mục
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}` class="w-full inline-block")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT_CATEGORY.UPDATE size='small')
+                              sl-input(size='small' disabled value=`/ID_SẢN_PHẨM` class="w-max inline-flex")
+                    div(class="grid grid-cols-3") 
+                         div(class="") Xóa danh mục (Vào thùng rác)
+                         div(class="flex items-center gap-x-[10px] col-span-2")
+                              sl-input(size='small' disabled value=`${domain}/${ROUTERS.ADMIN.AUTH}${ROUTERS.ADMIN.PRODUCT_CATEGORY.PATH}` class="w-full")
+                              sl-input(value=ROUTERS.ADMIN.PRODUCT_CATEGORY.TRASH size='small')
+                              sl-input(size='small' disabled value=`/ID_DANH_MỤC` class="w-max inline-flex")
+
+     sl-details(summary="Khách hàng" open)

@@ -21,11 +21,11 @@ const showAlertSuccess = () => {
   }
 };
 const setCookie = (name, value, days) => {
-  const expires = days
-    ? `expires=${new Date(
+  const expires = days ?
+    `expires=${new Date(
         Date.now() + days * 24 * 60 * 60 * 1000
-      ).toUTCString()};`
-    : "";
+      ).toUTCString()};` :
+    "";
   document.cookie = `${name}=${value}; ${expires}`;
 };
 const getCookie = (cookieName) => {
@@ -144,11 +144,13 @@ const formSearch = () => {
     showLoader();
     location.href = `${link}/trang?tu-khoa=${event.target.name.value}`;
   });
+
   function resetForm() {
     while (form.children.length > 2) {
       form.removeChild(form.lastChild);
     }
   }
+
   function clearSuggestions() {
     const suggestions = form.querySelector(".suggestions");
     if (suggestions) {
@@ -238,8 +240,7 @@ const blockDevTool = () => {
     if (
       e.keyCode === 123 || // F12
       (e.ctrlKey &&
-        e.shiftKey &&
-        ["I", "J", "C", "E"].includes(String.fromCharCode(e.keyCode))) ||
+        e.shiftKey && ["I", "J", "C", "E"].includes(String.fromCharCode(e.keyCode))) ||
       (e.ctrlKey && e.keyCode === "U".charCodeAt(0)) || // Ctrl+U
       (e.ctrlKey && e.keyCode === "S".charCodeAt(0)) // Ctrl+S
     ) {
@@ -252,16 +253,20 @@ const blockDevTool = () => {
     e.preventDefault();
   });
 };
-blockDevTool();
-
+// blockDevTool();
+window.addEventListener('pageshow', function (event) {
+  if (event.persisted) {
+    closeLoader();
+  }
+});
 
 const animation = () => {
   // const container = document.querySelector('.animation-scroll');
   const animation = document.querySelectorAll('sl-animation');
-  if(!animation || animation.length == 0) return
+  if (!animation || animation.length == 0) return
   animation.forEach(it => {
     const box = it.querySelector('.box');
-    
+
     // Watch for the box to enter and exit the viewport. Note that we're observing the box, not the animation element!
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
@@ -273,9 +278,9 @@ const animation = () => {
       }
     });
     // if(box)
-      observer.observe(it.children[0]);
+    observer.observe(it.children[0]);
   })
-  
+
 
 }
 

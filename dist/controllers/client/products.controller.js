@@ -19,7 +19,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.search = exports.getItem = exports.getSize = exports.detail = void 0;
+exports.search = exports.getItem = exports.getSize = exports.detail = exports.index = void 0;
 const products_model_1 = __importDefault(require("../../models/products.model"));
 const colorProduct_model_1 = __importDefault(require("../../models/colorProduct.model"));
 const product_items_model_1 = __importDefault(require("../../models/product-items.model"));
@@ -244,3 +244,109 @@ const search = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.search = search;
+const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { khoanggia, mausac, kichthuoc } = req.query;
+    const findProduct = {
+        status: "active",
+        deleted: false,
+    };
+    let sortProduct = {};
+    if (typeof req.query.sapxep === "string") {
+        const name = req.query.sapxep.split("-")[0];
+        const value = req.query.sapxep.split("-")[1];
+        if (name === "tensanpham") {
+            sortProduct["name"] = value === "tangdan" ? 1 : -1;
+        }
+        else if (name === "sanpham")
+            sortProduct["position"] = value === "moinhat" ? -1 : 1;
+    }
+    else {
+        sortProduct["position"] = -1;
+    }
+    let products = yield products_model_1.default.find(findProduct).sort(sortProduct);
+    const listProduct = [];
+    yield Promise.all(products.map((it) => __awaiter(void 0, void 0, void 0, function* () {
+        const find = { productId: it.id };
+        if (mausac) {
+            const color = yield colorProduct_model_1.default.findOne({ slug: mausac });
+            find["color"] = color ? color.id : it.id;
+        }
+        if (kichthuoc) {
+            const size = yield sizeProduct_model_1.default.findOne({ slug: kichthuoc });
+            find["size"] = size ? size.id : it.id;
+        }
+        const items = yield product_items_model_1.default.findOne(find);
+        if (items) {
+            if (khoanggia) {
+                const [min, max] = khoanggia.toString().split("-").map(Number);
+                const price = Math.ceil(items.price - items.price * (items.discount / 100));
+                if (price >= min && price <= max) {
+                    listProduct.push(it);
+                }
+            }
+            else if (typeof req.query.sapxep === "string") {
+                const name = req.query.sapxep.split("-")[0];
+                const value = req.query.sapxep.split("-")[1];
+                if (name == "danggiam") {
+                    if (value == "true" && items.discount > 0)
+                        listProduct.push(it);
+                    if (value == "false" && items.discount == 0)
+                        listProduct.push(it);
+                }
+            }
+            else {
+                listProduct.push(it);
+            }
+        }
+    })));
+    yield Promise.all(listProduct.map((it) => __awaiter(void 0, void 0, void 0, function* () {
+        it["img_main"] = [];
+        const img = yield productAssets_model_1.default.find({ productId: it.id, type: "main" });
+        if (img.length > 0) {
+            it["img_main"] = yield Promise.all(img.map((image) => __awaiter(void 0, void 0, void 0, function* () {
+                const assets__main = yield assets_model_1.default.findOne({ _id: image.assetsId });
+                return assets__main.path;
+            })));
+        }
+        const listItem = yield product_items_model_1.default.find({ productId: it.id });
+        if (listItem.length > 0) {
+            const minItem = listItem.reduce((min, item) => Math.ceil(item.price - item.price * (item.discount / 100)) <
+                Math.ceil(min.price - min.price * (min.discount / 100))
+                ? item
+                : min);
+            it["priceNew"] = Math.ceil(minItem.price - minItem.price * (minItem.discount / 100));
+            it.price = minItem.price;
+            it.discount = minItem.discount;
+        }
+    })));
+    if (typeof req.query.sapxep === "string") {
+        const name = req.query.sapxep.split("-")[0];
+        const value = req.query.sapxep.split("-")[1];
+        if (name === "gia") {
+            listProduct.sort((a, b) => value === "tangdan" ? a.priceNew - b.priceNew : b.priceNew - a.priceNew);
+        }
+    }
+    else {
+        listProduct.sort((a, b) => b.position - a.position);
+    }
+    let pagination = {
+        current: req.query.trang ? parseInt(req.query.trang) : 1,
+        limit: 9,
+    };
+    pagination["totalProduct"] = listProduct.length;
+    pagination["totalPage"] = Math.ceil(pagination["totalProduct"] / pagination.limit);
+    if (pagination.current > pagination["totalPage"])
+        pagination.current = 1;
+    pagination["skip"] = (pagination.current - 1) * pagination.limit;
+    const paginatedList = listProduct.slice(pagination["skip"], pagination["skip"] + pagination.limit);
+    const listColors = yield colorProduct_model_1.default.find({ status: "active" });
+    const listSizes = yield sizeProduct_model_1.default.find({ status: "active" });
+    res.render("client/pages/products/index.pug", {
+        pageTitle: "Danh sách sản phẩm",
+        products: paginatedList,
+        listColors,
+        listSizes,
+        pagination,
+    });
+});
+exports.index = index;

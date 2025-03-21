@@ -11,16 +11,16 @@ block main
             div(class=`container`)
                 sl-breadcrumb
                     sl-breadcrumb-item(href='/')
-                        sl-icon(slot="prefix", name="house")
+                        sl-icon(slot="prefix" name="house")
                         | Trang chủ
                     sl-breadcrumb-item(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}`) Thông tin cá nhân
                     sl-breadcrumb-item(href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}`) Sửa thông tin
                     sl-breadcrumb-item() Cập nhật số điện thoại
 
-        div(class=`bg-[#F5F5F5] h-full py-[20px]`)
+        div(class=`bg-[#F5F5F5] h-max py-[20px]`)
             div(class=`container`)
 
-                div(class=`mb-60 rounded-lg bg-white gap-y-5 shadow-2xl shadow-[rgba(0,0,0,.15)] p-6 w-max min-w-[50%] mx-auto flex flex-col`)
+                div(class=`rounded-lg bg-white gap-y-5 shadow-2xl shadow-[rgba(0,0,0,.15)] p-6 w-max min-w-[50%] mx-auto flex flex-col`)
                     h3(class=`text-[30px] font-bold`) Thay đổi Email
                     div(class=`flex items-center justify-between border-[1px] border-[black] rounded-[7px] p-[10px]`) 
                         div(class=`flex items-center gap-x-[8px] flex-1`) 
@@ -43,10 +43,3 @@ block main
                     input(type="email" placeholder="Số điện thoại mới" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" new-phone)
                     button(btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_PHONE}` class=`bg-[black] text-[white] rounded-lg py-[10px]`) Cập nhật số điện thoại
 
-        div(class=``)
-            div(class=`container`)
-
-                button(btn-otp = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_EMAIL}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_CREATE_OTP}`) Nhận mã
-                input(placeholder='Mã OTP' code-otp)
-                input(placeholder='Số điện thoại mới' new-phone)
-                button(btn-update = `${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_INFOR}${ROUTERS.CLIENT.CUSTOMER.INFOR_CUSTOMER_UPDATE_PHONE}`) Cập nhật Số điện thoại

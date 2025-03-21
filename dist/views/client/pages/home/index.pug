@@ -84,10 +84,12 @@ block main
                               sl-carousel-item(class="bg-none")
                                    div(class=`group`)
                                         - if(it.img_main.length == 0)
-                                             img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="Image Error" class="w-full aspect-square object-cover rounded-[16px]")
+                                             a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it.slug}`) 
+                                                  img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="Image Error" class="w-full aspect-square object-cover rounded-[16px]")
                                         - else if(it.img_main.length == 1)
                                              sl-animation(name="zoomIn" easing="easeOutQuint" duration="2000" class=`` play iterations='1')
-                                                  img(src=it.img_main[0], alt=it.name, class="duration-300 hover:scale-110 w-full aspect-square object-cover rounded-[16px]")
+                                                  a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it.slug}`) 
+                                                       img(src=it.img_main[0], alt=it.name, class="duration-300 hover:scale-110 w-full aspect-square object-cover rounded-[16px]")
                                         - else
                                              sl-animation(name="zoomIn", img-product-main easing="easeOutQuint" duration="2000" class=`group-hover:hidden` play iterations='1')
                                                   img(src=it.img_main[0], alt=it.name, class="w-full aspect-square object-cover rounded-[16px]")
@@ -112,74 +114,12 @@ block main
                                              span(class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center")
                                                   | -#{it.discount ? it.discount : ''}%
 
-                         // Item 2
-                         //- div(class="bg-none")
-                         //-     img(src="/client/images/home/t-shirt.png" alt="T-shirt" class="w-full aspect-square object-cover rounded-[16px]")
-                         //-     h3(class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px]")
-                         //-         | T-shirt with Tape Details
-                         //-     div(class="flex items-center mb-[6px]")
-                         //-         div(class="text-yellow-500 flex space-x-[2px]")
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-         span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 4.5/5
-                         //-     p(class="text-[20px] sm:text-[18px] font-[500] text-[#000000] mt-[8px] md:text-[20px]") 120.000đ
-                         //- // Item 2
-                         //- div(class="bg-none]")
-                         //-     img(src="/client/images/home/jeans.png" alt="Jeans" class="w-full object-cover aspect-square rounded-[16px]")
-                         //-     h3(class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px]")
-                         //-         | Skinny Fit Jeans
-                         //-     div(class="flex items-center mb-[6px]")
-                         //-         div(class="text-yellow-500 flex space-x-[2px]")
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span(class="text-gray-400") ⭐
-                         //-         span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 3.5/5
-                         //-     div(class="inline-flex flex-wrap gap-x-[16px] mt-[6px]")
-                         //-         p(class="text-[20px] sm:text-[18px] font-[500] text-[#000000]") 240.000đ
-                         //-         p(class="text-[20px] sm:text-[18px] font-[500] text-[#00000066] line-through") 260.000đ
-                         //-         span(class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center")
-                         //-             | -20%
-                         //- // Item 3
-                         //- div(class="bg-none")
-                         //-     img(src="/client/images/home/t-shirt.png" alt="T-shirt" class="w-full object-cover aspect-square rounded-[16px]")
-                         //-     h3(class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px]")
-                         //-         | T-shirt with Tape Details
-                         //-     div(class="flex items-center mb-[6px]")
-                         //-         div(class="text-yellow-500 flex space-x-[2px]")
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-         span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 4.5/5
-                         //-     p(class="text-[20px] sm:text-[18px] font-[500] text-[#000000] mt-[8px]") 120.000đ
-                         //- // Item 4
-                         //- div(class="bg-none")
-                         //-     img(src="/client/images/home/jeans.png" alt="Jeans" class="w-full object-cover aspect-square rounded-[16px]")
-                         //-     h3(class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px]")
-                         //-         | Skinny Fit Jeans
-                         //-     div(class="flex items-center mb-[6px]")
-                         //-         div(class="text-yellow-500 flex space-x-[2px]")
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span ⭐
-                         //-             span(class="text-gray-400") ⭐
-                         //-         span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 3.5/5
-                         //-     div(class="inline-flex flex-wrap gap-x-[16px] mt-[6px]")
-                         //-         p(class="text-[20px] sm:text-[18px] font-[500] text-[#000000]") 240.000đ
-                         //-         p(class="text-[20px] sm:text-[18px] font-[500] text-[#00000066] line-through") 260.000đ
-                         //-         span(class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center")
-                         //-             | -20%
 
-          div(class="container overflow-hidden")
-               button(type="button" class="w-[218px] h-[52px] sm:w-full block mx-auto mt-[60px] border-[1px] border-[#0000001A] rounded-[62px] text-[16px] text-center ")
-                    | Xem thêm
+     div(class="pt-[60px]") 
+          div(class="container")
+               div(class="flex justify-center") 
+                    a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.INDEX}` class="px-[71px] py-[16px] inline sm:w-full  mx-auto border-[1px] border-[#0000001A] rounded-[62px] text-[16px] text-center " onclick="showLoader()")
+                         | Xem thêm
      div(class="container")
           div(class="w-fit text-[48px] my-[60px] mx-auto text-center")
                | Đang bán chạy

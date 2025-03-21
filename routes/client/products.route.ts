@@ -18,6 +18,8 @@ router.post(
   controller.getItem
 );
 
+router.get(`${ROUTERS.CLIENT.PRODUCT.INDEX}`, controller.index);
+
 // router.post(
 //   `${ROUTERS.CLIENT.PRODUCT.DETAIL}/:id${ROUTERS.CLIENT.CUSTOMER.REVIEW}`,
 //   review,

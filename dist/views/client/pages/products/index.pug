@@ -1,0 +1,133 @@
+extends ../../layouts/layouts.pug
+
+block css
+     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" type="text/css")
+     link(rel="stylesheet" href="/client/css/productCategory/index.css")
+block script
+     script(src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js" async) 
+     script(src="https://code.jquery.com/jquery-3.6.0.min.js" async)
+     script(type="module" src="/client/js/productCategory/index.js" async) 
+
+block main
+     div(class="py-[20px]")
+          div(class="container") 
+               sl-breadcrumb
+                    sl-breadcrumb-item(href="/" onclick="showLoader()")
+                         sl-icon(slot="prefix" name="house")
+                         | Trang chủ
+                    sl-breadcrumb-item() Danh sách sản phẩm
+     div
+          div(class="container")
+               div(class="grid grid-cols-4 gap-x-[20px] pt-[26px]") 
+                    div(class="border-[1px] rounded-[20px] px-[24px] pt-[20px] lg:hidden")
+                         div(class="flex justify-between items-center")
+                              div(class="font-[400] text-[20px] text-[#000000]") Lọc
+                              i(class="fas fa-sliders text-[24px]")
+                         div(class="border-[1px] border-[#0000001A] my-[24px]")
+                         div(class=`truncate`)
+                              div(class="flex justify-between items-center")
+                                   div(class="font-[400] text-[20px] text-[#000000]") Giá
+                                   i(class="fa-solid fa-chevron-up text-[16px]")
+                              div(class="flex flex-col items-center  mt-[20px]")
+                                   div(class=`grid grid-cols-2 gap-x-[10px] p-[10px]`) 
+                                        sl-input(class=`` size='small' type='number' filter-price-min placeholder='Từ...')
+                                        sl-input(class=`` size='small' type='number' filter-price-max placeholder='Đến...')
+                         div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                         div
+                              div(class="flex justify-between items-center pb-[20px]")
+                                   div(class="font-[400] text-[20px] text-[#000000]") Màu
+                                   i(class="fa-solid fa-chevron-up text-[16px]")
+                              div(class="grid grid-cols-5 gap-[10px]" list-color)
+                                   - if(listColors && listColors.length > 0)
+                                        each color in listColors
+                                             sl-tooltip(content=color.name)
+                                                  input(type="radio" name="color", class=`radio w-[30px] h-[30px] bg-[${color.code}] checked:bg-[${color.code}]` slug = color.slug)
+                         div
+                              div(class="border border-[1px] border-[#0000001A] my-[24px]")
+                              div(class="flex justify-between items-center pb-[20px]")
+                                   div(class="font-[400] text-[20px] text-[#000000]") Kích thước
+                                   i(class="fa-solid fa-chevron-up text-[16px]")
+                              div(class="grid grid-cols-3 flex-col gap-y-[8px]")
+                                   - if(listSizes && listSizes.length > 0)
+                                        sl-radio-group(class="flex gap-x-[12px] mb-[26px]" filter-size)
+                                             each size in listSizes
+                                                  sl-radio-button(class="mr-[12px] flex justify-center items-center" value = size.slug)
+                                                       div(class="text-[16px]") #{size.name}
+                         div(class="border-[1px] border-[#0000001A] my-[24px]")
+                         div(class="flex flex-col justify-center gap-y-[20px]")
+                              button(class="w-full py-[15px] bg-[#000000] text-[#FFFFFF] font-[400] text-[14px] rounded-[62px] flex-1" btn-filter) Lọc
+                              button(class="" reset-filter) Reset
+                    div(class="col-span-3 lg:col-span-4")
+                         div(class="flex justify-between pb-[28px]")
+                              div(class="font-[400] text-[16px] lg:text-[24px] text-[#000000]") Danh sách sản phẩm
+                              div(class="flex gap-x-[12px] items-center")
+                                   div(class="font-[400] text-[16px] lg:text-[14px] text-[#00000099]") Hiển thị #{(pagination.current - 1) * pagination.limit + 1}-#{(pagination.current - 1) * pagination.limit + pagination.limit} trong số #{pagination.totalProduct} sản phẩm
+
+
+                                   sl-select(placeholder='Sắp xếp theo:' clearable select-sort-product hoist)
+                                        sl-option(value="sanpham-moinhat") Mới nhất
+                                        sl-option(value="sanpham-cunhat") Cũ nhất
+                                        //- sl-option(value="sanpham-banchaynhat") Bán chạy nhất
+                                        sl-divider
+                                        sl-option(value="gia-tangdan") Giá: Tăng dần
+                                        sl-option(value="gia-giamdan") Giá: Giảm dần
+                                        sl-divider
+                                        sl-option(value="tensanpham-tangdan") Tên A - Z
+                                        sl-option(value="tensanpham-giamdan") Tên Z - A
+                                        sl-divider
+                                        sl-option(value="danggiam-true") Đang giảm
+                                   //- div(class="flex gap-x-[4px] items-center")
+                                        div(class="font-[400] text-[16px] text-[#00000099] lg:hidden") Sắp xếp theo: Phổ biến nhất
+                                        i(class="fa-solid fa-chevron-down text-[16px] lg:hidden")
+                         div(class="grid grid-cols-3 lg:grid-cols-2 flex-col gap-y-[37px] lg:gap-y-[26px] gap-x-[20px] lg:gap-x-[14px] h-max")
+                              - if(products && products.length > 0)
+                                   each it in products
+                                        - if(it.priceNew)
+                                             div(class="bg-none")
+                                                  div(class=`group`)
+                                                       - if(it.img_main.length == 0)
+                                                            img(src="https://cdn-icons-png.flaticon.com/512/11542/11542598.png" alt="Image Error" class="w-full aspect-square object-cover rounded-[16px]")
+                                                       - else if(it.img_main.length == 1)
+                                                            sl-animation(name="zoomIn" easing="easeOutQuint" duration="2000" class=`` play iterations='1')
+                                                                 img(src=it.img_main[0], alt=it.name, class="duration-300 hover:scale-110 w-full aspect-square object-cover rounded-[16px]")
+                                                       - else
+                                                            sl-animation(name="zoomIn", img-product-main easing="easeOutQuint" duration="2000" class=`group-hover:hidden` play iterations='1')
+                                                                 img(src=it.img_main[0], alt=it.name, class="w-full aspect-square object-cover rounded-[16px]")
+                                                            sl-animation(name="zoomIn", img-product-sub easing="easeOutQuint" duration="2000" class=`hidden group-hover:block`)
+                                                                 img(src=it.img_main[1], alt=it.name, class="w-full aspect-square object-cover rounded-[16px]")
+                                                            //- img(src=it.img_main[1], alt="T-shirt" class="hidden  group-hover:block w-full aspect-square object-cover rounded-[16px]")
+                                                  a(href=`${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.DETAIL}/${it.slug}` class="text-[18px] sm:text-[16px] text-[#000000] font-[500] mt-[12px] mb-[6px] md:text-[16px] line-clamp-1")
+                                                       sl-tooltip(content=it.name)
+                                                            div #{it.name}
+                                                  div(class="flex items-center mb-[6px]")
+                                                       div(class="text-yellow-500 flex space-x-[2px]")
+                                                            span ⭐
+                                                            span ⭐
+                                                            span ⭐
+                                                            span ⭐
+                                                            span ⭐
+                                                       span(class="ml-[8px] text-[12px] sm:text-[10px] text-gray-500") 4.5/5
+                                                  div(class="inline-flex flex-wrap gap-x-[16px] mt-[6px]")
+                                                       sl-format-number(class="text-[20px] sm:text-[18px] font-[500] text-[#000000]" value=(it.priceNew ? it.priceNew : '') type="currency" currency="VND" lang="vi-VI")
+                                                       - if(it.discount != 0)
+                                                            sl-format-number(value=(it.price ? it.price : '') class="text-[14px] sm:text-[18px] font-[500] text-[#00000066] line-through flex items-center" type="currency" currency="VND" lang="vi-VI")
+                                                            span(class="w-[50px] h-[24px] text-[#FF3333] text-[10px] font-[500] bg-[#FF33331A] rounded-[50px] flex items-center justify-center")
+                                                                 | -#{it.discount ? it.discount : ''}%
+
+                         div(class="border-[1px] border-[#0000001A] mt-[33px]")
+                         - if(pagination && pagination.totalPage >= 2)
+                              div(class="flex items-center justify-between mt-[20px] lg:justify-between")
+                                   button(class="flex items-center px-[14px] py-[8px] text-[#000000] border border-[#0000001A] rounded-[8px] gap-x-[8px]" btn-pagination-back)
+                                        i(class="fas fa-arrow-left")
+                                        | Trước
+                                   div(class="flex items-center gap-x-[2px]" pagination)
+                                        - for(let i = Math.max(1,  pagination.current - 3); i <= Math.min(pagination.current + 3, pagination.totalPage); i++)
+                                             - if(i == pagination.current)
+                                                  button(class="w-10 h-10 flex items-center justify-center bg-[#0000000F] font-[400] text-[14px] text-[#000000] rounded-[8px]" trang = i) #{i}
+                                             - else
+                                                  button(class="w-10 h-10 flex items-center justify-center font-[400] text-[14px] text-[#000000] rounded-[8px]" trang = i) #{i}
+                                        //- span(class="w-10 h-10 flex items-center justify-center bg-[#0000000F] font-[400] text-[14px] text-[#000000] rounded-[8px]") #{pagination.totalPage}
+
+                                   button(class="flex items-center px-[14px] py-[8px] text-[#000000] border border-[#0000001A] rounded-[8px] gap-x-[8px]" btn-pagination-skip = pagination.totalPage)
+                                        | Sau
+                                        i(class="fas fa-arrow-right")

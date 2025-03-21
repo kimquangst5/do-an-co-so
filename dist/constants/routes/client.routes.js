@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ROUTER_CLIENT = {
     PRODUCT: {
         PATH: "/san-pham",
-        DETAIL: "",
+        DETAIL: "/chi-tiet",
         SEARCH: "/ket-qua-tim-kiem",
+        INDEX: "/danh-sach",
     },
     CUSTOMER: {
         PATH: "/khach-hang",

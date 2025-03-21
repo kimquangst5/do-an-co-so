@@ -14,9 +14,9 @@ header(class=``)
                               sl-menu(class=`hidden group-hover:block w-max absolute top-[20px] left-0 right-0 mx-auto z-[100]`)
                                    +treeCategory(treeCategories)
                     sl-animation(name="fadeInDown" easing="ease-in-out" duration="1200" play iterations="1")
-                         div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Đang giảm
+                         a(onclick='showLoader()' href = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.INDEX}?sapxep=danggiam-true`  class="text-[#000000] font-[400] text-[16px] lg:hidden") Đang giảm
                     sl-animation(name="fadeInDown" easing="ease-in-out" duration="1400" play iterations="1")
-                         div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Sản phẩm mới
+                         a(onclick='showLoader()' href = `${ROUTERS.CLIENT.PRODUCT.PATH}${ROUTERS.CLIENT.PRODUCT.INDEX}?sapxep=danggiam-true` class="text-[#000000] font-[400] text-[16px] lg:hidden") Sản phẩm mới
                     sl-animation(name="fadeInDown" easing="ease-in-out" duration="1600" play iterations="1")
                          div(class="text-[#000000] font-[400] text-[16px] lg:hidden") Thương hiệu
                sl-animation(name="fadeInDown" easing="ease-in-out" duration="1800" play iterations="1")
@@ -84,7 +84,7 @@ header(class=``)
                                                   div(class=`flex items-center gap-x-[10px]`) 
                                                        sl-icon(name="shield-lock")
                                                        div Đổi mật khẩu
-                                        
+
                                    - if(!INFOR_CUSTOMER)
                                         li
                                              a(class="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline dark:bg-surface-dark dark:text-white dark:hover:bg-neutral-800/25 dark:focus:bg-neutral-800/25 dark:active:bg-neutral-800/25" href=`${ROUTERS.CLIENT.CUSTOMER.PATH}${ROUTERS.CLIENT.CUSTOMER.LOGIN}`, data-twe-dropdown-item-ref)

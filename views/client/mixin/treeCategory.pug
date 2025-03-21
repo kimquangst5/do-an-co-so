@@ -1,7 +1,7 @@
 mixin treeCategory(array)
     each it in array
         sl-menu-item(value="undo" class=`w-[40vh] min-w-max`)
-            a(href=`${ROUTERS.CLIENT.PRODUCT_CATEGORY.PATH}/${it.slug}`) #{it.name}
+            a(onclick="showLoader()" href=`${ROUTERS.CLIENT.PRODUCT_CATEGORY.PATH}/${it.slug}`) #{it.name}
             - if(it.children)
                 sl-menu(slot="submenu")
                     +treeCategory(it.children)

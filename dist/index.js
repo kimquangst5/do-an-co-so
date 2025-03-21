@@ -19,7 +19,6 @@ app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.json());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
-app.locals.ROUTERS = index_routes_1.default;
 app.use(express_1.default.static(`${__dirname}/public`));
 const isDist = __dirname.includes("dist");
 const nodeModulesPathTinymce = isDist
@@ -29,7 +28,7 @@ app.use(`/tinymce`, express_1.default.static(nodeModulesPathTinymce));
 const nodeModulesPath = isDist
     ? path_1.default.join(__dirname, "..", "node_modules")
     : path_1.default.join(__dirname, "node_modules");
-app.use('/node_modules', express_1.default.static(nodeModulesPath));
+app.use("/node_modules", express_1.default.static(nodeModulesPath));
 (0, index_route_1.default)(app);
 (0, index_route_2.default)(app);
 app.listen(port, () => {

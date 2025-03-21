@@ -1,0 +1,17 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Sun 2025-03-16 06:48:41 UTC; 29min ago
+       Docs: man:nginx(8)
+    Process: 25786 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 25788 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 25789 (nginx)
+      Tasks: 3 (limit: 2309)
+     Memory: 3.3M
+        CPU: 90ms
+     CGroup: /system.slice/nginx.service
+             ├─25789 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─25790 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             └─25791 "nginx: worker process" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+
+Mar 16 06:48:41 doancoso.io.vn systemd[1]: Starting A high performance web server and a reverse proxy server...
+Mar 16 06:48:41 doancoso.io.vn systemd[1]: Started A high performance web server and a reverse proxy server.

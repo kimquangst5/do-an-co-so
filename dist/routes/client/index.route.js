@@ -11,7 +11,9 @@ const checkout_route_1 = __importDefault(require("./checkout.route"));
 const productCategories_route_1 = __importDefault(require("./productCategories.route"));
 const index_routes_1 = __importDefault(require("../../constants/routes/index.routes"));
 const checkLogin_middlewares_1 = __importDefault(require("../../middlewares/client/checkLogin.middlewares"));
+const checkRoute_middlewares_1 = __importDefault(require("../../middlewares/admin/checkRoute.middlewares"));
 const index = (app) => {
+    app.use(checkRoute_middlewares_1.default);
     app.use("/", checkLogin_middlewares_1.default, home_route_1.default);
     app.use(`${index_routes_1.default.CLIENT.PRODUCT.PATH}`, checkLogin_middlewares_1.default, products_route_1.default);
     app.use(`${index_routes_1.default.CLIENT.CUSTOMER.PATH}`, checkLogin_middlewares_1.default, customers_route_1.default);
